@@ -3,6 +3,7 @@ import warnings
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import dash
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from dash import ctx, dcc, html
@@ -11,7 +12,11 @@ from dash.exceptions import PreventUpdate
 from sklearn.pipeline import Pipeline
 
 from topicwizard.plots.topic import all_topics_plot, topic_plot
-from topicwizard.utils.prepare import calculate_top_words, calculate_topic_data
+from topicwizard.utils.prepare import (calculate_top_words,
+                                       prepare_pipeline_data,
+                                       prepare_topic_data,
+                                       prepare_transformed_data)
+warnings.filterwarnings("ignore")
 
 # -------------------------------
 # Callbacks
@@ -77,17 +82,20 @@ def update_current_topic(
     Output("current_topic_plot", "figure"),
     Input("current_topic", "data"),
     Input("fit_store", "data"),
+    Input("lambda_slider", "value"),
 )
 def update_current_topic_plot(
-    current_topic: int, fit_store: Dict
+    current_topic: int, fit_store: Dict, alpha: float
 ) -> go.Figure:
     """Updates the plots about the current topic in the topic view
     when the current topic is changed or when a new model is fitted.
     """
     if current_topic is None or fit_store is None:
         raise PreventUpdate()
-    top_words = pd.DataFrame(fit_store["top_words"])
-    return topic_plot(current_topic, top_words)
+    top_words = calculate_top_words(
+        topic_id=current_topic, top_n=30, alpha=alpha, **fit_store
+    )
+    return topic_plot(top_words)
 
 
 @cb(
@@ -106,7 +114,17 @@ def update_all_topics_plot(
     if not topic_names:
         # If there's missing data, prevent update.
         raise PreventUpdate()
-    topic_data = pd.DataFrame(fit_data["topic_data"])
+    x, y = fit_data["topic_pos"]
+    size = fit_data["topic_frequency"]
+    topic_id = np.arange(fit_data["n_topics"])
+    topic_data = pd.DataFrame(
+        {
+            "x": x,
+            "y": y,
+            "size": size,
+            "topic_id": topic_id,
+        }
+    )
     # Mapping topic names over to topic ids with a Series
     # since Series also function as a mapping, you can use them in the .map()
     # method
@@ -165,12 +183,27 @@ mini_switcher = html.Div(
     ],
 )
 
+relevance_slider = html.Div(
+    className="""
+        fixed flex flex-none flex-row justify-between items-center
+        left-40 bottom-10 h-16 w-96 bg-white shadow rounded-full/
+        rounded-full ml-5 px-6 py-6
+    """,
+    children=[
+        html.Div("λ :", className="text-xl text-gray-500"),
+        dcc.Slider(
+            id="lambda_slider",
+            value=1.0,
+            min=0.0,
+            max=1.0,
+            className="flex-1 mt-5",
+            tooltip={"placement": "bottom", "always_visible": False},
+        ),
+    ],
+)
 
-def _create_layout(
-    topic_names: Iterable[str],
-    top_words: pd.DataFrame,
-    topic_data: pd.DataFrame,
-):
+
+def _create_layout(topic_names: Iterable[str], fit_data: Dict):
     layout = html.Div(
         id="topic_view",
         className="""
@@ -181,14 +214,12 @@ def _create_layout(
             dcc.Store(id="current_topic", data=0),
             dcc.Store(
                 id="fit_store",
-                data={
-                    "top_words": top_words.to_dict(),
-                    "topic_data": topic_data.to_dict(),
-                },
+                data=fit_data,
             ),
-            dcc.Graph(id="all_topics_plot", className="flex-1 basis-2/3 "),
-            dcc.Graph(id="current_topic_plot", className="flex-1 basis-1/3"),
+            dcc.Graph(id="all_topics_plot", className="flex-1 basis-3/5 "),
+            dcc.Graph(id="current_topic_plot", className="flex-1 basis-2/5 "),
             mini_switcher,
+            relevance_slider,
         ],
     )
     return layout
@@ -197,7 +228,6 @@ def _create_layout(
 # ------------------------------------
 # Main
 # ------------------------------------
-
 
 def plot_topics_(
     pipeline: Union[Pipeline, Tuple[Any, Any], None] = None,
@@ -209,6 +239,7 @@ def plot_topics_(
     topic_names: Optional[Iterable[str]] = None,
     port: int = 8050,
     dash=dash.Dash,
+    use_reloader: bool = False,
     extra_kwargs: Dict = {},
 ):
     """Interactively plots all topics and related word importances.
@@ -252,12 +283,18 @@ def plot_topics_(
     if corpus is not None:
         texts = corpus[texts]
     assert topic_model is not None
+    assert vectorizer is not None
     assert texts is not None
     n_topics = topic_model.n_components
     if topic_names is None:
         topic_names = [f"Topic {i_topic}" for i_topic in range(n_topics)]
-    top_words = calculate_top_words(vectorizer, topic_model, 30, alpha=1.0)
-    topic_data = calculate_topic_data(vectorizer, topic_model, texts)
+    pipeline_data = prepare_pipeline_data(vectorizer, topic_model)
+    transformed_data = prepare_transformed_data(vectorizer, topic_model, texts)
+    topic_data = prepare_topic_data(**transformed_data, **pipeline_data)
+    fit_data = {
+        **pipeline_data,
+        **topic_data,
+    }
     app = dash(
         __name__,
         title="Topic visualization",
@@ -271,6 +308,8 @@ def plot_topics_(
             },
         ],
     )
-    app.layout = _create_layout(topic_names, top_words, topic_data)
+    app.layout = _create_layout(topic_names=topic_names, fit_data=fit_data)
     add_callbacks(app)
-    app.run_server(debug=True, use_reloader=False, port=port, **extra_kwargs)
+    app.run_server(
+        debug=True, use_reloader=use_reloader, port=port, **extra_kwargs
+    )

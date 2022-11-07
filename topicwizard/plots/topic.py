@@ -6,7 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def topic_plot(topic: int, top_words: pd.DataFrame):
+def topic_plot(top_words: pd.DataFrame):
     """Plots word importances for currently selected topic.
 
     Parameters
@@ -23,10 +23,9 @@ def topic_plot(topic: int, top_words: pd.DataFrame):
     Figure
         Bar chart of word importances.
     """
-    top_words = top_words[top_words.topic == topic]
-    top_words = top_words.sort_values("importance", ascending=False)
+    top_words = top_words.sort_values("relevance", ascending=False)
     topic_word_trace = go.Bar(
-        name="Importance for topic",
+        name="Estimated frequency in topic",
         y=top_words.word,
         x=top_words.importance,
         orientation="h",
@@ -34,7 +33,7 @@ def topic_plot(topic: int, top_words: pd.DataFrame):
         marker_color="#dc2626",
     )
     overall_word_trace = go.Bar(
-        name="Overall importance",
+        name="Overall frequency",
         y=top_words.word,
         x=top_words.overall_importance,
         orientation="h",
@@ -46,6 +45,7 @@ def topic_plot(topic: int, top_words: pd.DataFrame):
         yaxis=dict(autorange="reversed"),
         barmode="overlay",
         plot_bgcolor="#f8fafc",
+        hovermode=False,
     )
     return fig
 
@@ -83,7 +83,9 @@ def all_topics_plot(topic_data: pd.DataFrame, current_topic: int) -> go.Figure:
         hovermode="closest",
         plot_bgcolor="white",
     )
-    fig.update_traces(textposition="top center", hovertemplate="")
+    fig.update_traces(
+        textposition="top center", hovertemplate="", hoverinfo="none"
+    )
     fig.update_coloraxes(showscale=False)
     fig.update_xaxes(
         showticklabels=False,

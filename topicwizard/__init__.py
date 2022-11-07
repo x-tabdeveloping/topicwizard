@@ -50,6 +50,7 @@ def plot_topics(
     vectorizer: Optional[Any] = None,
     topic_model: Optional[Any] = None,
     topic_names: Optional[Iterable[str]] = None,
+    **kwargs,
 ):
     """Interactively plots all topics and related word importances.
 
@@ -86,6 +87,7 @@ def plot_topics(
         topic_names=topic_names,
         port=port,
         dash=Dash,
-        extra_kwargs=extra_kwargs
+        extra_kwargs=extra_kwargs,
+        **kwargs,
     )
     port += 1

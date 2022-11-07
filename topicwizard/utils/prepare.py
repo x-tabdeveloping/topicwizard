@@ -7,9 +7,21 @@ import scipy.sparse as spr
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.manifold import TSNE
+from sklearn.preprocessing import normalize
 
 
-def word_relevance(components: np.ndarray, alpha: float) -> np.ndarray:
+def min_max_norm(a) -> np.ndarray:
+    """Performs min max normalization on an ArrayLike"""
+    a = (a - np.min(a)) / (np.max(a) - np.min(a))
+    return a
+
+
+def word_relevance(
+    topic_id: int,
+    term_frequency: np.ndarray,
+    topic_term_frequency: np.ndarray,
+    alpha: float,
+) -> np.ndarray:
     """Returns relevance scores for each topic for each word.
 
     Parameters
@@ -24,136 +36,101 @@ def word_relevance(components: np.ndarray, alpha: float) -> np.ndarray:
     ndarray of shape (n_topics, n_vocab)
         Topic word relevance matrix.
     """
-    prior = np.sum(components, axis=0)
-    relevance = alpha * np.log(components) + (1 - alpha) * np.log(
-        components / np.sum(components, axis=0)
-    )
+    probability = np.log(topic_term_frequency[topic_id])
+    probability[probability == -np.inf] = np.nan
+    lift = np.log(topic_term_frequency[topic_id] / term_frequency)
+    lift[lift == -np.inf] = np.nan
+    relevance = alpha * probability + (1 - alpha) * lift
     return relevance
 
 
 def calculate_top_words(
-    vectorizer: Any, topic_model: Any, top_n: int, alpha: float
+    topic_id: int,
+    top_n: int,
+    alpha: float,
+    term_frequency: np.ndarray,
+    topic_term_frequency: np.ndarray,
+    vocab: np.ndarray,
+    **kwargs
 ) -> pd.DataFrame:
-    """Arranges top N words of each topic to a DataFrame.
-
-    Parameters
-    ----------
-    vectorizer
-        Sklearn compatible vectorizer.
-    topic_model
-        Sklearn topic model.
-    top_n: int
-        Number of words to include for each topic.
-    alpha: float
-        Weight parameter.
-
-    Returns
-    -------
-    DataFrame
-        Top N words for each topic with importance scores.
-
-    Note
-    ----
-    Importance scores are exclusively calculated from the topic model's
-    'components_' attribute and do not have anything to do with the empirical
-    distribution of words in each topic. This has to be kept in mind, as some models
-    keep counts in their 'components_' attribute (e.g. DMM).
-    Would probably be smart to reconsider this in the future.
-    """
-    relevance = topic_model.components_#word_relevance(topic_model.components_, alpha=alpha)
-    overall_relevance = relevance.sum(axis=0)
-    vocab = vectorizer.get_feature_names_out()
-    n_topics = topic_model.n_components
-    # Wrangling the data into tuple records
-    res = pd.DataFrame(
-        columns=["topic", "word", "importance", "overall_importance"]
+    """Arranges top N words by relevance for the given topic into a DataFrame."""
+    vocab = np.array(vocab)
+    term_frequency = np.array(term_frequency)
+    topic_term_frequency = np.array(topic_term_frequency)
+    relevance = word_relevance(
+        topic_id, term_frequency, topic_term_frequency, alpha=alpha
     )
-    for i_topic in range(n_topics):
-        # Selecting N highest ranking feature indices for this topic
-        highest = np.argpartition(relevance[i_topic], -top_n)[-top_n:]
-        top_words = vocab[highest]
-        top_relevance = relevance[i_topic, highest]
-        top_overall = overall_relevance[highest]
-        topic_res = pd.DataFrame(
-            {
-                "topic": i_topic,
-                "word": top_words,
-                "importance": top_relevance,
-                "overall_importance": top_overall,
-            }
-        )
-        res = pd.concat((res, topic_res), ignore_index=True)
+    highest = np.argpartition(-relevance, top_n)[:top_n]
+    res = pd.DataFrame(
+        {
+            "word": vocab[highest],
+            "importance": topic_term_frequency[topic_id, highest],
+            "overall_importance": term_frequency[highest],
+            "relevance": relevance[highest],
+        }
+    )
     return res
 
 
-# def calculate_topic_document_importance(
-#     vectorizer: Any, topic_model: Any, texts: Iterable[str]
-# ) -> Dict[int, Dict[int, float]]:
-#     """Calculates topic importances for each document.
-#
-#     Parameters
-#     ----------
-#     vectorizer
-#         Sklearn compatible vectorizer.
-#     topic_model
-#         Sklearn topic model.
-#     corpus: DataFrame
-#         Data frame containing the cleaned corpus with ids.
-#
-#     Returns
-#     -------
-#     dict of int to (dict of int to float)
-#        Mapping of document ids to a dictionary of topic ids to importances.
-#     """
-#     pred = topic_model.transform(vectorizer.transform(texts))
-#     lil = spr.lil_matrix(pred)
-#     importance_list = []
-#     for topic_ids, importances in zip(lil.rows, lil.data):
-#         importance_list.append(
-#             {
-#                 topic_id: importance
-#                 for topic_id, importance in zip(topic_ids, importances)
-#             }
-#         )
-#     importance_dict = {
-#         document_id: topics
-#         for document_id, topics in zip(corpus.id_nummer, importance_list)
-#     }
-#     return importance_dict
-
-
-def calculate_topic_data(
-    vectorizer: Any, topic_model: Any, texts: Iterable[str]
-) -> pd.DataFrame:
-    """Calculates topic positions in 2D space as well as topic sizes
-    based on their empirical importance in the corpus.
-
-    Parameters
-    ----------
-    vectorizer
-        Sklearn compatible vectorizer.
-    topic_model
-        Sklearn topic model.
-    texts: iterable of str
-        Texts in the corpus.
-
-    Returns
-    -------
-    DataFrame
-        Data about topic sizes and positions.
-    """
-    # Calculating topic predictions for each document.
-    pred = topic_model.transform(vectorizer.transform(texts))
-    _, n_topics = pred.shape
-    # Calculating topic size from the empirical importance of topics
-    size = pred.sum(axis=0)
+def prepare_pipeline_data(vectorizer: Any, topic_model: Any) -> Dict:
+    """Prepares data about the pipeline for storing
+    in local store and plotting"""
+    n_topics = topic_model.n_components
+    vocab = vectorizer.get_feature_names_out()
     components = topic_model.components_
-    # Calculating topic positions with t-SNE
-    x, y = (
+    # Making sure components are normalized
+    # (remember this is not necessarily the case with some models)
+    components = normalize(components, norm="l1", axis=1)
+    return {
+        "n_topics": n_topics,
+        "vocab": vocab.tolist(),
+        "components": components.tolist(),
+    }
+
+
+def prepare_transformed_data(
+    vectorizer: Any, topic_model: Any, texts: Iterable[str]
+) -> Dict:
+    """Runs pipeline on the given texts and returns the document term matrix
+    and the topic document distribution."""
+    # Computing doc-term matrix for corpus
+    document_term_matrix = vectorizer.transform(texts)
+    # Transforming corpus with topic model for empirical topic data
+    document_topic_matrix = topic_model.transform(document_term_matrix)
+    return {
+        "document_term_matrix": document_term_matrix,
+        "document_topic_matrix": document_topic_matrix,
+    }
+
+
+def prepare_topic_data(
+    document_term_matrix: np.ndarray,
+    document_topic_matrix: np.ndarray,
+    components: np.ndarray,
+    **kwargs
+) -> Dict:
+    """Prepares data about topics for plotting."""
+    components = np.array(components)
+    # Calculating document lengths
+    document_lengths = document_term_matrix.sum(axis=1)
+    # Calculating an estimate of empirical topic frequencies
+    topic_frequency = (document_topic_matrix.T * document_lengths).sum(axis=1)
+    topic_frequency = np.squeeze(np.asarray(topic_frequency))
+    # Calculating empirical estimate of term-topic frequencies
+    # shape: (n_topics, n_vocab)
+    topic_term_frequency = (components.T * topic_frequency).T
+    # Empirical term frequency
+    term_frequency = topic_term_frequency.sum(axis=0)
+    term_frequency = np.squeeze(np.asarray(term_frequency))
+    # Determining topic positions with TSNE
+    topic_pos = (
         TSNE(perplexity=5, init="pca", learning_rate="auto")
         .fit_transform(components)
         .T
     )
-    return pd.DataFrame(
-        {"topic_id": range(n_topics), "x": x, "y": y, "size": size}
-    )
+    return {
+        "topic_frequency": topic_frequency.tolist(),
+        "topic_pos": topic_pos.tolist(),
+        "term_frequency": term_frequency.tolist(),
+        "topic_term_frequency": topic_term_frequency.tolist(),
+    }

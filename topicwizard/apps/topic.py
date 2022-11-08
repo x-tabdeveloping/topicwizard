@@ -11,37 +11,60 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from sklearn.pipeline import Pipeline
 
+from topicwizard.components import mini_switcher, relevance_slider
 from topicwizard.plots.topic import all_topics_plot, topic_plot
+from topicwizard.utils.app import (add_callbacks, get_app, init_callbacks,
+                                   is_notebook)
 from topicwizard.utils.prepare import (calculate_top_words,
                                        prepare_pipeline_data,
                                        prepare_topic_data,
                                        prepare_transformed_data)
+
 warnings.filterwarnings("ignore")
+
+# -----------------------
+# Layout
+# -----------------------
+
+
+def _create_layout(topic_names: Iterable[str], fit_data: Dict):
+    layout = html.Div(
+        id="topic_view",
+        className="""
+            flex-row items-stretch flex flex-1 w-full h-full fixed
+        """,
+        children=[
+            dcc.Store(id="topic_names", data=topic_names),
+            dcc.Store(id="current_topic", data=0),
+            dcc.Store(
+                id="fit_store",
+                data=fit_data,
+            ),
+            dcc.Graph(
+                id="all_topics_plot",
+                className="flex-1 basis-3/5 transition-all m-5 ",
+                responsive=True,
+                config=dict(scrollZoom=True),
+                animate=True,
+            ),
+            dcc.Graph(
+                id="current_topic_plot",
+                className="flex-1 basis-2/5 transition-all m-5 mb-9",
+                responsive=True,
+                animate=True,
+                animation_options=dict(frame=dict(redraw=True)),
+            ),
+            mini_switcher,
+            relevance_slider,
+        ],
+    )
+    return layout
+
 
 # -------------------------------
 # Callbacks
 # -------------------------------
-
-
-callbacks = []
-
-
-def cb(*args, **kwargs) -> Callable:
-    """Decorator to add a function to the global callback list"""
-
-    def _cb(func: Callable):
-        callbacks.append({"function": func, "args": args, "kwargs": kwargs})
-        return func
-
-    return _cb
-
-
-def add_callbacks(app: dash.Dash) -> None:
-    """Adds the list of callbacks to a Dash app."""
-    for callback in callbacks:
-        app.callback(*callback["args"], **callback["kwargs"])(
-            callback["function"]
-        )
+callbacks, cb = init_callbacks()
 
 
 @cb(
@@ -150,84 +173,10 @@ def update_topic_switcher(current_topic: int, topic_names: List[str]):
     return next_disabled, prev_disabled
 
 
-# -----------------------
-# Layout
-# -----------------------
-
-button_class = """
-    text-xl transition-all ease-in 
-    justify-center content-center items-center
-    text-gray-500 hover:text-sky-600
-    flex flex-1
-"""
-
-mini_switcher = html.Div(
-    className="""
-        fixed flex flex-none flex-row justify-center content-middle
-        left-0.5 bottom-10 h-16 w-32 bg-white shadow rounded-full
-        rounded-full ml-5
-    """,
-    children=[
-        html.Button(
-            "<-",
-            id="prev_topic",
-            title="Switch to previous topic",
-            className=button_class,
-        ),
-        html.Button(
-            "->",
-            id="next_topic",
-            title="Switch to next topic",
-            className=button_class,
-        ),
-    ],
-)
-
-relevance_slider = html.Div(
-    className="""
-        fixed flex flex-none flex-row justify-between items-center
-        left-40 bottom-10 h-16 w-96 bg-white shadow rounded-full/
-        rounded-full ml-5 px-6 py-6
-    """,
-    children=[
-        html.Div("λ :", className="text-xl text-gray-500"),
-        dcc.Slider(
-            id="lambda_slider",
-            value=1.0,
-            min=0.0,
-            max=1.0,
-            className="flex-1 mt-5",
-            tooltip={"placement": "bottom", "always_visible": False},
-        ),
-    ],
-)
-
-
-def _create_layout(topic_names: Iterable[str], fit_data: Dict):
-    layout = html.Div(
-        id="topic_view",
-        className="""
-            flex-row items-stretch flex flex-1 w-full h-full fixed
-        """,
-        children=[
-            dcc.Store(id="topic_names", data=topic_names),
-            dcc.Store(id="current_topic", data=0),
-            dcc.Store(
-                id="fit_store",
-                data=fit_data,
-            ),
-            dcc.Graph(id="all_topics_plot", className="flex-1 basis-3/5 "),
-            dcc.Graph(id="current_topic_plot", className="flex-1 basis-2/5 "),
-            mini_switcher,
-            relevance_slider,
-        ],
-    )
-    return layout
-
-
 # ------------------------------------
 # Main
 # ------------------------------------
+
 
 def plot_topics_(
     pipeline: Union[Pipeline, Tuple[Any, Any], None] = None,
@@ -237,10 +186,7 @@ def plot_topics_(
     vectorizer: Optional[Any] = None,
     topic_model: Optional[Any] = None,
     topic_names: Optional[Iterable[str]] = None,
-    port: int = 8050,
-    dash=dash.Dash,
-    use_reloader: bool = False,
-    extra_kwargs: Dict = {},
+    **kwargs,
 ):
     """Interactively plots all topics and related word importances.
 
@@ -295,21 +241,9 @@ def plot_topics_(
         **pipeline_data,
         **topic_data,
     }
-    app = dash(
-        __name__,
-        title="Topic visualization",
-        external_scripts=[
-            {
-                "src": "https://cdn.tailwindcss.com",
-            },
-            {
-                "src": "https://kit.fontawesome.com/9640e5cd85.js",
-                "crossorigin": "anonymous",
-            },
-        ],
-    )
+    app = get_app()
     app.layout = _create_layout(topic_names=topic_names, fit_data=fit_data)
-    add_callbacks(app)
-    app.run_server(
-        debug=True, use_reloader=use_reloader, port=port, **extra_kwargs
-    )
+    add_callbacks(app, callbacks)
+    if is_notebook():
+        kwargs["mode"] = "inline"
+    app.run_server(**kwargs)

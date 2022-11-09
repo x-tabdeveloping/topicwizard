@@ -1,6 +1,6 @@
 """Contains dash app for plotting topics."""
 import warnings
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Any, Dict, Iterable, List, Literal, Optional, Tuple, Union
 
 import dash
 import numpy as np
@@ -12,7 +12,7 @@ from dash.exceptions import PreventUpdate
 from sklearn.pipeline import Pipeline
 
 from topicwizard.components import mini_switcher, relevance_slider
-from topicwizard.plots.topic import all_topics_plot, topic_plot
+from topicwizard.plots.topic import all_topics_plot, topic_plot, wordcloud
 from topicwizard.utils.app import (add_callbacks, get_app, init_callbacks,
                                    is_notebook)
 from topicwizard.utils.prepare import (calculate_top_words,
@@ -27,7 +27,9 @@ warnings.filterwarnings("ignore")
 # -----------------------
 
 
-def _create_layout(topic_names: Iterable[str], fit_data: Dict):
+def _create_layout(topic_names: Iterable[str], fit_data: Dict, mode: str):
+    is_wordcloud = mode == "wordcloud"
+    aspect_ratio = " aspect-square " if is_wordcloud else ""
     layout = html.Div(
         id="topic_view",
         className="""
@@ -40,19 +42,22 @@ def _create_layout(topic_names: Iterable[str], fit_data: Dict):
                 id="fit_store",
                 data=fit_data,
             ),
+            dcc.Store(id="mode", data=mode),
             dcc.Graph(
                 id="all_topics_plot",
-                className="flex-1 basis-3/5 transition-all m-5 ",
+                className="flex-auto basis-3/5 transition-all m-5 ",
                 responsive=True,
                 config=dict(scrollZoom=True),
                 animate=True,
             ),
             dcc.Graph(
                 id="current_topic_plot",
-                className="flex-1 basis-2/5 transition-all m-5 mb-9",
+                className="flex-auto basis-2/5 transition-all m-5 mb-9"
+                + aspect_ratio,
                 responsive=True,
                 animate=True,
                 animation_options=dict(frame=dict(redraw=True)),
+                config=dict(scrollZoom=is_wordcloud),
             ),
             mini_switcher,
             relevance_slider,
@@ -106,19 +111,27 @@ def update_current_topic(
     Input("current_topic", "data"),
     Input("fit_store", "data"),
     Input("lambda_slider", "value"),
+    State("mode", "data"),
 )
 def update_current_topic_plot(
-    current_topic: int, fit_store: Dict, alpha: float
+    current_topic: int, fit_store: Dict, alpha: float, mode: str
 ) -> go.Figure:
     """Updates the plots about the current topic in the topic view
     when the current topic is changed or when a new model is fitted.
     """
     if current_topic is None or fit_store is None:
         raise PreventUpdate()
+    if mode == "bar":
+        top_n = 30
+    else:
+        top_n = 70
     top_words = calculate_top_words(
-        topic_id=current_topic, top_n=30, alpha=alpha, **fit_store
+        topic_id=current_topic, top_n=top_n, alpha=alpha, **fit_store
     )
-    return topic_plot(top_words)
+    if mode == "bar":
+        return topic_plot(top_words)
+    else:
+        return wordcloud(top_words)
 
 
 @cb(
@@ -186,6 +199,7 @@ def plot_topics_(
     vectorizer: Optional[Any] = None,
     topic_model: Optional[Any] = None,
     topic_names: Optional[Iterable[str]] = None,
+    mode: Literal["bar", "wordcloud"],
     **kwargs,
 ):
     """Interactively plots all topics and related word importances.
@@ -208,6 +222,9 @@ def plot_topics_(
         Only needed if pipeline is not specified.
     topic_names: iterable of str, optional
         Names of the topics in the topic model.
+    mode: {'bar', 'wordcloud'}
+        Indicates which type of plot should be used to display most relevant
+        words.
     """
     if pipeline is None:
         if vectorizer is None or topic_model is None:
@@ -242,7 +259,9 @@ def plot_topics_(
         **topic_data,
     }
     app = get_app()
-    app.layout = _create_layout(topic_names=topic_names, fit_data=fit_data)
+    app.layout = _create_layout(
+        topic_names=topic_names, fit_data=fit_data, mode=mode
+    )
     add_callbacks(app, callbacks)
     if is_notebook():
         kwargs["mode"] = "inline"

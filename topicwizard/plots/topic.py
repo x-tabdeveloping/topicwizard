@@ -1,9 +1,11 @@
 """Module containing plotting utilities for topics."""
+import random
 from typing import Dict, List
 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from wordcloud import WordCloud
 
 
 def topic_plot(top_words: pd.DataFrame):
@@ -106,4 +108,40 @@ def all_topics_plot(topic_data: pd.DataFrame, current_topic: int) -> go.Figure:
         zerolinewidth=2,
         zerolinecolor="#d1d5db",
     )
+    return fig
+
+
+def wordcloud(top_words: pd.DataFrame) -> go.Figure:
+    """Plots most relevant words for current topic as a worcloud."""
+    top_dict = {
+        word: importance
+        for word, importance in zip(top_words.word, top_words.importance)
+    }
+    cloud = WordCloud(
+        width=800,
+        height=800,
+        background_color="white",
+        colormap="twilight",
+        scale=4,
+    ).generate_from_frequencies(top_dict)
+    image = cloud.to_image()
+    fig = px.imshow(image)
+    fig.update_layout(
+        dragmode="pan",
+        plot_bgcolor="white",
+        margin=dict(l=0, r=0, b=0, t=0, pad=0),
+    )
+    fig.update_yaxes(
+        showticklabels=False,
+        gridcolor="white",
+        linecolor="white",
+        zerolinecolor="white",
+    )
+    fig.update_xaxes(
+        showticklabels=False,
+        gridcolor="white",
+        linecolor="white",
+        zerolinecolor="white",
+    )
+    fig.update_traces(hovertemplate="", hoverinfo="none")
     return fig

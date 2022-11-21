@@ -11,7 +11,7 @@ button_class = """
 mini_switcher = html.Div(
     className="""
         fixed flex flex-none flex-row justify-center content-middle
-        left-0.5 bottom-10 h-16 w-32 bg-white shadow rounded-full
+        left-0.5 bottom-5 h-16 w-32 bg-white shadow rounded-full
         rounded-full ml-5
     """,
     children=[

@@ -13,12 +13,13 @@ from sklearn.pipeline import Pipeline
 
 from topicwizard.components import mini_switcher, relevance_slider
 from topicwizard.plots.topic import all_topics_plot, topic_plot, wordcloud
-from topicwizard.utils.app import (add_callbacks, get_app, init_callbacks,
-                                   is_notebook)
-from topicwizard.utils.prepare import (calculate_top_words,
-                                       prepare_pipeline_data,
-                                       prepare_topic_data,
-                                       prepare_transformed_data)
+from topicwizard.utils.app import add_callbacks, get_app, init_callbacks, is_notebook
+from topicwizard.utils.prepare import (
+    calculate_top_words,
+    prepare_pipeline_data,
+    prepare_topic_data,
+    prepare_transformed_data,
+)
 
 warnings.filterwarnings("ignore")
 
@@ -30,10 +31,12 @@ warnings.filterwarnings("ignore")
 def _create_layout(topic_names: Iterable[str], fit_data: Dict, mode: str):
     is_wordcloud = mode == "wordcloud"
     aspect_ratio = " aspect-square " if is_wordcloud else ""
+    item_style = " items-center" if is_wordcloud else "items_stretch"
     layout = html.Div(
         id="topic_view",
         className="""
-            flex-row items-stretch flex flex-1 w-full h-full fixed
+            flex-row items-stretch flex flex-1 w-full h-full fixed pb-24
+            space-x-2
         """,
         children=[
             dcc.Store(id="topic_names", data=topic_names),
@@ -45,19 +48,30 @@ def _create_layout(topic_names: Iterable[str], fit_data: Dict, mode: str):
             dcc.Store(id="mode", data=mode),
             dcc.Graph(
                 id="all_topics_plot",
-                className="flex-auto basis-3/5 transition-all m-5 ",
+                className="flex-1 basis-1/2 transition-all ",
                 responsive=True,
                 config=dict(scrollZoom=True),
                 animate=True,
             ),
-            dcc.Graph(
-                id="current_topic_plot",
-                className="flex-auto basis-2/5 transition-all m-5 mb-9"
-                + aspect_ratio,
-                responsive=True,
-                animate=True,
-                animation_options=dict(frame=dict(redraw=True)),
-                config=dict(scrollZoom=is_wordcloud),
+            html.Div(
+                className="""
+                    flex flex-1 basis-1/2 transition-all
+                    justify-center 
+                """
+                + item_style,
+                children=[
+                    dcc.Graph(
+                        id="current_topic_plot",
+                        className="""
+                            flex-1
+                        """
+                        + aspect_ratio,
+                        responsive=True,
+                        animate=True,
+                        animation_options=dict(frame=dict(redraw=True)),
+                        config=dict(scrollZoom=is_wordcloud),
+                    ),
+                ],
             ),
             mini_switcher,
             relevance_slider,
@@ -234,8 +248,7 @@ def plot_topics_(
             )
     if texts is None and corpus is not None:
         raise TypeError(
-            "You have to specify which column in the corpus"
-            "should be used as texts."
+            "You have to specify which column in the corpus" "should be used as texts."
         )
     if corpus is None and texts is None:
         raise TypeError("Either corpus or texts has to be specified.")
@@ -259,9 +272,7 @@ def plot_topics_(
         **topic_data,
     }
     app = get_app()
-    app.layout = _create_layout(
-        topic_names=topic_names, fit_data=fit_data, mode=mode
-    )
+    app.layout = _create_layout(topic_names=topic_names, fit_data=fit_data, mode=mode)
     add_callbacks(app, callbacks)
     if is_notebook():
         kwargs["mode"] = "inline"

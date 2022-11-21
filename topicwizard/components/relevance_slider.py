@@ -6,7 +6,7 @@ from dash import html, dcc
 relevance_slider = html.Div(
     className="""
         fixed flex flex-none flex-row justify-between items-center
-        left-40 bottom-10 h-16 w-96 bg-white shadow rounded-full/
+        left-40 bottom-5 h-16 w-96 bg-white shadow
         rounded-full ml-5 px-6 py-6
     """,
     children=[

@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 
 from topicwizard.apps.topic import plot_topics_
+from topicwizard.apps.document import plot_documents_
 from topicwizard.utils.app import is_notebook
 
 port = 8050
@@ -54,6 +55,7 @@ def plot_topics(
     )
     port += 1
 
+
 def plot_wordclouds(
     pipeline: Union[Pipeline, Tuple[Any, Any], None] = None,
     corpus: Optional[pd.DataFrame] = None,
@@ -95,6 +97,32 @@ def plot_wordclouds(
         topic_names=topic_names,
         port=port,
         mode="wordcloud",
+        **kwargs,
+    )
+    port += 1
+
+
+def plot_documents(
+    pipeline: Union[Pipeline, Tuple[Any, Any], None] = None,
+    corpus: Optional[pd.DataFrame] = None,
+    texts: Optional[Union[str, Iterable[str]]] = None,
+    names: Optional[Union[str, Iterable[str]]] = None,
+    *,
+    vectorizer: Optional[Any] = None,
+    topic_model: Optional[Any] = None,
+    topic_names: Optional[Iterable[str]] = None,
+    **kwargs,
+):
+    global port
+    plot_documents_(
+        pipeline=pipeline,
+        corpus=corpus,
+        texts=texts,
+        names=names,
+        vectorizer=vectorizer,
+        topic_model=topic_model,
+        topic_names=topic_names,
+        port=port,
         **kwargs,
     )
     port += 1

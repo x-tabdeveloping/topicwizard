@@ -5,6 +5,7 @@ from typing import Dict, List
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from PIL import Image
 from wordcloud import WordCloud
 
 
@@ -32,20 +33,32 @@ def topic_plot(top_words: pd.DataFrame):
     fig = go.Figure(data=[overall_word_trace, topic_word_trace])
     fig.update_layout(
         barmode="overlay",
-        plot_bgcolor="#f8fafc",
+        plot_bgcolor="white",
         hovermode=False,
         uniformtext=dict(
             minsize=10,
             mode="show",
         ),
-        legend=dict(yanchor="bottom", y=0.01, xanchor="right", x=0.99),
-        margin=dict(l=0, r=0, b=0, t=0, pad=0),
+        legend=dict(
+            yanchor="bottom",
+            y=0.01,
+            xanchor="right",
+            x=0.99,
+            bgcolor="rgba(255,255,255,0.6)",
+        ),
+        margin=dict(l=0, r=0, b=18, t=0, pad=0),
     )
     fig.update_xaxes(
         range=[0, top_words.overall_importance.max() * 1.3],
         showticklabels=False,
     )
     fig.update_yaxes(ticks="", showticklabels=False)
+    fig.update_xaxes(
+        gridcolor="#e5e7eb",
+    )
+    fig.update_yaxes(
+        gridcolor="#e5e7eb",
+    )
     return fig
 
 
@@ -125,6 +138,7 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()
+    image = image.resize((1600, 1600), resample=Image.ANTIALIAS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

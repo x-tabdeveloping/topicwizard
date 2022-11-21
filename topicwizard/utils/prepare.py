@@ -4,10 +4,12 @@ from typing import Any, Dict, Iterable, List
 import numpy as np
 import pandas as pd
 import scipy.sparse as spr
-from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD, PCA
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.manifold import TSNE
-from sklearn.preprocessing import normalize
+import umap
+from sklearn.preprocessing import normalize, StandardScaler
 
 
 def min_max_norm(a) -> np.ndarray:
@@ -51,7 +53,7 @@ def calculate_top_words(
     term_frequency: np.ndarray,
     topic_term_frequency: np.ndarray,
     vocab: np.ndarray,
-    **kwargs
+    **kwargs,
 ) -> pd.DataFrame:
     """Arranges top N words by relevance for the given topic into a DataFrame."""
     vocab = np.array(vocab)
@@ -107,7 +109,7 @@ def prepare_topic_data(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     components: np.ndarray,
-    **kwargs
+    **kwargs,
 ) -> Dict:
     """Prepares data about topics for plotting."""
     components = np.array(components)
@@ -124,13 +126,67 @@ def prepare_topic_data(
     term_frequency = np.squeeze(np.asarray(term_frequency))
     # Determining topic positions with TSNE
     topic_pos = (
-        TSNE(perplexity=5, init="pca", learning_rate="auto")
-        .fit_transform(components)
-        .T
+        TSNE(perplexity=5, init="pca", learning_rate="auto").fit_transform(components).T
     )
     return {
         "topic_frequency": topic_frequency.tolist(),
         "topic_pos": topic_pos.tolist(),
         "term_frequency": term_frequency.tolist(),
         "topic_term_frequency": topic_term_frequency.tolist(),
+    }
+
+
+def topic_document_importance(
+    document_topic_matrix: np.ndarray,
+) -> Dict:
+    """Calculates topic importances for each document."""
+    coo = spr.coo_array(document_topic_matrix)
+    topic_doc_imp = pd.DataFrame(
+        dict(doc_id=coo.row, topic_id=coo.col, importance=coo.data)
+    )
+    return topic_doc_imp.to_dict()
+
+
+def prepare_document_data(
+    corpus: pd.DataFrame,
+    document_term_matrix: np.ndarray,
+    document_topic_matrix: np.ndarray,
+    **kwargs,
+) -> Dict:
+    """Prepares document data for plotting"""
+    dominant_topic = np.argmax(document_topic_matrix, axis=1)
+    # Setting up dimensionality reduction pipeline
+    dim_red_pipeline = Pipeline(
+        [
+            ("SVD", TruncatedSVD(20)),
+            ("Scaler", StandardScaler()),
+            # (
+            #     "t-SNE",
+            #     TSNE(2, perplexity=10, n_iter=300, init="pca", learning_rate="auto"),
+            # ),
+            (
+                "UMAP",
+                umap.UMAP(
+                    n_components=2,
+                    n_epochs=200,
+                    n_neighbors=50,
+                    # metric="cosine",
+                    min_dist=0.01,
+                ),
+            ),
+            # ("PCA", PCA(n_components=2)),
+        ]
+    )
+    # Calculating positions in 2D space
+    x, y = dim_red_pipeline.fit_transform(document_term_matrix).T
+    documents = corpus.assign(
+        x=x,
+        y=y,
+        doc_id=np.arange(len(corpus.index)),
+        topic_id=dominant_topic,
+    )
+    importance_sparse = topic_document_importance(document_topic_matrix)
+    return {
+        "document_data": documents.to_dict(),
+        "document_topic_importance": importance_sparse,
     }

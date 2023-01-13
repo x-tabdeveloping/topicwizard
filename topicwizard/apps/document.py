@@ -10,7 +10,12 @@ from dash.exceptions import PreventUpdate
 from sklearn.pipeline import Pipeline
 import plotly.graph_objects as go
 from topicwizard.components.document_inspector import document_inspector
-from topicwizard.utils.app import add_callbacks, get_app, init_callbacks, is_notebook
+from topicwizard.utils.app import (
+    add_callbacks,
+    get_app,
+    init_callbacks,
+    is_notebook,
+)
 from topicwizard.plots.document import documents_plot, document_topic_plot
 from topicwizard.utils.prepare import (
     calculate_top_words,
@@ -68,7 +73,9 @@ def update_document_selector(fit_store: Dict) -> List[Dict]:
     document_data = pd.DataFrame(fit_store["document_data"])
     return [
         {"label": doc_name, "value": doc_id}
-        for doc_id, doc_name in zip(document_data["doc_id"], document_data["name"])
+        for doc_id, doc_name in zip(
+            document_data["doc_id"], document_data["name"]
+        )
     ]
 
 
@@ -145,6 +152,7 @@ def plot_documents_(
     topic_names: Optional[Iterable[str]] = None,
     **kwargs,
 ):
+    # Checking if parameters are valid
     if pipeline is None:
         if vectorizer is None or topic_model is None:
             raise TypeError(
@@ -153,10 +161,12 @@ def plot_documents_(
             )
     if texts is None and corpus is not None:
         raise TypeError(
-            "You have to specify which column in the corpus" "should be used as texts."
+            "You have to specify which column in the corpus"
+            "should be used as texts."
         )
     if corpus is None and texts is None:
         raise TypeError("Either corpus or texts has to be specified.")
+    # Unpacking parameters
     if isinstance(pipeline, Pipeline):
         (_, vectorizer), (_, topic_model) = pipeline.steps
     if isinstance(pipeline, tuple):
@@ -170,6 +180,7 @@ def plot_documents_(
     if names is None:
         assert texts is not None
         names = [f"Document {i_doc}" for i_doc, _ in enumerate(texts)]
+    # If they didn't supply a corpus variable we create one
     if corpus is None:
         corpus = pd.DataFrame(
             dict(
@@ -179,12 +190,15 @@ def plot_documents_(
         )
     else:
         corpus = corpus.assign(text=texts, name=names)
+    # These are mainly here to satisfy the type checker
     assert topic_model is not None
     assert vectorizer is not None
     assert texts is not None
     n_topics = topic_model.n_components
+    # Naming topics if they didn't supply topic names
     if topic_names is None:
         topic_names = [f"Topic {i_topic}" for i_topic in range(n_topics)]
+    # Tranformations
     pipeline_data = prepare_pipeline_data(vectorizer, topic_model)
     transformed_data = prepare_transformed_data(vectorizer, topic_model, texts)
     topic_data = prepare_topic_data(**transformed_data, **pipeline_data)
@@ -196,10 +210,10 @@ def plot_documents_(
         **topic_data,
         **document_data,
     }
+    # Creating application
     app = get_app()
     app.layout = _create_layout(topic_names=topic_names, fit_data=fit_data)
     add_callbacks(app, callbacks)
     if is_notebook():
         kwargs["mode"] = "inline"
     app.run_server(**kwargs)
-    pass

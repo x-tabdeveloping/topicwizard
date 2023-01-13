@@ -70,6 +70,7 @@ def documents_plot(
     """
     fig = px.scatter(
         document_data,
+        render_mode="webgl",
         x="x",
         y="y",
         color="topic_name",

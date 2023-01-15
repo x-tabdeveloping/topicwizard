@@ -86,6 +86,18 @@ def create_blueprint(
                 "topic_names", data=[f"Topic {i}" for i in range(n_topics)]
             ),
             dcc.Store("current_topic", data=0),
+            dmc.Grid(
+                [
+                    dmc.Col(topic_switcher.layout, span="content"),
+                    dmc.Col(topic_namer.layout, span=4),
+                    dmc.Col(relevance_slider.layout, span=4),
+                ],
+                columns=10,
+                align="center",
+                gutter="md",
+                justify="space-between",
+                mr=5,
+            ),
             html.Div(
                 [
                     intertopic_map.layout,
@@ -99,23 +111,12 @@ def create_blueprint(
                 ],
                 className="flex-1 flex flex-row items-stretch p-3",
             ),
-            dmc.Grid(
-                [
-                    dmc.Col(topic_switcher.layout, span="content"),
-                    dmc.Col(topic_namer.layout, span=4),
-                    dmc.Col(relevance_slider.layout, span=4),
-                ],
-                columns=10,
-                align="center",
-                gutter="md",
-                justify="space-between",
-                mr=5,
-            ),
         ],
         className="""
-        fixed w-full h-full flex-col flex
+        flex flex-1 flex-col flex
         p-3
         """,
+        id="topics_container",
     )
 
     # --------[ Registering callbacks ]--------

@@ -10,10 +10,10 @@ topic_namer.layout = dmc.TextInput(
     id="topic_namer",
     label="",
     placeholder="Rename topic...",
-    size="lg",
+    size="md",
     radius="xl",
     debounce=500,
-    icon=DashIconify(icon="clarity:hashtag-solid", width=25),
+    icon=DashIconify(icon="clarity:hashtag-solid", width=15),
 )
 
 topic_namer.clientside_callback(

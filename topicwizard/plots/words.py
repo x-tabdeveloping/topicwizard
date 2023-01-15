@@ -16,7 +16,8 @@ def word_map(
     word_trace = go.Scatter(
         x=x,
         y=y,
-        mode="markers",
+        mode="text+markers",
+        text=[""] * n_words,
         marker=dict(
             size=word_frequencies,
             sizemode="area",
@@ -62,54 +63,64 @@ def word_map(
     return fig
 
 
-def all_words_plot(words: pd.DataFrame) -> go.Figure:
-    """Plots all word on a scatter plot based on their reduced embeddings"""
-    fig = px.scatter(
-        words,
-        x="x",
-        y="y",
-        size="frequency",
-        color="topic",
-        size_max=80,
-        hover_data=dict(word=True, x=False, y=False),
+def word_topics_plot(top_topics: pd.DataFrame) -> go.Figure:
+    """Plots word importances for currently selected topic."""
+    top_topics = top_topics.sort_values("importance", ascending=True)
+    topic_word_trace = go.Bar(
+        name="Importance for selected words",
+        y=top_topics.topic,
+        x=top_topics.importance,
+        orientation="h",
+        base=dict(x=[0.5, 1]),
+        marker_color="#15AABF",
     )
+    associated_word_trace = go.Bar(
+        name="Importance with associated words",
+        y=top_topics.topic,
+        x=top_topics.associated_importance,
+        orientation="h",
+        base=dict(x=[0.5, 1]),
+        marker_color="#b8eadb",
+        textposition="outside",
+        texttemplate=top_topics.topic,
+    )
+    # overall_word_trace = go.Bar(
+    # name="Overall topic importance",
+    # y=top_topics.topic,
+    # x=top_topics.overall_importance,
+    # orientation="h",
+    # base=dict(x=[0.5, 1]),
+    # marker_color="rgb(168,162,158)",
+    # textposition="outside",
+    # texttemplate=top_topics.topic,
+    # )
+    fig = go.Figure(data=[associated_word_trace, topic_word_trace])
     fig.update_layout(
-        clickmode="event",
-        modebar_remove=["lasso2d", "select2d"],
-        hovermode="closest",
+        barmode="overlay",
         plot_bgcolor="white",
-        dragmode="pan",
-        margin=dict(l=0, r=0, b=0, t=0, pad=0),
+        hovermode=False,
+        uniformtext=dict(
+            minsize=10,
+            mode="show",
+        ),
+        legend=dict(
+            yanchor="bottom",
+            y=0.01,
+            xanchor="right",
+            x=0.99,
+            bgcolor="rgba(255,255,255,0.6)",
+        ),
+        margin=dict(l=0, r=0, b=18, t=0, pad=0),
     )
     fig.update_xaxes(
+        range=[0, top_topics.associated_importance.max() * 1.3],
         showticklabels=False,
-        title="",
+    )
+    fig.update_yaxes(ticks="", showticklabels=False)
+    fig.update_xaxes(
         gridcolor="#e5e7eb",
-        linecolor="#f9fafb",
-        linewidth=6,
-        mirror=True,
-        zerolinewidth=2,
-        zerolinecolor="#d1d5db",
     )
     fig.update_yaxes(
-        showticklabels=False,
-        title="",
         gridcolor="#e5e7eb",
-        linecolor="#f9fafb",
-        mirror=True,
-        linewidth=6,
-        zerolinewidth=2,
-        zerolinecolor="#d1d5db",
     )
     return fig
-
-
-# def plot_semantic_kernel(words: pd.DataFrame, word_id: int) -> go.Figure:
-# """Plots semantic kernel for the given selected word on a network graph"""
-# nodes, edges = semantic_kernel(words, word_id=word_id)
-# edge_x, edge_y = get_edge_positions(edges, x=nodes.x, y=nodes.y)
-# node_trace = go.Scatter(
-# x=nodes.x, y=nodes.y, mode="markers", text=nodes.word
-# )
-## TODO: finish this
-# pass

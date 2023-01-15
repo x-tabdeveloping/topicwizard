@@ -1,7 +1,4 @@
 """Module containing plotting utilities for topics."""
-import random
-from typing import Dict, List
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go

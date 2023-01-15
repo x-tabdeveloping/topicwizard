@@ -3,8 +3,8 @@ from typing import Any, Iterable, Optional, Tuple, Union
 import pandas as pd
 from sklearn.pipeline import Pipeline
 
-from topicwizard.apps.topic import plot_topics_
-from topicwizard.apps.document import plot_documents_
+from topicwizard.blueprints.topic import plot_topics_
+from topicwizard.blueprints.documents import plot_documents_
 from topicwizard.utils.app import is_notebook
 
 port = 8050

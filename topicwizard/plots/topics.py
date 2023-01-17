@@ -1,4 +1,5 @@
 """Module containing plotting utilities for topics."""
+from typing import List
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -8,10 +9,12 @@ import numpy as np
 
 
 def intertopic_map(
-    x: np.ndarray, y: np.ndarray, topic_importances: np.ndarray
+    x: np.ndarray,
+    y: np.ndarray,
+    topic_importances: np.ndarray,
+    topic_names: List[str],
 ) -> go.Figure:
     n_topics = x.shape[0]
-    topic_names = [f"Topic {i}" for i in range(n_topics)]
     topic_trace = go.Scatter(
         x=x,
         y=y,

@@ -1,20 +1,14 @@
-import functools
-from typing import Tuple, List, Any
+from typing import List, Any
 
 import dash_mantine_components as dmc
 import numpy as np
-import plotly.graph_objects as go
 from dash_extensions.enrich import (
     DashBlueprint,
-    Input,
-    Output,
-    State,
     dcc,
     html,
     html,
 )
 
-import topicwizard.plots.documents as plots
 import topicwizard.prepare.documents as prepare
 from topicwizard.components.documents.document_map import create_document_map
 from topicwizard.components.documents.window_slider import create_window_slider
@@ -37,6 +31,7 @@ def create_blueprint(
     corpus: List[str],
     vectorizer: Any,
     topic_model: Any,
+    topic_names: List[str],
 ) -> DashBlueprint:
 
     # --------[ Preparing data ]--------

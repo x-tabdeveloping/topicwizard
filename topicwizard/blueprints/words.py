@@ -1,18 +1,13 @@
-from typing import Tuple, List, Any
+from typing import List, Any
 import numpy as np
 from dash_extensions.enrich import (
     DashBlueprint,
     dcc,
     html,
-    Output,
-    Input,
-    State,
 )
 import dash_mantine_components as dmc
-import plotly.graph_objects as go
 
 import topicwizard.prepare.words as prepare
-import topicwizard.plots.words as plots
 from topicwizard.components.words.word_map import create_word_map
 from topicwizard.components.words.word_selector import create_word_selector
 from topicwizard.components.words.word_barplot import create_word_barplot
@@ -30,6 +25,7 @@ def create_blueprint(
     corpus: List[str],
     vectorizer: Any,
     topic_model: Any,
+    topic_names: List[str],
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     word_distances = prepare.calculate_word_distances(topic_term_matrix)

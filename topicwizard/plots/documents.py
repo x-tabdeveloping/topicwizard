@@ -129,7 +129,6 @@ def document_timeline(
         mirror=True,
         zerolinewidth=2,
         zerolinecolor="#d1d5db",
-        rangeslider_visible=True,
     )
     fig.update_yaxes(
         title="",

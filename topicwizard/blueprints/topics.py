@@ -59,10 +59,10 @@ def create_blueprint(
     corpus: List[str],
     vectorizer: Any,
     topic_model: Any,
+    topic_names: List[str],
 ) -> DashBlueprint:
 
     # --------[ Preparing data ]--------
-    n_topics = topic_term_matrix.shape[0]
     topic_positions = prepare.topic_positions(topic_term_matrix)
     (
         topic_importances,
@@ -73,7 +73,9 @@ def create_blueprint(
     )
 
     # --------[ Collecting blueprints ]--------
-    intertopic_map = create_intertopic_map(topic_positions, topic_importances)
+    intertopic_map = create_intertopic_map(
+        topic_positions, topic_importances, topic_names
+    )
     blueprints = [
         intertopic_map,
         relevance_slider,
@@ -89,7 +91,8 @@ def create_blueprint(
     app_blueprint.layout = html.Div(
         [
             dcc.Store(
-                "topic_names", data=[f"Topic {i}" for i in range(n_topics)]
+                "topic_names",
+                data=topic_names,
             ),
             dcc.Store("current_topic", data=0),
             dmc.Grid(

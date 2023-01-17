@@ -3,14 +3,11 @@ import numpy as np
 
 from dash_extensions.enrich import (
     DashBlueprint,
-    dcc,
     html,
     Output,
     Input,
-    State,
 )
 import dash_mantine_components as dmc
-from topicwizard.blueprints.template import prepare_blueprint
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
 import topicwizard.blueprints.documents as documents
@@ -25,6 +22,7 @@ def create_blueprint(
     corpus: List[str],
     vectorizer: Any,
     topic_model: Any,
+    topic_names: List[str],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = topics.create_blueprint(
@@ -36,6 +34,7 @@ def create_blueprint(
         corpus=corpus,
         vectorizer=vectorizer,
         topic_model=topic_model,
+        topic_names=topic_names,
     )
     documents_blueprint = documents.create_blueprint(
         vocab=vocab,
@@ -46,6 +45,7 @@ def create_blueprint(
         corpus=corpus,
         vectorizer=vectorizer,
         topic_model=topic_model,
+        topic_names=topic_names,
     )
     words_blueprint = words.create_blueprint(
         vocab=vocab,
@@ -56,6 +56,7 @@ def create_blueprint(
         corpus=corpus,
         vectorizer=vectorizer,
         topic_model=topic_model,
+        topic_names=topic_names,
     )
     blueprints = [
         topic_blueprint,

@@ -1,21 +1,17 @@
-from typing import Tuple
-
-import numpy as np
+from typing import List
 
 from dash_extensions.enrich import (
     DashBlueprint,
-    dcc,
     Input,
     Output,
     State,
 )
 import dash_mantine_components as dmc
-import topicwizard.plots.documents as plots
 
 
 def create_document_selector(
-    document_names: np.ndarray,
-):
+    document_names: List[str],
+) -> DashBlueprint:
     docs = [
         {"value": index, "label": name}
         for index, name in enumerate(document_names)

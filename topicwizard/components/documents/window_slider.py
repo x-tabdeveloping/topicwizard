@@ -1,9 +1,7 @@
 """Window slider component."""
-from typing import List
 
-import numpy as np
 import dash_mantine_components as dmc
-from dash_extensions.enrich import DashBlueprint, Output, Input
+from dash_extensions.enrich import DashBlueprint
 
 
 def create_window_slider() -> DashBlueprint:

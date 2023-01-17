@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 
@@ -15,6 +15,7 @@ import topicwizard.plots.topics as plots
 def create_intertopic_map(
     topic_positions: Tuple[np.ndarray, np.ndarray],
     topic_importances: np.ndarray,
+    topic_names: List[str],
 ) -> DashBlueprint:
     x, y = topic_positions
 
@@ -26,7 +27,10 @@ def create_intertopic_map(
         config=dict(scrollZoom=True),
         animate=True,
         figure=plots.intertopic_map(
-            x=x, y=y, topic_importances=topic_importances
+            x=x,
+            y=y,
+            topic_importances=topic_importances,
+            topic_names=topic_names,
         ),
         className="flex-1",
     )

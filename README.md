@@ -24,7 +24,7 @@ Install from PyPI:
 pip install topic-wizard
 ```
 
-## Usage
+## Usage ([documentation](https://x-tabdeveloping.github.io/topic-wizard/))
 
 ### Step 1:
 

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "topic-wizard"
+version = "0.1.0"
+description = "Pretty and opinionated topic model visualization in Python."
+authors = ["Márton Kardos <power.up1163@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "topicwizard"}]
+
+[tool.poetry.dependencies]
+python = "^3.10.8"
+dash = "^2.7.1"
+dash-extensions = "^0.1.10"
+dash-mantine-components = "^0.11.1"
+dash-iconify = "^0.1.2"
+joblib = "^1.2.0"
+scikit-learn = "^1.2.0"
+numpy = "^1.24.1"
+pandas = "^1.5.2"
+wordcloud = "^1.8.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -68,8 +68,9 @@ def get_dash_app(
         topic_names=topic_names,
     )
     app = Dash(
+        __name__,
         blueprint=blueprint,
-        title="Topic visualization",
+        title="topicwizard",
         external_scripts=[
             {
                 "src": "https://cdn.tailwindcss.com",

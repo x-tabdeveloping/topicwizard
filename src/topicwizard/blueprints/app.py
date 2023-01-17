@@ -1,16 +1,23 @@
-from typing import List, Any
-import numpy as np
+from typing import Any, Dict, List
 
+import dash_mantine_components as dmc
+import joblib
+from io import BytesIO
+import numpy as np
 from dash_extensions.enrich import (
     DashBlueprint,
-    html,
-    Output,
+    exceptions,
     Input,
+    Output,
+    State,
+    dcc,
+    html,
 )
-import dash_mantine_components as dmc
+from dash_iconify import DashIconify
+
+import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
-import topicwizard.blueprints.documents as documents
 
 
 def create_blueprint(
@@ -69,18 +76,34 @@ def create_blueprint(
 
     app_blueprint.layout = html.Div(
         [
+            dcc.Download("download_data"),
             topic_blueprint.layout,
             words_blueprint.layout,
             documents_blueprint.layout,
             html.Div(
-                dmc.SegmentedControl(
-                    id="page_picker",
-                    data=["Topics", "Words", "Documents"],
-                    value="Topics",
-                    color="orange",
-                    size="md",
-                    radius="xl",
-                ),
+                [
+                    dmc.SegmentedControl(
+                        id="page_picker",
+                        data=["Topics", "Words", "Documents"],
+                        value="Topics",
+                        color="orange",
+                        size="md",
+                        radius="xl",
+                    ),
+                    html.Div(className="w-5"),
+                    dmc.ActionIcon(
+                        DashIconify(
+                            icon="material-symbols:cloud-download-outline",
+                            width=25,
+                        ),
+                        id="download_button",
+                        size="xl",
+                        radius="md",
+                        n_clicks=0,
+                        color="blue",
+                        variant="light",
+                    ),
+                ],
                 className="""
                     flex-row p-3
                     flex-none justify-center flex
@@ -95,6 +118,27 @@ def create_blueprint(
     # --------[ Registering callbacks ]--------
     for blueprint in blueprints:
         blueprint.register_callbacks(app_blueprint)
+
+    @app_blueprint.callback(
+        Output("download_data", "data"),
+        Input("download_button", "n_clicks"),
+        State("topic_names", "data"),
+    )
+    def download_data(n_clicks: int, topic_names: List[str]) -> Dict:
+        if not n_clicks:
+            raise exceptions.PreventUpdate
+        data = dict(
+            document_names=document_names,
+            corpus=corpus,
+            vectorizer=vectorizer,
+            topic_model=topic_model,
+            topic_names=topic_names,
+        )
+
+        def write_joblib(bytes_io: BytesIO):
+            joblib.dump(data, filename=bytes_io)
+
+        return dcc.send_bytes(write_joblib, "topic_data.joblib")
 
     app_blueprint.clientside_callback(
         """

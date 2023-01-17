@@ -129,7 +129,7 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
         width=800,
         height=800,
         background_color="white",
-        colormap="Oranges",
+        colormap="copper",
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()

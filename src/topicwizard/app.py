@@ -2,6 +2,7 @@ from typing import Any, Iterable, List, Optional
 import sys
 import subprocess
 import os
+import joblib
 
 from dash_extensions.enrich import Dash, DashBlueprint
 from sklearn.pipeline import Pipeline
@@ -82,6 +83,23 @@ def get_dash_app(
     return app
 
 
+def load_app(filename: str) -> Dash:
+    """Loads and prepares saved app from disk.
+
+    Parameters
+    ----------
+    filename: str
+        Path to the file where the data is stored.
+
+    Returns
+    -------
+    Dash
+        Dash application.
+    """
+    data = joblib.load(filename)
+    return get_dash_app(**data)
+
+
 def open_url(url: str) -> None:
     if sys.platform == "win32":
         os.startfile(url)
@@ -92,6 +110,22 @@ def open_url(url: str) -> None:
             subprocess.Popen(["xdg-open", url])
         except OSError:
             print("Please open a browser on: " + url)
+
+
+def load(filename: str, port: int = 8050) -> None:
+    """Visualizes topic model data loaded from disk.
+
+    Parameters
+    ----------
+    filename: str
+        Path to the file where the data is stored.
+    port: int
+        Port where the application should run in localhost. Defaults to 8050.
+    """
+    print("Preparing data")
+    app = load_app(filename)
+    open_url(f"http://127.0.0.1:{port}/")
+    app.run_server(port=port, debug=False)
 
 
 def visualize(
@@ -133,6 +167,8 @@ def visualize(
             pipeline is not None
         ), "Either pipeline or vectorizer and topic model have to be provided"
         (_, vectorizer), (_, topic_model) = pipeline.steps
+
+    print("Preprocessing")
     app = get_dash_app(
         vectorizer=vectorizer,
         topic_model=topic_model,

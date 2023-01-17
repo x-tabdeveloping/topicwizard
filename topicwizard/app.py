@@ -1,5 +1,7 @@
 from typing import Any, Iterable, List, Optional
-import webbrowser
+import sys
+import subprocess
+import os
 
 from dash_extensions.enrich import Dash, DashBlueprint
 from sklearn.pipeline import Pipeline
@@ -80,6 +82,18 @@ def get_dash_app(
     return app
 
 
+def open_url(url: str) -> None:
+    if sys.platform == "win32":
+        os.startfile(url)
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", url])
+    else:
+        try:
+            subprocess.Popen(["xdg-open", url])
+        except OSError:
+            print("Please open a browser on: " + url)
+
+
 def visualize(
     corpus: Iterable[str],
     vectorizer: Optional[Any] = None,
@@ -118,7 +132,7 @@ def visualize(
         assert (
             pipeline is not None
         ), "Either pipeline or vectorizer and topic model have to be provided"
-        (vectorizer, _), (topic_model, _) = pipeline.steps
+        (_, vectorizer), (_, topic_model) = pipeline.steps
     app = get_dash_app(
         vectorizer=vectorizer,
         topic_model=topic_model,
@@ -126,5 +140,5 @@ def visualize(
         document_names=document_names,
         topic_names=topic_names,
     )
-    webbrowser.open(f"localhost:{port}", new=0, autoraise=True)
+    open_url(f"http://127.0.0.1:{port}/")
     app.run_server(port=port, debug=False)

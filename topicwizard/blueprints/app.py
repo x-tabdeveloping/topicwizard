@@ -1,3 +1,4 @@
+from typing import List, Any
 import numpy as np
 
 from dash_extensions.enrich import (
@@ -12,6 +13,7 @@ import dash_mantine_components as dmc
 from topicwizard.blueprints.template import prepare_blueprint
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
+import topicwizard.blueprints.documents as documents
 
 
 def create_blueprint(
@@ -19,17 +21,46 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
+    document_names: List[str],
+    corpus: List[str],
+    vectorizer: Any,
+    topic_model: Any,
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = topics.create_blueprint(
-        vocab, document_term_matrix, document_topic_matrix, topic_term_matrix
+        vocab=vocab,
+        document_term_matrix=document_term_matrix,
+        document_topic_matrix=document_topic_matrix,
+        topic_term_matrix=topic_term_matrix,
+        document_names=document_names,
+        corpus=corpus,
+        vectorizer=vectorizer,
+        topic_model=topic_model,
+    )
+    documents_blueprint = documents.create_blueprint(
+        vocab=vocab,
+        document_term_matrix=document_term_matrix,
+        document_topic_matrix=document_topic_matrix,
+        topic_term_matrix=topic_term_matrix,
+        document_names=document_names,
+        corpus=corpus,
+        vectorizer=vectorizer,
+        topic_model=topic_model,
     )
     words_blueprint = words.create_blueprint(
-        vocab, document_term_matrix, document_topic_matrix, topic_term_matrix
+        vocab=vocab,
+        document_term_matrix=document_term_matrix,
+        document_topic_matrix=document_topic_matrix,
+        topic_term_matrix=topic_term_matrix,
+        document_names=document_names,
+        corpus=corpus,
+        vectorizer=vectorizer,
+        topic_model=topic_model,
     )
     blueprints = [
         topic_blueprint,
         words_blueprint,
+        documents_blueprint,
     ]
 
     # --------[ Creating app blueprint ]--------
@@ -39,10 +70,11 @@ def create_blueprint(
         [
             topic_blueprint.layout,
             words_blueprint.layout,
+            documents_blueprint.layout,
             html.Div(
                 dmc.SegmentedControl(
                     id="page_picker",
-                    data=["Topics", "Words"],
+                    data=["Topics", "Words", "Documents"],
                     value="Topics",
                     color="orange",
                     size="md",
@@ -69,16 +101,20 @@ def create_blueprint(
             const visible = 'flex flex-1 flex-col p-3';
             const hidden = 'hidden';
             if (currentPage === 'Topics') {
-                return [visible, hidden];
+                return [visible, hidden, hidden];
             }
             if (currentPage === 'Words') {
-                return [hidden, visible];
+                return [hidden, visible, hidden];
             }
-            return [hidden, hidden];
+            if (currentPage === 'Documents') {
+                return [hidden, hidden, visible];
+            }
+            return [hidden, hidden, hidden];
         }
         """,
         Output("topics_container", "className"),
         Output("words_container", "className"),
+        Output("documents_container", "className"),
         Input("page_picker", "value"),
     )
     app_blueprint.clientside_callback(
@@ -89,6 +125,9 @@ def create_blueprint(
             }
             if (currentPage === 'Words') {
                 return 'teal';
+            }
+            if (currentPage === 'Documents') {
+                return 'indigo';
             }
             return 'black';
         }

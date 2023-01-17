@@ -13,7 +13,7 @@ def word_map(
     """Plots all words in relation to each other."""
     n_words = vocab.shape[0]
     customdata = np.array([np.arange(n_words), vocab]).T
-    word_trace = go.Scatter(
+    word_trace = go.Scattergl(
         x=x,
         y=y,
         mode="text+markers",
@@ -23,7 +23,7 @@ def word_map(
             sizemode="area",
             sizeref=2.0 * max(word_frequencies) / (100.0**2),
             sizemin=4,
-            color="rgb(168,162,158)",
+            color="#a8a29e",
         ),
         customdata=customdata,
         hovertemplate="%{customdata[1]}",
@@ -36,7 +36,7 @@ def word_map(
         showlegend=False,
         hovermode="closest",
         plot_bgcolor="white",
-        dragmode="pan",
+        # dragmode="pan",
         margin=dict(l=0, r=0, b=0, t=0, pad=0),
     )
     fig.update_coloraxes(showscale=False)
@@ -84,16 +84,15 @@ def word_topics_plot(top_topics: pd.DataFrame) -> go.Figure:
         textposition="outside",
         texttemplate=top_topics.topic,
     )
-    # overall_word_trace = go.Bar(
-    # name="Overall topic importance",
-    # y=top_topics.topic,
-    # x=top_topics.overall_importance,
-    # orientation="h",
-    # base=dict(x=[0.5, 1]),
-    # marker_color="rgb(168,162,158)",
-    # textposition="outside",
-    # texttemplate=top_topics.topic,
-    # )
+    overall_word_trace = go.Bar(
+        name="Overall topic importance",
+        y=top_topics.topic,
+        x=top_topics.overall_importance,
+        orientation="h",
+        base=dict(x=[0.5, 1]),
+        marker_color="rgb(168,162,158)",
+        opacity=0.3,
+    )
     fig = go.Figure(data=[associated_word_trace, topic_word_trace])
     fig.update_layout(
         barmode="overlay",

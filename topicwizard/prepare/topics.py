@@ -4,6 +4,7 @@ import pandas as pd
 
 import numpy as np
 from sklearn.manifold import TSNE
+from sklearn.metrics import pairwise_distances
 
 
 def topic_positions(
@@ -21,13 +22,21 @@ def topic_positions(
     x: array of shape (n_topics)
     y: array of shape (n_topics)
     """
+    # Calculating distances
+    topic_distances = pairwise_distances(
+        topic_term_matrix, metric="correlation"
+    )
     n_topics = topic_term_matrix.shape[0]
     # Setting perplexity to 30, or the number of topics minus one
     perplexity = np.min((30, n_topics - 1))
     tsne = TSNE(
-        n_components=2, perplexity=perplexity, init="pca", learning_rate="auto"
+        n_components=2,
+        perplexity=perplexity,
+        init="random",
+        learning_rate="auto",
+        metric="precomputed",
     )
-    x, y = tsne.fit_transform(topic_term_matrix).T
+    x, y = tsne.fit_transform(topic_distances).T
     return x, y
 
 

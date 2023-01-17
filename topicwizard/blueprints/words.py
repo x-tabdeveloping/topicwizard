@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List, Any
 import numpy as np
 from dash_extensions.enrich import (
     DashBlueprint,
@@ -26,8 +26,11 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
+    document_names: List[str],
+    corpus: List[str],
+    vectorizer: Any,
+    topic_model: Any,
 ) -> DashBlueprint:
-    n_topics = topic_term_matrix.shape[0]
     # --------[ Preparing data ]--------
     word_distances = prepare.calculate_word_distances(topic_term_matrix)
     word_positions = prepare.word_positions(word_distances)

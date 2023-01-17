@@ -1,4 +1,5 @@
 from typing import List
+import functools
 
 import numpy as np
 import plotly.graph_objects as go
@@ -13,6 +14,20 @@ from dash_extensions.enrich import (
 )
 import topicwizard.plots.words as plots
 import topicwizard.prepare.words as prepare
+
+
+def list_to_tuple(function):
+    """Nasty decorator hack to stop lru_cache from
+    complaining that list is not hashable.
+    """
+
+    def wrapper(*args):
+        args = [tuple(x) if type(x) == list else x for x in args]
+        result = function(*args)
+        result = tuple(result) if type(result) == list else result
+        return result
+
+    return wrapper
 
 
 def create_word_barplot(topic_term_matrix: np.ndarray) -> DashBlueprint:
@@ -32,6 +47,8 @@ def create_word_barplot(topic_term_matrix: np.ndarray) -> DashBlueprint:
         Input("topic_names", "data"),
         prevent_initial_call=True,
     )
+    @list_to_tuple
+    @functools.lru_cache
     def update_barplot(
         selected_words: List[int],
         associated_words: List[int],

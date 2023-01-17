@@ -1,23 +1,25 @@
-from typing import Tuple
+import functools
+from typing import Tuple, List, Any
+
+import dash_mantine_components as dmc
 import numpy as np
+import plotly.graph_objects as go
 from dash_extensions.enrich import (
     DashBlueprint,
+    Input,
+    Output,
+    State,
     dcc,
     html,
-    Output,
-    Input,
-    State,
 )
-import dash_mantine_components as dmc
-import plotly.graph_objects as go
 
-import topicwizard.prepare.topics as prepare
 import topicwizard.plots.topics as plots
+import topicwizard.prepare.topics as prepare
 from topicwizard.components.topics.intertopic_map import create_intertopic_map
 from topicwizard.components.topics.relevance_slider import relevance_slider
-from topicwizard.components.topics.topic_switcher import topic_switcher
-from topicwizard.components.topics.topic_namer import topic_namer
 from topicwizard.components.topics.topic_barplot import topic_barplot
+from topicwizard.components.topics.topic_namer import topic_namer
+from topicwizard.components.topics.topic_switcher import topic_switcher
 from topicwizard.components.topics.wordcloud import wordcloud
 
 # ----Clientside Callbacks----
@@ -53,6 +55,10 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
+    document_names: List[str],
+    corpus: List[str],
+    vectorizer: Any,
+    topic_model: Any,
 ) -> DashBlueprint:
 
     # --------[ Preparing data ]--------
@@ -126,6 +132,7 @@ def create_blueprint(
         Input("lambda_slider", "value"),
         Input("current_topic", "data"),
     )
+    @functools.lru_cache
     def update_plots(
         relevance: float, current_topic: int
     ) -> Tuple[go.Figure, go.Figure]:

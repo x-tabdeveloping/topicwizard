@@ -49,7 +49,7 @@ def word_positions(
     # Getting number of words in the vocabulary
     n_vocab = word_distances.shape[0]
     # Choosing perplexity such that the pipeline never fails
-    perplexity = np.min((30, n_vocab - 1))
+    perplexity = np.min((40, n_vocab - 1))
     tsne = TSNE(
         n_components=2,
         perplexity=perplexity,

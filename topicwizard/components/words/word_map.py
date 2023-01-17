@@ -24,8 +24,8 @@ def create_word_map(
     word_map.layout = dcc.Graph(
         id="word_map",
         responsive=True,
-        config=dict(scrollZoom=True),
-        animate=True,
+        # config=dict(scrollZoom=True),
+        # animate=True,
         figure=plots.word_map(
             x=x, y=y, word_frequencies=word_frequencies, vocab=vocab
         ),
@@ -43,17 +43,23 @@ def create_word_map(
             const trace = currentPlot.data[0];
             const nVocab = vocab.length;
             const text = new Array(nVocab).fill('');
-            const colors = new Array(nVocab).fill('rgb(168 162 158)');
+            const colors = new Array(nVocab).fill('#a8a29e');
+            const textColor = new Array(nVocab).fill('black');
+            const textSize = new Array(nVocab).fill(9);
             selectedWords.forEach(index => {
                 text[index] = vocab[index];
                 colors[index] = '#15AABF';
+                textColor[index] = '#0B7285';
+                textSize[index] = 22;
             })
             associatedWords.forEach(index => {
+                text[index] = vocab[index];
                 colors[index] = '#89dcc3';
             })
-            const marker = {...trace.marker, 'color': colors}
-            const newTrace = {...trace, 'marker': marker, 'text': text}
-            const newFigure = {...currentPlot, 'data': [newTrace]}
+            const textFont = {'color': textColor, 'size': textSize};
+            const marker = {...trace.marker, 'color': colors};
+            const newTrace = {...trace, 'marker': marker, 'text': text, 'textfont': textFont};
+            const newFigure = {...currentPlot, 'data': [newTrace]};
             return newFigure;
         }
         """,

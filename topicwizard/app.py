@@ -48,10 +48,10 @@ def get_dash_app(
         into topic distributions.
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    document_names: Optional[List[str]] = None,
+    document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
-    topic_names: Optional[List[str]] = None,
+    topic_names: list of str, default None
         List of topic names in the corpus, if not provided topics will initially
         be labeled 'Topic <index>'.
 
@@ -150,17 +150,17 @@ def visualize(
     topic_model: TopicModel, default None
         Sklearn compatible topic model, that can transform documents
         into topic distributions.
-    pipeline: Optional[Pipeline] = None,
+    pipeline: Pipeline, default None
         Sklearn compatible pipeline, that has two components:
         a vectorizer and a topic model.
         Ignored if vectorizer and topic_model are provided.
-    document_names: Optional[List[str]] = None,
+    document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
-    topic_names: Optional[List[str]] = None,
+    topic_names: list of str, default None
         List of topic names in the corpus, if not provided topics will initially
         be labeled 'Topic <index>'.
-    port: int
+    port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
     """
     if (vectorizer is None) and (topic_model is None):

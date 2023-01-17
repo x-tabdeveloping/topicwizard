@@ -1,3 +1,6 @@
+file_system_store/
+topic_data.joblib
+poetry.lock
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -28,8 +28,9 @@ def create_blueprint(
     topic_names: List[str],
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
-    word_distances = prepare.calculate_word_distances(topic_term_matrix)
-    word_positions = prepare.word_positions(word_distances)
+    word_positions = prepare.word_positions(
+        topic_term_matrix=topic_term_matrix
+    )
     word_frequencies = prepare.word_importances(document_term_matrix)
 
     # --------[ Collecting blueprints ]--------
@@ -40,7 +41,7 @@ def create_blueprint(
     )
     word_selector = create_word_selector(vocab=vocab)
     association_slider = create_association_slider(
-        word_distances=word_distances
+        topic_term_matrix=topic_term_matrix,
     )
     word_barplot = create_word_barplot(topic_term_matrix=topic_term_matrix)
     blueprints = [word_map, word_selector, word_barplot, association_slider]

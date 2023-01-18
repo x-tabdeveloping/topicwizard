@@ -8,7 +8,7 @@ from dash_extensions.enrich import DashBlueprint, Output, Input
 import topicwizard.prepare.words as prepare
 
 
-def create_association_slider(word_distances: np.ndarray) -> DashBlueprint:
+def create_association_slider(topic_term_matrix: np.ndarray) -> DashBlueprint:
     association_slider = DashBlueprint()
 
     association_slider.layout = dmc.Grid(
@@ -56,7 +56,7 @@ def create_association_slider(word_distances: np.ndarray) -> DashBlueprint:
             return []
         return prepare.associated_words(
             selected_words=selected_words,
-            word_distances=word_distances,
+            topic_term_matrix=topic_term_matrix,
             n_association=n_associations,
         )
 

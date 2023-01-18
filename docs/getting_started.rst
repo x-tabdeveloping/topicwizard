@@ -12,6 +12,13 @@ topicwizard can be simply installed by installing the PyPI package.
 
 Usage
 ^^^^^^^^^
+.. raw:: html
+
+   <a href="https://colab.research.google.com/github/x-tabdeveloping/topic-wizard/blob/main/examples/basic_usage.ipynb">
+      <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+   </a>
+
+
 Train a scikit-learn compatible topic model.
 
 .. code-block:: python

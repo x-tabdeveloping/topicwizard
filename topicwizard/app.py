@@ -1,6 +1,8 @@
-from typing import Any, Iterable, List, Optional
+from typing import Any, Iterable, List, Optional, Callable
 import sys
+import time
 import subprocess
+import threading
 import os
 import joblib
 
@@ -9,6 +11,23 @@ from sklearn.pipeline import Pipeline
 
 from topicwizard.blueprints.template import prepare_blueprint
 from topicwizard.blueprints.app import create_blueprint
+
+
+def is_notebook() -> bool:
+    try:
+        from IPython import get_ipython
+    except Exception:
+        return False
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == "ZMQInteractiveShell":
+            return True  # Jupyter notebook or qtconsole
+        elif shell == "TerminalInteractiveShell":
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False  # Probably standard Python interpreter
 
 
 def get_app_blueprint(
@@ -113,7 +132,35 @@ def open_url(url: str) -> None:
             print("Please open a browser on: " + url)
 
 
-def load(filename: str, port: int = 8050) -> None:
+def run_silent(app: Dash, port: int) -> Callable:
+    def _run_silent():
+        import logging
+        import warnings
+
+        log = logging.getLogger("werkzeug")
+        log.setLevel(logging.ERROR)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            app.run_server(port=port)
+
+    return _run_silent
+
+
+def run_app(app: Dash, port: int = 8050) -> Optional[threading.Thread]:
+    url = f"http://127.0.0.1:{port}/"
+    if is_notebook():
+        from IPython.display import IFrame, display
+
+        thread = threading.Thread(target=run_silent(app, port))
+        thread.start()
+        time.sleep(1)
+        display(IFrame(src=url, width="1200", height="1000"))
+    else:
+        open_url(url)
+        app.run_server(port=port)
+
+
+def load(filename: str, port: int = 8050) -> Optional[threading.Thread]:
     """Visualizes topic model data loaded from disk.
 
     Parameters
@@ -122,11 +169,16 @@ def load(filename: str, port: int = 8050) -> None:
         Path to the file where the data is stored.
     port: int
         Port where the application should run in localhost. Defaults to 8050.
+
+    Returns
+    -------
+    Thread or None
+        Returns a Thread if running in a Jupyter notebook (so you can close the server)
+        returns None otherwise.
     """
     print("Preparing data")
     app = load_app(filename)
-    open_url(f"http://127.0.0.1:{port}/")
-    app.run_server(port=port, debug=False)
+    return run_app(app, port=port)
 
 
 def visualize(
@@ -137,7 +189,7 @@ def visualize(
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     port: int = 8050,
-) -> None:
+) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
 
     Parameters
@@ -162,6 +214,12 @@ def visualize(
         be labeled 'Topic <index>'.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
+
+    Returns
+    -------
+    Thread or None
+        Returns a Thread if running in a Jupyter notebook (so you can close the server)
+        returns None otherwise.
     """
     if (vectorizer is None) and (topic_model is None):
         assert (
@@ -177,5 +235,4 @@ def visualize(
         document_names=document_names,
         topic_names=topic_names,
     )
-    open_url(f"http://127.0.0.1:{port}/")
-    app.run_server(port=port, debug=False)
+    return run_app(app, port=port)

@@ -14,20 +14,24 @@ from topicwizard.blueprints.app import create_blueprint
 
 
 def is_notebook() -> bool:
-    try:
-        from IPython import get_ipython
-    except Exception:
-        return False
-    try:
-        shell = get_ipython().__class__.__name__
-        if shell == "ZMQInteractiveShell":
-            return True  # Jupyter notebook or qtconsole
-        elif shell == "TerminalInteractiveShell":
-            return False  # Terminal running IPython
-        else:
-            return False  # Other type (?)
-    except NameError:
-        return False  # Probably standard Python interpreter
+    return "ipykernel" in sys.modules
+
+
+# def is_notebook() -> bool:
+# try:
+# from IPython import get_ipython
+# except Exception:
+# return False
+# try:
+# shell = get_ipython().__class__.__name__
+# if shell == "ZMQInteractiveShell":
+# return True  # Jupyter notebook or qtconsole
+# elif shell == "TerminalInteractiveShell":
+# return False  # Terminal running IPython
+# else:
+# return False  # Other type (?)
+# except NameError:
+# return False  # Probably standard Python interpreter
 
 
 def get_app_blueprint(

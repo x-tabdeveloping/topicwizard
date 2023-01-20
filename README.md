@@ -1,7 +1,5 @@
 <img align="left" width="82" height="82" src="assets/logo.svg">
 
-<br>
-
 # topicwizard
 
 <br>

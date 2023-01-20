@@ -1,15 +1,25 @@
-![Logo with text](assets/logo_text.svg)
+<img align="left" width="82" height="82" src="assets/logo.svg">
 
-# topicwizard: Pretty and opinionated topic model visualization
+<br>
+
+# topicwizard
+
+<br>
+
+Pretty and opinionated topic model visualization in Python.
 
 [![PyPI version](https://badge.fury.io/py/topic-wizard.svg)](https://pypi.org/project/topic-wizard/)
 [![pip downloads](https://img.shields.io/pypi/dm/topic-wizard.svg)](https://pypi.org/project/topic-wizard/)
 [![python version](https://img.shields.io/badge/Python-%3E=3.8-blue)](https://github.com/centre-for-humanities-computing/tweetopic)
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-black)](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/x-tabdeveloping/topic-wizard/blob/main/examples/basic_usage.ipynb)
 <br>
 
 ## Features
 
+-   Name topics
+-   Investigate complex relations between topics, words and documents
+-   Highly interactive
 -   Pretty :art:
 -   Intuitive :cow:
 -   Clean API :candy:

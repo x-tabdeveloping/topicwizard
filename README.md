@@ -15,9 +15,9 @@ Pretty and opinionated topic model visualization in Python.
 
 ## Features
 
--   Name topics
 -   Investigate complex relations between topics, words and documents
 -   Highly interactive
+-   Name topics
 -   Pretty :art:
 -   Intuitive :cow:
 -   Clean API :candy:

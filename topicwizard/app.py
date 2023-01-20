@@ -146,9 +146,11 @@ def run_silent(app: Dash, port: int) -> Callable:
     return _run_silent
 
 
-def run_app(app: Dash, port: int = 8050) -> Optional[threading.Thread]:
+def run_app(
+    app: Dash, port: int = 8050, enable_notebook: bool = False
+) -> Optional[threading.Thread]:
     url = f"http://127.0.0.1:{port}/"
-    if is_notebook():
+    if enable_notebook:
         from IPython.display import IFrame, display
 
         thread = threading.Thread(target=run_silent(app, port))
@@ -160,15 +162,19 @@ def run_app(app: Dash, port: int = 8050) -> Optional[threading.Thread]:
         app.run_server(port=port)
 
 
-def load(filename: str, port: int = 8050) -> Optional[threading.Thread]:
+def load(
+    filename: str, port: int = 8050, enable_notebook: bool = False
+) -> Optional[threading.Thread]:
     """Visualizes topic model data loaded from disk.
 
     Parameters
     ----------
     filename: str
         Path to the file where the data is stored.
-    port: int
+    port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
+    enable_notebook: bool, default False
+        Specifies whether topicwizard should run in a Jupyter notebook.
 
     Returns
     -------
@@ -189,6 +195,7 @@ def visualize(
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     port: int = 8050,
+    enable_notebook: bool = False,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
 
@@ -214,6 +221,8 @@ def visualize(
         be labeled 'Topic <index>'.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
+    enable_notebook: bool, default False
+        Specifies whether topicwizard should run in a Jupyter notebook.
 
     Returns
     -------

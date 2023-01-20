@@ -17,23 +17,6 @@ def is_notebook() -> bool:
     return "ipykernel" in sys.modules
 
 
-# def is_notebook() -> bool:
-# try:
-# from IPython import get_ipython
-# except Exception:
-# return False
-# try:
-# shell = get_ipython().__class__.__name__
-# if shell == "ZMQInteractiveShell":
-# return True  # Jupyter notebook or qtconsole
-# elif shell == "TerminalInteractiveShell":
-# return False  # Terminal running IPython
-# else:
-# return False  # Other type (?)
-# except NameError:
-# return False  # Probably standard Python interpreter
-
-
 def get_app_blueprint(
     vectorizer: Any,
     topic_model: Any,
@@ -157,7 +140,7 @@ def run_app(app: Dash, port: int = 8050) -> Optional[threading.Thread]:
 
         thread = threading.Thread(target=run_silent(app, port))
         thread.start()
-        time.sleep(1)
+        time.sleep(4)
         display(IFrame(src=url, width="1200", height="1000"))
     else:
         open_url(url)

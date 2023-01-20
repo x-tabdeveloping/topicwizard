@@ -184,7 +184,7 @@ def load(
     """
     print("Preparing data")
     app = load_app(filename)
-    return run_app(app, port=port)
+    return run_app(app, port=port, enable_notebook=enable_notebook)
 
 
 def visualize(
@@ -244,4 +244,4 @@ def visualize(
         document_names=document_names,
         topic_names=topic_names,
     )
-    return run_app(app, port=port)
+    return run_app(app, port=port, enable_notebook=enable_notebook)

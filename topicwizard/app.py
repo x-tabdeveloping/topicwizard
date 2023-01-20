@@ -13,8 +13,17 @@ from topicwizard.blueprints.template import prepare_blueprint
 from topicwizard.blueprints.app import create_blueprint
 
 
-def is_notebook() -> bool:
-    return "ipykernel" in sys.modules
+def is_notebook():
+    try:
+        from IPython import get_ipython
+
+        if "IPKernelApp" not in get_ipython().config:  # type: ignore
+            return False
+    except ImportError:
+        return False
+    except AttributeError:
+        return False
+    return True
 
 
 def get_app_blueprint(

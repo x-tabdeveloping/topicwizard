@@ -5,6 +5,6 @@ authors:
   given-names: "Márton"
   orcid: "https://orcid.org/0000-0001-9652-4498"
 title: "topicwizard: Pretty and opinionated topic model visualization in Python"
-version: 0.1.11
+version: 0.1.12
 date-released: 2023-23-01
 url: "https://github.com/x-tabdeveloping/topic-wizard"

@@ -145,7 +145,7 @@ def run_app(
     if is_colab():
         from google.colab import output  # type: ignore
 
-        output.server_kernel_port_as_iframe(port, width=1200, height=1000)
+        output.serve_kernel_port_as_iframe(port, width=1200, height=1000)
 
     elif is_notebook():
         from IPython.display import IFrame, display

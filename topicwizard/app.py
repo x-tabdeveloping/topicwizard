@@ -14,20 +14,11 @@ from topicwizard.blueprints.app import create_blueprint
 
 
 def is_notebook() -> bool:
-    try:
-        from IPython import get_ipython
+    return "ipykernel" in sys.modules
 
-        shell = get_ipython().__class__.__name__
-        if shell == "ZMQInteractiveShell":
-            return True  # Jupyter notebook or qtconsole
-        elif shell == "TerminalInteractiveShell":
-            return False  # Terminal running IPython
-        else:
-            return True  # Other type (?)
-    except NameError:
-        return False  # Probably standard Python interpreter
-    except ModuleNotFoundError:
-        return False  # Probably standard Python interpreter
+
+def is_colab() -> bool:
+    return "google.colab" in sys.modules
 
 
 def get_app_blueprint(
@@ -147,10 +138,16 @@ def run_silent(app: Dash, port: int) -> Callable:
 
 
 def run_app(
-    app: Dash, port: int = 8050, enable_notebook: bool = False
+    app: Dash,
+    port: int = 8050,
 ) -> Optional[threading.Thread]:
     url = f"http://127.0.0.1:{port}/"
-    if enable_notebook:
+    if is_colab():
+        from google.colab import output  # type: ignore
+
+        output.server_kernel_port_as_iframe(port, width=1200, height=1000)
+
+    elif is_notebook():
         from IPython.display import IFrame, display
 
         thread = threading.Thread(target=run_silent(app, port))
@@ -163,7 +160,8 @@ def run_app(
 
 
 def load(
-    filename: str, port: int = 8050, enable_notebook: bool = False
+    filename: str,
+    port: int = 8050,
 ) -> Optional[threading.Thread]:
     """Visualizes topic model data loaded from disk.
 
@@ -184,7 +182,7 @@ def load(
     """
     print("Preparing data")
     app = load_app(filename)
-    return run_app(app, port=port, enable_notebook=enable_notebook)
+    return run_app(app, port=port)
 
 
 def visualize(
@@ -221,8 +219,6 @@ def visualize(
         be labeled 'Topic <index>'.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
-    enable_notebook: bool, default False
-        Specifies whether topicwizard should run in a Jupyter notebook.
 
     Returns
     -------
@@ -244,4 +240,4 @@ def visualize(
         document_names=document_names,
         topic_names=topic_names,
     )
-    return run_app(app, port=port, enable_notebook=enable_notebook)
+    return run_app(app, port=port)

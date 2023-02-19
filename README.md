@@ -13,6 +13,10 @@ Pretty and opinionated topic model visualization in Python.
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-black)](https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html)
 <br>
 
+
+https://user-images.githubusercontent.com/13087737/219967955-1263c35b-4c5b-4ccc-adb9-23e073e099f0.mp4
+
+
 ## Features
 
 -   Investigate complex relations between topics, words and documents

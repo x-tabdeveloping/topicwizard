@@ -4,9 +4,9 @@ from dash_extensions.enrich import (
     DashBlueprint,
     Input,
     Output,
+    dcc,
     State,
 )
-import dash_mantine_components as dmc
 
 
 def create_document_selector(
@@ -19,14 +19,12 @@ def create_document_selector(
 
     document_selector = DashBlueprint()
 
-    document_selector.layout = dmc.Select(
+    document_selector.layout = dcc.Dropdown(
         id="document_selector",
-        label="",
         placeholder="Select document...",
-        data=docs,
+        options=docs,
         searchable=True,
-        clearable=True,
-        nothingFound="No options found",
+        className="min-w-max flex-1",
     )
 
     document_selector.clientside_callback(

@@ -80,7 +80,7 @@ def create_blueprint(
             ),
             dmc.Grid(
                 [
-                    dmc.Col(document_selector.layout, span="content"),
+                    dmc.Col(document_selector.layout, span=5),
                     dmc.Col(window_slider.layout, span=4),
                 ],
                 columns=10,
@@ -89,24 +89,32 @@ def create_blueprint(
                 justify="space-between",
                 mr=5,
             ),
-            html.Div(
+            dmc.Group(
                 [
                     document_map.layout,
-                    html.Div(
+                    dmc.Stack(
                         [
                             timeline.layout,
-                            html.Div(
+                            dmc.Group(
                                 [
                                     document_pie.layout,
                                     document_wordcloud.layout,
                                 ],
-                                className="flex-1 flex flex-row items-stretch",
+                                grow=1,
+                                align="stretch",
+                                position="apart",
+                                className="flex-1",
                             ),
                         ],
-                        className="flex-1 flex flex-col items-stretch",
+                        align="stretch",
+                        justify="space-around",
+                        className="flex-1",
                     ),
                 ],
-                className="flex-1 flex flex-row items-stretch p-3",
+                grow=1,
+                align="stretch",
+                position="apart",
+                className="flex-1 p-3",
             ),
         ],
         className="""

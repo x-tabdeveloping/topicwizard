@@ -1,4 +1,3 @@
-from typing import Tuple
 
 import numpy as np
 
@@ -9,9 +8,6 @@ from dash_extensions.enrich import (
     Output,
     State,
 )
-import dash_mantine_components as dmc
-import topicwizard.plots.words as plots
-
 
 def create_word_selector(
     vocab: np.ndarray,
@@ -22,15 +18,15 @@ def create_word_selector(
 
     word_selector = DashBlueprint()
 
-    word_selector.layout = dmc.MultiSelect(
+    word_selector.layout = dcc.Dropdown(
         id="word_selector",
-        label="",
         placeholder="Select words...",
         value=[],
-        data=terms,
+        options=terms,
+        multi=True,
         searchable=True,
+        className="min-w-max flex-1",
         clearable=True,
-        nothingFound="No options found",
     )
 
     word_selector.clientside_callback(

@@ -57,7 +57,7 @@ def create_blueprint(
                 [
                     dmc.Col(
                         word_selector.layout,
-                        span="content",
+                        span=5,
                     ),
                     dmc.Col(association_slider.layout, span=4),
                 ],
@@ -67,12 +67,15 @@ def create_blueprint(
                 justify="space-between",
                 mr=5,
             ),
-            html.Div(
+            dmc.Group(
                 [
                     word_map.layout,
                     word_barplot.layout,
                 ],
-                className="flex-1 flex flex-row items-stretch p-3",
+                position="apart",
+                grow=1,
+                align="stretch",
+                className="flex-1 p-3",
             ),
         ],
         className="""

@@ -149,7 +149,7 @@ def run_app(
         thread.start()
         time.sleep(4)
 
-        output.serve_kernel_port_as_iframe(port, width=1200, height=1000)
+        output.serve_kernel_port_as_window(port, anchor_text=url)
 
     elif is_notebook():
         from IPython.display import IFrame, display

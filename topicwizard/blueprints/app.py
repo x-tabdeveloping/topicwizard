@@ -112,6 +112,7 @@ def create_blueprint(
         ],
         className="""
             fixed w-full h-full flex-col flex items-stretch
+            bg-white
         """,
     )
 

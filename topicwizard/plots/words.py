@@ -9,6 +9,8 @@ def word_map(
     y: np.ndarray,
     word_frequencies: np.ndarray,
     vocab: np.ndarray,
+    dominant_topic: np.ndarray,
+    topic_colors: np.ndarray,
 ) -> go.Figure:
     """Plots all words in relation to each other."""
     n_words = vocab.shape[0]
@@ -23,7 +25,7 @@ def word_map(
             sizemode="area",
             sizeref=2.0 * max(word_frequencies) / (100.0**2),
             sizemin=4,
-            color="#a8a29e",
+            color=topic_colors[dominant_topic],
         ),
         customdata=customdata,
         hovertemplate="%{customdata[1]}",

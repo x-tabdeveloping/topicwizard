@@ -1,14 +1,8 @@
 from typing import Tuple
 
 import numpy as np
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
 
-from dash_extensions.enrich import (
-    DashBlueprint,
-    dcc,
-    Input,
-    Output,
-    State,
-)
 import topicwizard.plots.words as plots
 
 
@@ -16,6 +10,8 @@ def create_word_map(
     word_positions: Tuple[np.ndarray, np.ndarray],
     word_frequencies: np.ndarray,
     vocab: np.ndarray,
+    dominant_topic: np.ndarray,
+    topic_colors: np.ndarray,
 ):
     x, y = word_positions
 
@@ -27,7 +23,12 @@ def create_word_map(
         # config=dict(scrollZoom=True),
         # animate=True,
         figure=plots.word_map(
-            x=x, y=y, word_frequencies=word_frequencies, vocab=vocab
+            x=x,
+            y=y,
+            word_frequencies=word_frequencies,
+            vocab=vocab,
+            dominant_topic=dominant_topic,
+            topic_colors=topic_colors,
         ),
         className="flex-1",
     )
@@ -57,7 +58,8 @@ def create_word_map(
                 colors[index] = '#89dcc3';
             })
             const textFont = {'color': textColor, 'size': textSize};
-            const marker = {...trace.marker, 'color': colors};
+            // const marker = {...trace.marker, 'color': colors};
+            const marker = {...trace.marker}
             const newTrace = {...trace, 'marker': marker, 'text': text, 'textfont': textFont};
             const newFigure = {...currentPlot, 'data': [newTrace]};
             return newFigure;

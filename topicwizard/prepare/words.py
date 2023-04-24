@@ -7,6 +7,23 @@ import umap
 from sklearn.metrics import pairwise_distances
 
 
+def dominant_topic(topic_term_matrix: np.ndarray) -> np.ndarray:
+    """Calculates dominant topic for each word.
+
+    Parameters
+    ----------
+    topic_term_matrix: array of shape (n_topics, n_terms)
+
+    Returns
+    -------
+    array of shape (n_documents)
+        Index of dominant topic for each term.
+    """
+    term_topic_matrix = topic_term_matrix.T
+    dominant_topic = np.argmax(term_topic_matrix, axis=1)
+    return dominant_topic
+
+
 def calculate_word_distances(
     topic_term_matrix: np.ndarray,
 ) -> np.ndarray:

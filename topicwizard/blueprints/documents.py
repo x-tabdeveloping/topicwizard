@@ -1,25 +1,19 @@
-from typing import List, Any
+from typing import Any, List
 
 import dash_mantine_components as dmc
 import numpy as np
-from dash_extensions.enrich import (
-    DashBlueprint,
-    dcc,
-    html,
-    html,
-)
+from dash_extensions.enrich import DashBlueprint, dcc, html
+from plotly import colors
 
 import topicwizard.prepare.documents as prepare
 from topicwizard.components.documents.document_map import create_document_map
-from topicwizard.components.documents.window_slider import create_window_slider
 from topicwizard.components.documents.document_pie import create_document_pie
+from topicwizard.components.documents.document_selector import \
+    create_document_selector
 from topicwizard.components.documents.document_timeline import create_timeline
-from topicwizard.components.documents.document_selector import (
-    create_document_selector,
-)
-from topicwizard.components.documents.document_wordcloud import (
-    create_document_wordcloud,
-)
+from topicwizard.components.documents.document_wordcloud import \
+    create_document_wordcloud
+from topicwizard.components.documents.window_slider import create_window_slider
 
 
 def create_blueprint(
@@ -33,7 +27,6 @@ def create_blueprint(
     topic_model: Any,
     topic_names: List[str],
 ) -> DashBlueprint:
-
     # --------[ Preparing data ]--------
     n_topics = topic_term_matrix.shape[0]
     document_positions = prepare.document_positions(
@@ -42,6 +35,10 @@ def create_blueprint(
     dominant_topics = prepare.dominant_topic(
         document_topic_matrix=document_topic_matrix
     )
+    # Creating unified color scheme
+    twilight = colors.get_colorscale("Twilight")
+    topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
+    topic_colors = np.array(topic_colors)
 
     # --------[ Collecting blueprints ]--------
     document_map = create_document_map(
@@ -49,9 +46,13 @@ def create_blueprint(
         document_positions=document_positions,
         dominant_topic=dominant_topics,
         n_topics=n_topics,
+        topic_colors=topic_colors,
     )
     timeline = create_timeline(
-        corpus=corpus, vectorizer=vectorizer, topic_model=topic_model
+        corpus=corpus,
+        vectorizer=vectorizer,
+        topic_model=topic_model,
+        topic_colors=topic_colors,
     )
     document_wordcloud = create_document_wordcloud(
         document_term_matrix=document_term_matrix, vocab=vocab
@@ -59,7 +60,7 @@ def create_blueprint(
     document_selector = create_document_selector(document_names=document_names)
     window_slider = create_window_slider()
     document_pie = create_document_pie(
-        document_topic_matrix=document_topic_matrix
+        document_topic_matrix=document_topic_matrix, topic_colors=topic_colors
     )
     blueprints = [
         document_map,

@@ -1,14 +1,8 @@
-from typing import Tuple, List
+from typing import List, Tuple
 
 import numpy as np
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
 
-from dash_extensions.enrich import (
-    DashBlueprint,
-    dcc,
-    Input,
-    Output,
-    State,
-)
 import topicwizard.plots.documents as plots
 
 
@@ -17,6 +11,7 @@ def create_document_map(
     dominant_topic: np.ndarray,
     document_names: List[str],
     n_topics: int,
+    topic_colors: np.ndarray,
 ):
     x, y = document_positions
 
@@ -29,6 +24,8 @@ def create_document_map(
             x=x,
             y=y,
             document_names=document_names,
+            dominant_topic=dominant_topic,
+            topic_colors=topic_colors,
         ),
         className="flex-1",
     )
@@ -44,12 +41,13 @@ def create_document_map(
             const trace = currentPlot.data[0];
             const nDocuments = trace.x.length
             const text = new Array(nDocuments).fill('');
-            const colors = new Array(nDocuments).fill('#a8a29e');
+            // const colors = new Array(nDocuments).fill('#a8a29e');
             if (selectedDocument !== undefined) {
                 text[selectedDocument] = trace.customdata[selectedDocument][1];
-                colors[selectedDocument] = '#5F3DC4';
+                // colors[selectedDocument] = '#5F3DC4';
             }
-            const marker = {...trace.marker, 'color': colors};
+            // const marker = {...trace.marker, 'color': colors};
+            const marker = {...trace.marker}
             const newTrace = {...trace, 'marker': marker, 'text': text};
             const newFigure = {...currentPlot, 'data': [newTrace]};
             return newFigure;

@@ -1,5 +1,5 @@
 """Module containing plotting utilities for documents."""
-from typing import Dict, List, Optional, Iterable
+from typing import Dict, Iterable, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -14,6 +14,8 @@ def document_map(
     x: np.ndarray,
     y: np.ndarray,
     document_names: List[str],
+    dominant_topic: np.ndarray,
+    topic_colors: np.ndarray,
 ) -> go.Figure:
     n_documents = x.shape[0]
     customdata = np.array([np.arange(n_documents), document_names]).T
@@ -22,7 +24,9 @@ def document_map(
         y=y,
         mode="markers+text",
         text=[""] * n_documents,
-        marker=dict(color="#a8a29e", line=dict(width=1, color="white")),
+        marker=dict(
+            color=topic_colors[dominant_topic], line=dict(width=1, color="white")
+        ),
         customdata=customdata,
         hovertemplate="%{customdata[1]}",
         name="",
@@ -64,6 +68,7 @@ def document_map(
 def document_topic_plot(
     topic_importances: pd.DataFrame,
     topic_names: List[str],
+    topic_colors: np.ndarray,
 ) -> go.Figure:
     """Plots topic importances for a selected document.
 
@@ -80,6 +85,8 @@ def document_topic_plot(
         Pie chart of topic importances for each document.
     """
     name_mapping = pd.Series(topic_names)
+    n_topics = len(topic_names)
+    color_mapping = {topic_names[i]: topic_colors[i] for i in range(n_topics)}
     topic_importances = topic_importances.assign(
         topic_name=topic_importances.topic_id.map(name_mapping)
     )
@@ -87,7 +94,9 @@ def document_topic_plot(
         topic_importances,
         values="importance",
         names="topic_name",
-        color_discrete_sequence=px.colors.cyclical.Twilight,
+        color="topic_name",
+        color_discrete_map=color_mapping,
+        # color_discrete_sequence=px.colors.cyclical.Twilight,
     )
     fig.update_traces(textposition="inside", textinfo="label")
     fig.update_layout(
@@ -99,7 +108,7 @@ def document_topic_plot(
 
 
 def document_timeline(
-    topic_timeline: np.ndarray, topic_names: List[str]
+    topic_timeline: np.ndarray, topic_names: List[str], topic_colors: np.ndarray
 ) -> go.Figure:
     topic_timeline = topic_timeline.T
     traces = []
@@ -112,6 +121,7 @@ def document_timeline(
             y=timeline,
             mode="lines",
             name=topic_names[topic_id],
+            marker=dict(color=topic_colors[topic_id]),
         )
         traces.append(trace)
     fig = go.Figure(data=traces)
@@ -146,9 +156,7 @@ def document_wordcloud(
     doc_id: int, document_term_matrix: np.ndarray, vocab: np.ndarray
 ) -> go.Figure:
     coo = spr.coo_array(document_term_matrix[doc_id])
-    term_dict = {
-        vocab[column]: data for column, data in zip(coo.col, coo.data)
-    }
+    term_dict = {vocab[column]: data for column, data in zip(coo.col, coo.data)}
     cloud = WordCloud(
         width=800,
         height=800,

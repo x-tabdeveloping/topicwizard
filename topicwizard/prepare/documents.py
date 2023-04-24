@@ -1,12 +1,9 @@
-from typing import Tuple, List, Any
+from typing import Any, List, Tuple
 
 import numpy as np
 import pandas as pd
 import scipy.sparse as spr
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import TruncatedSVD
-from sklearn.pipeline import Pipeline
+import umap
 
 
 def dominant_topic(document_topic_matrix: np.ndarray) -> np.ndarray:
@@ -41,27 +38,13 @@ def document_positions(
     """
     # Calculating distances
     n_docs = document_term_matrix.shape[0]
-    svd = TruncatedSVD(10)
-    # Choosing perplexity such that the pipeline never fails
     perplexity = np.min((40, n_docs - 1))
-    manifold = TSNE(
+    manifold = umap.UMAP(
         n_components=2,
-        # affinity="nearest_neighbors",
-        perplexity=perplexity,
-        init="pca",
-        metric="euclidean",
-        learning_rate="auto",
-        n_iter=400,
-        n_iter_without_progress=100,
+        n_neighbors=perplexity,
+        metric="cosine",
     )
-    reduction_pipeline = Pipeline(
-        [
-            ("svd", svd),
-            ("scaler", StandardScaler()),
-            ("manifold", manifold),
-        ]
-    )
-    x, y = reduction_pipeline.fit_transform(document_term_matrix).T
+    x, y = manifold.fit_transform(document_term_matrix).T
     return x, y
 
 

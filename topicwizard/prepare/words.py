@@ -1,13 +1,10 @@
 """Utilities for preparing data about words."""
-from typing import Tuple, List
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
-from sklearn.decomposition import PCA
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import StandardScaler
+import umap
 from sklearn.metrics import pairwise_distances
-from sklearn.pipeline import Pipeline
 
 
 def calculate_word_distances(
@@ -28,9 +25,7 @@ def calculate_word_distances(
     # We use the parameters of the topic model as word embeddings
     term_topic_matrix = topic_term_matrix.T
     # Calculating word distances using correlation
-    word_distances = pairwise_distances(
-        term_topic_matrix, metric="correlation"
-    )
+    word_distances = pairwise_distances(term_topic_matrix, metric="correlation")
     return word_distances
 
 
@@ -52,28 +47,15 @@ def word_positions(
     n_topics, n_vocab = topic_term_matrix.shape
     # We use the parameters of the topic model as word embeddings
     term_topic_matrix = topic_term_matrix.T
-    # Adding pre-manifold reduction, so that it runs faster
-    pca = PCA(n_components=np.min((n_topics, 10)))
     # Choosing perplexity such that the pipeline never fails
     perplexity = np.min((40, n_vocab - 1))
-    manifold = TSNE(
+    manifold = umap.UMAP(
         n_components=2,
         # affinity="nearest_neighbors",
-        perplexity=perplexity,
-        init="pca",
-        metric="euclidean",
-        learning_rate="auto",
-        n_iter=400,
-        n_iter_without_progress=100,
+        n_neighbors=perplexity,
+        metric="cosine",
     )
-    reduction_pipeline = Pipeline(
-        [
-            ("pca", pca),
-            ("scaler", StandardScaler()),
-            ("manifold", manifold),
-        ]
-    )
-    x, y = reduction_pipeline.fit_transform(term_topic_matrix).T
+    x, y = manifold.fit_transform(term_topic_matrix).T
     return x, y
 
 
@@ -141,7 +123,7 @@ def associated_words(
     selected_terms_matrix = term_topic_matrix[selected_words]
     # Calculating all distances from the selected words
     distances = pairwise_distances(
-        selected_terms_matrix, term_topic_matrix, metric="euclidean"
+        selected_terms_matrix, term_topic_matrix, metric="cosine"
     )
     # Partitions array so that the smallest k elements along axis 1 are at the
     # lowest k dimensions, then I slice the array to only get the top indices

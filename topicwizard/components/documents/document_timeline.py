@@ -1,20 +1,16 @@
-from typing import Tuple, List, Union, Any
+from typing import Any, List, Tuple, Union
 
 import numpy as np
-
-from dash_extensions.enrich import (
-    DashBlueprint,
-    dcc,
-    Input,
-    Output,
-    State,
-)
 import plotly.graph_objects as go
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
+
 import topicwizard.plots.documents as plots
 import topicwizard.prepare.documents as prepare
 
 
-def create_timeline(corpus: List[str], vectorizer: Any, topic_model: Any):
+def create_timeline(
+    corpus: List[str], vectorizer: Any, topic_model: Any, topic_colors: np.ndarray
+):
     timeline = DashBlueprint()
 
     timeline.layout = dcc.Graph(
@@ -46,6 +42,7 @@ def create_timeline(corpus: List[str], vectorizer: Any, topic_model: Any):
             step=1,
         )
         return plots.document_timeline(
+            topic_colors=topic_colors,
             topic_timeline=topic_timeline,
             topic_names=topic_names,
         )

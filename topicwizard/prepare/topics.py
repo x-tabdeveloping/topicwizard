@@ -1,10 +1,9 @@
 """Utilities for preparing data for visualization."""
 from typing import Tuple
-import pandas as pd
 
 import numpy as np
-from sklearn.manifold import TSNE
-from sklearn.metrics import pairwise_distances
+import pandas as pd
+import umap
 
 
 def topic_positions(
@@ -23,20 +22,11 @@ def topic_positions(
     y: array of shape (n_topics)
     """
     # Calculating distances
-    topic_distances = pairwise_distances(
-        topic_term_matrix, metric="correlation"
-    )
     n_topics = topic_term_matrix.shape[0]
     # Setting perplexity to 30, or the number of topics minus one
     perplexity = np.min((30, n_topics - 1))
-    tsne = TSNE(
-        n_components=2,
-        perplexity=perplexity,
-        init="random",
-        learning_rate="auto",
-        metric="precomputed",
-    )
-    x, y = tsne.fit_transform(topic_distances).T
+    manifold = umap.UMAP(n_components=2, n_neighbors=perplexity, metric="cosine")
+    x, y = manifold.fit_transform(topic_term_matrix).T
     return x, y
 
 
@@ -62,9 +52,7 @@ def topic_importances(
     # Calculating document lengths
     document_lengths = document_term_matrix.sum(axis=1)
     # Calculating an estimate of empirical topic frequencies
-    topic_importances = (document_topic_matrix.T * document_lengths).sum(
-        axis=1
-    )
+    topic_importances = (document_topic_matrix.T * document_lengths).sum(axis=1)
     topic_importances = np.squeeze(np.asarray(topic_importances))
     # Calculating empirical estimate of term-topic frequencies
     topic_term_importances = (topic_term_matrix.T * topic_importances).T

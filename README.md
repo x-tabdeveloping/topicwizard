@@ -14,7 +14,9 @@ Pretty and opinionated topic model visualization in Python.
 <br>
 
 
-https://user-images.githubusercontent.com/13087737/219967955-1263c35b-4c5b-4ccc-adb9-23e073e099f0.mp4
+
+https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
+
 
 
 ## Features

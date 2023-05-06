@@ -155,7 +155,7 @@ def document_timeline(
 def document_wordcloud(
     doc_id: int, document_term_matrix: np.ndarray, vocab: np.ndarray
 ) -> go.Figure:
-    coo = spr.coo_array(document_term_matrix[doc_id])
+    coo = spr.coo_array(document_term_matrix[[doc_id], :])
     term_dict = {vocab[column]: data for column, data in zip(coo.col, coo.data)}
     cloud = WordCloud(
         width=800,

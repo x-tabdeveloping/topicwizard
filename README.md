@@ -28,11 +28,12 @@ https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-
 
 -   Investigate complex relations between topics, words and documents
 -   Highly interactive
--   Name topics
+-   Automatically infer topic names
+-   Name topics manually
 -   Pretty :art:
 -   Intuitive :cow:
 -   Clean API :candy:
--   Sklearn compatible :nut_and_bolt:
+-   Sklearn, Gensim and BERTopic compatible :nut_and_bolt:
 -   Easy deployment :earth_africa:
 
 ## Installation

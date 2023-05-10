@@ -21,6 +21,11 @@ Usage
 
 Train a scikit-learn compatible topic model.
 
+.. note::
+   If you intend to investigate non-scikit-learn models, please have a look at
+   :ref:`Compatibility <usage compatibility>`
+
+
 .. code-block:: python
 
    from sklearn.decomposition import NMF
@@ -42,6 +47,9 @@ Visualize with topicwizard.
 .. code-block:: python
 
    import topicwizard
+
+   # If you want to infer topic names automatically you can do so
+   topic_names = topicwizard.infer_topic_names(pipeline=topic_pipeline)
 
    topicwizard.visualize(pipeline=topic_pipeline, corpus=texts)
 

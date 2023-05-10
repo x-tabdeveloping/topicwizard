@@ -19,7 +19,7 @@ On the left you will see a plot showing you all the words, aka. the word map.
     :alt: Word map.
 
 Word distances are calculated from correlations between words in topics.
-Positions are calculated with t-SNE.
+Positions are calculated with UMAP.
 You can zoom this graph by dragging your cursor and enclosing a selection area.
 
 Selecting Words

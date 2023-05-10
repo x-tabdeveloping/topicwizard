@@ -19,7 +19,7 @@ On the left you will see a plot showing you all the documents, aka. the document
     :alt: Document map.
 
 Document positions are calculated from document embeddings created by the vectorizer by reducing dimensionality to 2 with
-TruncatedSVD.
+UMAP.
 You can zoom this graph by dragging your cursor and enclosing a selection area.
 
 Selecting documents

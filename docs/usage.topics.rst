@@ -18,7 +18,7 @@ On the left you will see a plot showing you all the topics, aka. the topic map.
     :width: 800
     :alt: Topic map.
 
-Topic positions are calculated from model parameters (the topic-term matrix) with t-distributed Stochastic Neighbor Embeddings.
+Topic positions are calculated from model parameters (the topic-term matrix) with UMAP.
 The graph is draggable with the cursor and zoomable by scrolling.
 To select a topic click on it.
 

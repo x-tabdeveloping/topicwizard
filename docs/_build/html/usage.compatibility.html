@@ -223,22 +223,20 @@ Gensim and BERTopic can now be used with topicwizard.</p>
 <p>sklearn compatible pipelines for Gensim models can be created once you have a dictionary
 and a topic model object available, topicwizard is compatible with LSI, LDA (also multicore) and NMF.</p>
 <p>First you need to train a Gensim dictionary and topic model.</p>
-<p>… code-block:: python</p>
-<blockquote>
-<div><p>from gensim.corpora.dictionary import Dictionary
-from gensim.models import LdaModel</p>
-<dl class="simple">
-<dt>texts: list[list[str] = [</dt><dd><p>[‘computer’, ‘time’, ‘graph’],
-[‘survey’, ‘response’, ‘eps’],
-[‘human’, ‘system’, ‘computer’],
-…</p>
-</dd>
-</dl>
-<p>]
-dictionary = Dictionary(texts)
-bow_corpus = [dictionary.doc2bow(text) for text in texts]
-lda = LdaModel(bow_corpus, num_topics=10)</p>
-</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gensim.corpora.dictionary</span> <span class="kn">import</span> <span class="n">Dictionary</span>
+<span class="kn">from</span> <span class="nn">gensim.models</span> <span class="kn">import</span> <span class="n">LdaModel</span>
+
+<span class="n">texts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;computer&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;graph&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;survey&#39;</span><span class="p">,</span> <span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="s1">&#39;computer&#39;</span><span class="p">],</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+<span class="n">dictionary</span> <span class="o">=</span> <span class="n">Dictionary</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+<span class="n">bow_corpus</span> <span class="o">=</span> <span class="p">[</span><span class="n">dictionary</span><span class="o">.</span><span class="n">doc2bow</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span>
+<span class="n">lda</span> <span class="o">=</span> <span class="n">LdaModel</span><span class="p">(</span><span class="n">bow_corpus</span><span class="p">,</span> <span class="n">num_topics</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Then you need to create a pipeline with topicwizard.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
 
@@ -253,11 +251,11 @@ lda = LdaModel(bow_corpus, num_topics=10)</p>
 <h2>BERTopic<a class="headerlink" href="#bertopic" title="Permalink to this heading">#</a></h2>
 <p>You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.</p>
 <p>First you need to train a BERTopic topic model.</p>
-<p>… code-block:: python</p>
-<blockquote>
-<div><p>from bertopic import BERTopic</p>
-<p>model = BERTopic(corpus)</p>
-</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Then you need to create a pipeline with topicwizard.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
 

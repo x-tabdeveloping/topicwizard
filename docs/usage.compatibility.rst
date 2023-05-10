@@ -14,7 +14,7 @@ and a topic model object available, topicwizard is compatible with LSI, LDA (als
 
 First you need to train a Gensim dictionary and topic model.
 
-... code-block:: python
+.. code-block:: python
 
   from gensim.corpora.dictionary import Dictionary
   from gensim.models import LdaModel
@@ -47,7 +47,7 @@ You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.
 
 First you need to train a BERTopic topic model.
 
-... code-block:: python
+.. code-block:: python
 
     from bertopic import BERTopic
 

@@ -1,9 +1,10 @@
 """Utilities for preparing data for visualization."""
-from typing import Tuple
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import umap
+from sklearn.pipeline import Pipeline
 
 
 def topic_positions(
@@ -121,3 +122,32 @@ def calculate_top_words(
         }
     )
     return res
+
+
+def infer_topic_names(pipeline: Pipeline, top_n: int = 4) -> List[str]:
+    """Infers names of topics from a trained topic model's components.
+    This method does not take empirical counts or relevance into account, therefore
+    automatically assigned topic names can be of low quality.
+
+    Parameters
+    ----------
+    pipeline: Pipeline
+        Sklearn compatible topic pipeline.
+    top_n: int, default 4
+        Number of words used to name the topic.
+
+    Returns
+    -------
+    list of str
+        List of topic names.
+    """
+    ((_, vectorizer), (_, topic_model)) = pipeline.steps
+    components = topic_model.components_
+    vocab = vectorizer.get_feature_names_out()
+    highest = np.argpartition(-components, top_n)[:, :top_n]
+    top_words = vocab[highest]
+    topic_names = []
+    for i_topic, words in enumerate(top_words):
+        name = "_".join(words)
+        topic_names.append(f"{i_topic}_{name}")
+    return topic_names

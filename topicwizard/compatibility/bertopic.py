@@ -1,15 +1,25 @@
-from typing import Callable, Iterable
+from typing import Callable, Iterable, List, Tuple
 
 import numpy as np
+import scipy.sparse as spr
 from bertopic import BERTopic
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline, make_pipeline
 
 
+class _SparseWithText(spr.csr_array):
+    def __init__(self, *args, texts: Iterable[str] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if texts is None:
+            self.texts = None
+        else:
+            self.texts = list(texts)
+
+
 class _BERTopicVectorizer(BaseEstimator):
-    def __init__(self, topic_model: BERTopic, set_texts: Callable):
+    def __init__(self, topic_model: BERTopic):
+        self.topic_model = topic_model
         self.vectorizer = topic_model.vectorizer_model
-        self.set_texts = set_texts
         self.vocabulary_ = self.vectorizer.vocabulary_
         self.stop_words_ = self.vectorizer.stop_words_
         self.fixed_vocabulary_ = self.vectorizer.fixed_vocabulary_
@@ -19,8 +29,10 @@ class _BERTopicVectorizer(BaseEstimator):
         return self
 
     def transform(self, raw_documents: Iterable[str]):
-        self.set_texts(raw_documents)
-        return self.vectorizer.transform(raw_documents)
+        texts = list(raw_documents)
+        X = self.vectorizer.transform(texts)
+        X = _SparseWithText(X, texts=texts)
+        return X
 
     def fit_transform(self, raw_documents: Iterable[str], y=None):
         self.fit(raw_documents)
@@ -31,54 +43,57 @@ class _BERTopicVectorizer(BaseEstimator):
 
 
 class _BERTopicModel(BaseEstimator):
-    def __init__(self, topic_model: BERTopic, get_texts: Callable):
+    def __init__(self, topic_model: BERTopic):
+        self.topic_model = topic_model
         self.model = topic_model
-        self.get_texts = get_texts
 
-    def fit(self, X, y=None):
-        documents = self.get_texts()
-        self.model.fit(documents)
+    @property
+    def _has_outliers(self):
+        return -1 in self.model.topic_labels_
+
+    @property
+    def components_(self):
+        ctfidf = self.model.c_tf_idf_
+        if self._has_outliers:
+            ctfidf = ctfidf[1:, :]
+        return ctfidf.toarray()
+
+    def fit(self, X: _SparseWithText, y=None):
+        self.model.fit(X.texts)
         return self
 
-    def transform(self, X) -> np.array:
-        documents = self.get_texts()
-        return self.model.transform(documents)
+    def transform(self, X: _SparseWithText) -> np.array:
+        dist, _ = self.model.approximate_distribution(X.texts, padding=True)
+        return np.array(dist)
 
     def fit_transform(self, X, y=None):
         self.fit(X)
         return self.transform(X)
 
 
-class TextContainer:
-    def __init__(self):
-        self.texts = []
-
-    def set_texts(self, texts: Iterable[str]):
-        self.texts = texts
-
-    def get_texts(self) -> Iterable[str]:
-        return self.texts
-
-
-def bertopic_pipeline(topic_model: BERTopic) -> Pipeline:
+def bertopic_pipeline(model: BERTopic) -> Tuple[Pipeline, List[str]]:
     """Creates sklearn compatible wrapper for a BERTopic topic pipeline.
 
     Parameters
     ----------
-    topic_model: BERTopic
+    model: BERTopic
         Any BERTopic model.
 
     Returns
     -------
-    Pipeline
+    pipeline: Pipeline
         Sklearn pipeline wrapping the BERTopic topic model.
+    topic_names: list of str
+        Names of topics assigned in the BERTopic model.
     """
-    # I create a closure, so the raw documents can be
-    # Passed through the pipeline without the intermediary step
-    # This is necessary, because BERTopic doesn't produce
-    # Embeddings from the BOW representation, but embeds texts
-    # with transformers.
-    texts = TextContainer()
-    vectorizer = _BERTopicVectorizer(topic_model=topic_model, texts.set_texts=set_texts)
-    model = _BERTopicModel(topic_model=topic_model, get_texts=texts.get_texts)
-    return make_pipeline(vectorizer, model)
+    vectorizer = _BERTopicVectorizer(topic_model=model)
+    topic_model = _BERTopicModel(topic_model=model)
+    n_components, _ = topic_model.components_.shape
+    topic_names = []
+    if model.custom_labels_ is not None:
+        topic_labels = model.custom_labels_
+    else:
+        topic_labels = model.topic_labels_
+    for i_topic in range(n_components):
+        topic_names.append(topic_labels[i_topic])
+    return make_pipeline(vectorizer, topic_model), topic_names

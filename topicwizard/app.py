@@ -1,16 +1,16 @@
-from typing import Any, Iterable, List, Optional, Callable
-import sys
-import time
-import subprocess
-import threading
 import os
-import joblib
+import subprocess
+import sys
+import threading
+import time
+from typing import Any, Callable, Iterable, List, Optional
 
+import joblib
 from dash_extensions.enrich import Dash, DashBlueprint
 from sklearn.pipeline import Pipeline
 
-from topicwizard.blueprints.template import prepare_blueprint
 from topicwizard.blueprints.app import create_blueprint
+from topicwizard.blueprints.template import prepare_blueprint
 
 
 def is_notebook() -> bool:
@@ -150,17 +150,19 @@ def run_app(
         time.sleep(4)
 
         print("Open in browser:")
-        output.serve_kernel_port_as_window(port, anchor_text="Click this link to open topicwizard.")
+        output.serve_kernel_port_as_window(
+            port, anchor_text="Click this link to open topicwizard."
+        )
         return thread
 
-    elif is_notebook():
-        from IPython.display import IFrame, display
-
-        thread = threading.Thread(target=run_silent(app, port))
-        thread.start()
-        time.sleep(4)
-        display(IFrame(src=url, width="1200", height="1000"))
-        return thread
+    # elif is_notebook():
+    #     from IPython.display import IFrame, display
+    #
+    #     thread = threading.Thread(target=run_silent(app, port))
+    #     thread.start()
+    #     time.sleep(4)
+    #     display(IFrame(src=url, width="1200", height="1000"))
+    #     return thread
     else:
         open_url(url)
         app.run_server(port=port)

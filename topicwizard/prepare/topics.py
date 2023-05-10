@@ -25,7 +25,13 @@ def topic_positions(
     n_topics = topic_term_matrix.shape[0]
     # Setting perplexity to 30, or the number of topics minus one
     perplexity = np.min((30, n_topics - 1))
-    manifold = umap.UMAP(n_components=2, n_neighbors=perplexity, metric="cosine")
+    if n_topics <= 3:
+        init = "random"
+    else:
+        init = "spectral"
+    manifold = umap.UMAP(
+        n_components=2, n_neighbors=perplexity, metric="cosine", init=init
+    )
     x, y = manifold.fit_transform(topic_term_matrix).T
     return x, y
 

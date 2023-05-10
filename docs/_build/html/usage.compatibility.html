@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Deployment" href="usage.deployment.html" /><link rel="prev" title="Persistence" href="usage.persistence.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
         <title>Compatibility - topicwizard</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -208,15 +208,124 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="compatibility">
-<h1>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this heading">#</a></h1>
-<p>This part of the documentation is under construction.</p>
+<span id="usage-compatibility"></span><h1>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this heading">#</a></h1>
+<p>Compatibility layers have been introduced with version 0.2.4,
+Gensim and BERTopic can now be used with topicwizard.</p>
+<section id="gensim">
+<h2>Gensim<a class="headerlink" href="#gensim" title="Permalink to this heading">#</a></h2>
+<p>sklearn compatible pipelines for Gensim models can be created once you have a dictionary
+and a topic model object available, topicwizard is compatible with LSI, LDA (also multicore) and NMF.</p>
+<p>First you need to train a Gensim dictionary and topic model.</p>
+<p>… code-block:: python</p>
+<blockquote>
+<div><p>from gensim.corpora.dictionary import Dictionary
+from gensim.models import LdaModel</p>
+<dl class="simple">
+<dt>texts: list[list[str] = [</dt><dd><p>[‘computer’, ‘time’, ‘graph’],
+[‘survey’, ‘response’, ‘eps’],
+[‘human’, ‘system’, ‘computer’],
+…</p>
+</dd>
+</dl>
+<p>]
+dictionary = Dictionary(texts)
+bow_corpus = [dictionary.doc2bow(text) for text in texts]
+lda = LdaModel(bow_corpus, num_topics=10)</p>
+</div></blockquote>
+<p>Then you need to create a pipeline with topicwizard.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">topicwizard</span><span class="o">.</span><span class="n">gensim_pipeline</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">lda</span><span class="p">)</span>
+<span class="c1"># Then you can use the pipeline as usual</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">corpus</span><span class="o">=</span><span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="bertopic">
+<h2>BERTopic<a class="headerlink" href="#bertopic" title="Permalink to this heading">#</a></h2>
+<p>You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.</p>
+<p>First you need to train a BERTopic topic model.</p>
+<p>… code-block:: python</p>
+<blockquote>
+<div><p>from bertopic import BERTopic</p>
+<p>model = BERTopic(corpus)</p>
+</div></blockquote>
+<p>Then you need to create a pipeline with topicwizard.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+
+<span class="c1"># BERTopic automatically assigns topic names, you can use these</span>
+<span class="c1"># in topicwizard</span>
+<span class="n">pipeline</span><span class="p">,</span> <span class="n">topic_names</span> <span class="o">=</span> <span class="n">topicwizard</span><span class="o">.</span><span class="n">bertopic_pipeline</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Then you can use the pipeline as usual</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">corpus</span><span class="o">=</span><span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>BERTopic compatibility is an experimental feature in topicwizard.
+Most of topicwizard rests on the bag of words assumption, and two-step topic
+pipelines, which BERTopic does not conform to.
+Document and word positions for example are solely based on c-TF-IDF representations,
+not on the contextual embeddings in BERTopic.</p>
+<p>If you find that the results are unsatisfactory, we recommend that you use BERTopic’s
+own excellent visualizations. (They are honestly pretty great :))
+In the future there is a possiblity of a BERTopic-specific visualization dashboard.</p>
+</div>
+</section>
+<section id="custom-topic-models">
+<h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Permalink to this heading">#</a></h2>
+<p>You can write topic models, which are compatible with topicwizard.
+If you have a topic model, which rests on the bag-of-words assumption this is
+a fairly straightforward task.</p>
+<p>Vectorizer components of the pipeline should have the following properties:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+
+<span class="c1"># All of your components should ideally be inherited from BaseEstimator</span>
+<span class="k">class</span> <span class="nc">CustomVectorizer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+
+   <span class="c1"># All vectorizers should have a transform method,</span>
+   <span class="c1"># that turns raw texts into sparse arrays</span>
+   <span class="c1"># of shape (n_documents, n_features)</span>
+   <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_documents</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+       <span class="k">pass</span>
+
+   <span class="c1"># All vectorizers should have a get_feature_names_out method, that</span>
+   <span class="c1"># returns a dense array of feature names</span>
+   <span class="k">def</span> <span class="nf">get_feature_names_out</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+       <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Topic model components should follow the following structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same thing, BaseEstimator is a good thing to have</span>
+<span class="k">class</span> <span class="nc">CustomTopicModel</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+
+    <span class="c1"># All topic models should have a transform method, that takes</span>
+    <span class="c1"># the vectorized documents and returns a sparse or dense array of</span>
+    <span class="c1"># topic distributions with shape (n_docs, n_topics)</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># All topic models should have a property or attribute named</span>
+    <span class="c1"># components_, that should be a dense or sparse array of topic-word</span>
+    <span class="c1"># distributions of shape (n_topics, n_features)</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">components_</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -262,8 +371,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Compatibility</a><ul>
+<li><a class="reference internal" href="#gensim">Gensim</a></li>
+<li><a class="reference internal" href="#bertopic">BERTopic</a></li>
+<li><a class="reference internal" href="#custom-topic-models">Custom Topic Models</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

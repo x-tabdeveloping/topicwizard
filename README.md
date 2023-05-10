@@ -49,18 +49,20 @@ pip install topic-wizard
 ### Step 1:
 
 Train a scikit-learn compatible topic model.
+(If you want to use non-scikit-learn topic models, check [compatibility](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html))
 
 ```python
 from sklearn.decomposition import NMF
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
 
-topic_pipeline = Pipeline(
-    [
-        ("bow", CountVectorizer()),
-        ("nmf", NMF(n_components=10)),
-    ]
+# Create topic pipeline
+topic_pipeline = make_pipeline(
+    CountVectorizer(),
+    NMF(n_components=10),
 )
+
+# Then fit it on the given texts
 topic_pipeline.fit(texts)
 ```
 
@@ -71,7 +73,11 @@ Visualize with topicwizard.
 ```python
 import topicwizard
 
-topicwizard.visualize(pipeline=topic_pipeline, corpus=texts)
+# You can get automatically assigned topic labels, that you can change manually later
+topic_names = topicwizard.infer_topic_names(pipeline=pipeline)
+
+# Then you can visualize your results
+topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, topic_names=topic_names)
 ```
 
 ### Step 3:

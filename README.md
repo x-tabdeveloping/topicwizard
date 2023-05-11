@@ -19,9 +19,9 @@ https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-
 
 ## New in version 0.2.4 🌟 🌟
 
- - Compatiblity with Gensim topic models. 💥
- - Compatibility with BERTopic (experimental 🧪)
- - Topic name inference. 🧠
+ - [Compatiblity with Gensim topic models](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html) 💥
+ - [Compatibility with BERTopic](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html)(experimental 🧪)
+ - Topic name inference 🧠
 
 
 ## Features

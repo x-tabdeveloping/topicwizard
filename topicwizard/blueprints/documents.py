@@ -8,11 +8,11 @@ from plotly import colors
 import topicwizard.prepare.documents as prepare
 from topicwizard.components.documents.document_map import create_document_map
 from topicwizard.components.documents.document_pie import create_document_pie
-from topicwizard.components.documents.document_selector import \
-    create_document_selector
+from topicwizard.components.documents.document_selector import create_document_selector
 from topicwizard.components.documents.document_timeline import create_timeline
-from topicwizard.components.documents.document_wordcloud import \
-    create_document_wordcloud
+from topicwizard.components.documents.document_wordcloud import (
+    create_document_wordcloud,
+)
 from topicwizard.components.documents.window_slider import create_window_slider
 
 
@@ -25,7 +25,7 @@ def create_blueprint(
     corpus: List[str],
     vectorizer: Any,
     topic_model: Any,
-    topic_names: List[str],
+    **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     n_topics = topic_term_matrix.shape[0]

@@ -1,17 +1,10 @@
 import functools
-from typing import Tuple, List, Any
+from typing import Any, List, Tuple
 
 import dash_mantine_components as dmc
 import numpy as np
 import plotly.graph_objects as go
-from dash_extensions.enrich import (
-    DashBlueprint,
-    Input,
-    Output,
-    State,
-    dcc,
-    html,
-)
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc, html
 
 import topicwizard.plots.topics as plots
 import topicwizard.prepare.topics as prepare
@@ -55,13 +48,9 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
-    document_names: List[str],
-    corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
     topic_names: List[str],
+    **kwargs,
 ) -> DashBlueprint:
-
     # --------[ Preparing data ]--------
     topic_positions = prepare.topic_positions(topic_term_matrix)
     (

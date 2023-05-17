@@ -6,8 +6,7 @@ from dash_extensions.enrich import DashBlueprint, dcc, html
 from plotly import colors
 
 import topicwizard.prepare.words as prepare
-from topicwizard.components.words.association_slider import \
-    create_association_slider
+from topicwizard.components.words.association_slider import create_association_slider
 from topicwizard.components.words.word_barplot import create_word_barplot
 from topicwizard.components.words.word_map import create_word_map
 from topicwizard.components.words.word_selector import create_word_selector
@@ -16,13 +15,9 @@ from topicwizard.components.words.word_selector import create_word_selector
 def create_blueprint(
     vocab: np.ndarray,
     document_term_matrix: np.ndarray,
-    document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
-    document_names: List[str],
-    corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
     topic_names: List[str],
+    **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     word_positions = prepare.word_positions(topic_term_matrix=topic_term_matrix)

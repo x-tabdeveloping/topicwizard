@@ -17,7 +17,7 @@ Pretty and opinionated topic model visualization in Python.
 
 https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
 
-## New in version 0.2.4 🌟 🌟
+## New in version 0.2.5 🌟 🌟
 
  - [Compatiblity with Gensim topic models](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html) 💥
  - [Compatibility with BERTopic](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html)(experimental 🧪)

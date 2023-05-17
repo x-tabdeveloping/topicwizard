@@ -3,8 +3,6 @@ from typing import Iterable
 
 import numpy as np
 import scipy.sparse as spr
-from gensim.corpora.dictionary import Dictionary
-from gensim.models import LdaModel, LdaMulticore, LsiModel, Nmf
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline, make_pipeline
 from tqdm import tqdm
@@ -29,7 +27,7 @@ class DictionaryVectorizer(BaseEstimator):
         Mapping of terms to feature indices.
     """
 
-    def __init__(self, dictionary: Dictionary):
+    def __init__(self, dictionary):
         self.dictionary = dictionary
         self.index_to_key = np.array(dictionary.keys())
         self.key_to_index = {key: index for index, key in enumerate(self.index_to_key)}
@@ -118,7 +116,7 @@ class TopicModelWrapper(BaseEstimator):
 
     def __init__(
         self,
-        model: LdaModel | LdaMulticore | Nmf | LsiModel,
+        model,
         index_to_key: dict[int, int],
     ):
         self.model = model
@@ -171,9 +169,7 @@ class TopicModelWrapper(BaseEstimator):
         return self.transform(X)
 
 
-def gensim_pipeline(
-    dictionary: Dictionary, model: LdaModel | LdaMulticore | Nmf | LsiModel
-) -> Pipeline:
+def gensim_pipeline(dictionary, model) -> Pipeline:
     """Creates sklearn compatible wrapper for a Gensim topic pipeline.
 
     Parameters

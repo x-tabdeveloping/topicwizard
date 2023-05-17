@@ -1,8 +1,7 @@
-from typing import Callable, Iterable, List, Tuple
+from typing import Iterable, List, Tuple
 
 import numpy as np
 import scipy.sparse as spr
-from bertopic import BERTopic
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline, make_pipeline
 
@@ -17,7 +16,7 @@ class _SparseWithText(spr.csr_array):
 
 
 class _BERTopicVectorizer(BaseEstimator):
-    def __init__(self, topic_model: BERTopic):
+    def __init__(self, topic_model):
         self.topic_model = topic_model
         self.vectorizer = topic_model.vectorizer_model
         self.vocabulary_ = self.vectorizer.vocabulary_
@@ -43,7 +42,7 @@ class _BERTopicVectorizer(BaseEstimator):
 
 
 class _BERTopicModel(BaseEstimator):
-    def __init__(self, topic_model: BERTopic):
+    def __init__(self, topic_model):
         self.topic_model = topic_model
         self.model = topic_model
 
@@ -71,7 +70,7 @@ class _BERTopicModel(BaseEstimator):
         return self.transform(X)
 
 
-def bertopic_pipeline(model: BERTopic) -> Tuple[Pipeline, List[str]]:
+def bertopic_pipeline(model) -> Tuple[Pipeline, List[str]]:
     """Creates sklearn compatible wrapper for a BERTopic topic pipeline.
 
     Parameters

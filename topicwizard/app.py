@@ -194,6 +194,22 @@ def load(
     return run_app(app, port=port)
 
 
+def split_pipeline(
+    vectorizer: Any, topic_model: Any, pipeline: Optional[Pipeline]
+) -> tuple[Any, Any]:
+    """Check which arguments are provided,
+    raises error if the arguments are not satisfactory, and if needed
+    splits Pipeline into vectorizer and topic model."""
+    if (vectorizer is None) or (topic_model is None):
+        if pipeline is None:
+            raise TypeError(
+                "Either pipeline, or vectorizer and topic model have to be provided"
+            )
+        _, vectorizer = pipeline.steps[0]
+        _, topic_model = pipeline.steps[-1]
+    return vectorizer, topic_model
+
+
 def visualize(
     corpus: Iterable[str],
     vectorizer: Optional[Any] = None,
@@ -235,12 +251,7 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    if (vectorizer is None) and (topic_model is None):
-        assert (
-            pipeline is not None
-        ), "Either pipeline or vectorizer and topic model have to be provided"
-        (_, vectorizer), (_, topic_model) = pipeline.steps
-
+    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
     print("Preprocessing")
     app = get_dash_app(
         vectorizer=vectorizer,

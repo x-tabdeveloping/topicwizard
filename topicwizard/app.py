@@ -3,7 +3,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Callable, Iterable, List, Optional
+from typing import Any, Callable, Iterable, List, Literal, Optional, Set
 
 import joblib
 from dash_extensions.enrich import Dash, DashBlueprint
@@ -27,6 +27,8 @@ def get_app_blueprint(
     corpus: Iterable[str],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    *args,
+    **kwargs,
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
         vectorizer=vectorizer,
@@ -35,14 +37,20 @@ def get_app_blueprint(
         document_names=document_names,
         topic_names=topic_names,
         create_blueprint=create_blueprint,
+        *args,
+        **kwargs,
     )
     return blueprint
+
+
+PageName = Literal["topics", "documents", "words"]
 
 
 def get_dash_app(
     vectorizer: Any,
     topic_model: Any,
     corpus: Iterable[str],
+    exclude_pages: Set[PageName],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
 ) -> Dash:
@@ -76,6 +84,7 @@ def get_dash_app(
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
+        exclude_pages=exclude_pages,
     )
     app = Dash(
         __name__,
@@ -217,8 +226,8 @@ def visualize(
     pipeline: Optional[Pipeline] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    exclude_pages: Optional[Iterable[PageName]] = None,
     port: int = 8050,
-    enable_notebook: bool = False,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
 
@@ -242,6 +251,11 @@ def visualize(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided topics will initially
         be labeled 'Topic <index>'.
+    exclude_pages: iterable of {"topics", "documents", "words"}
+        Set of pages you want to exclude from the application.
+        This can be relevant as with larger corpora for example,
+        calculating UMAP embeddings for documents or words can take
+        a long time and you might not be interested in them.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
 
@@ -252,6 +266,7 @@ def visualize(
         returns None otherwise.
     """
     vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
+    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
     app = get_dash_app(
         vectorizer=vectorizer,
@@ -259,5 +274,6 @@ def visualize(
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
+        exclude_pages=exclude_pages,
     )
     return run_app(app, port=port)

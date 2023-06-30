@@ -1,12 +1,19 @@
 from typing import Any, Callable, Iterable, List, Optional
+
 from warnings import warn
 
 import numpy as np
-from dash_extensions.enrich import DashBlueprint
+from dash_extensions.enrich import DashBlueprint, html
 
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 BlueprintCreator = Callable[..., DashBlueprint]
+
+
+def create_blank_page(name: str) -> DashBlueprint:
+    blueprint = DashBlueprint()
+    blueprint.layout = html.Div(id=f"{name}_container")
+    return blueprint
 
 
 def prepare_blueprint(
@@ -16,6 +23,8 @@ def prepare_blueprint(
     create_blueprint: BlueprintCreator,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    *args,
+    **kwargs,
 ) -> DashBlueprint:
     corpus = list(corpus)
     n_documents = len(corpus)
@@ -51,5 +60,7 @@ def prepare_blueprint(
         vectorizer=vectorizer,
         topic_model=topic_model,
         topic_names=topic_names,
+        *args,
+        **kwargs,
     )
     return blueprint

@@ -3,7 +3,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Callable, Iterable, List, Optional
+from typing import Any, Callable, Iterable, List, Literal, Optional, Set
 
 import joblib
 from dash_extensions.enrich import Dash, DashBlueprint
@@ -27,6 +27,8 @@ def get_app_blueprint(
     corpus: Iterable[str],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    *args,
+    **kwargs,
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
         vectorizer=vectorizer,
@@ -35,14 +37,20 @@ def get_app_blueprint(
         document_names=document_names,
         topic_names=topic_names,
         create_blueprint=create_blueprint,
+        *args,
+        **kwargs,
     )
     return blueprint
+
+
+PageName = Literal["topics", "documents", "words"]
 
 
 def get_dash_app(
     vectorizer: Any,
     topic_model: Any,
     corpus: Iterable[str],
+    exclude_pages: Set[PageName],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
 ) -> Dash:
@@ -76,6 +84,7 @@ def get_dash_app(
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
+        exclude_pages=exclude_pages,
     )
     app = Dash(
         __name__,
@@ -194,6 +203,22 @@ def load(
     return run_app(app, port=port)
 
 
+def split_pipeline(
+    vectorizer: Any, topic_model: Any, pipeline: Optional[Pipeline]
+) -> tuple[Any, Any]:
+    """Check which arguments are provided,
+    raises error if the arguments are not satisfactory, and if needed
+    splits Pipeline into vectorizer and topic model."""
+    if (vectorizer is None) or (topic_model is None):
+        if pipeline is None:
+            raise TypeError(
+                "Either pipeline, or vectorizer and topic model have to be provided"
+            )
+        _, vectorizer = pipeline.steps[0]
+        _, topic_model = pipeline.steps[-1]
+    return vectorizer, topic_model
+
+
 def visualize(
     corpus: Iterable[str],
     vectorizer: Optional[Any] = None,
@@ -201,8 +226,8 @@ def visualize(
     pipeline: Optional[Pipeline] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    exclude_pages: Optional[Iterable[PageName]] = None,
     port: int = 8050,
-    enable_notebook: bool = False,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
 
@@ -226,6 +251,11 @@ def visualize(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided topics will initially
         be labeled 'Topic <index>'.
+    exclude_pages: iterable of {"topics", "documents", "words"}
+        Set of pages you want to exclude from the application.
+        This can be relevant as with larger corpora for example,
+        calculating UMAP embeddings for documents or words can take
+        a long time and you might not be interested in them.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
 
@@ -235,12 +265,8 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    if (vectorizer is None) and (topic_model is None):
-        assert (
-            pipeline is not None
-        ), "Either pipeline or vectorizer and topic model have to be provided"
-        (_, vectorizer), (_, topic_model) = pipeline.steps
-
+    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
+    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
     app = get_dash_app(
         vectorizer=vectorizer,
@@ -248,5 +274,6 @@ def visualize(
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
+        exclude_pages=exclude_pages,
     )
     return run_app(app, port=port)

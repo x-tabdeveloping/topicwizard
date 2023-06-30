@@ -27,6 +27,8 @@ def get_app_blueprint(
     corpus: Iterable[str],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    *args,
+    **kwargs,
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
         vectorizer=vectorizer,
@@ -35,6 +37,8 @@ def get_app_blueprint(
         document_names=document_names,
         topic_names=topic_names,
         create_blueprint=create_blueprint,
+        *args,
+        **kwargs,
     )
     return blueprint
 

@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Callable, List, Optional
+from typing import Any, Callable, Iterable, List, Optional
 
 from dash_extensions.enrich import DashBlueprint
 
@@ -14,6 +14,8 @@ def prepare_blueprint(
     create_blueprint: BlueprintCreator,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    *args,
+    **kwargs,
 ) -> DashBlueprint:
     corpus = list(corpus)
     n_documents = len(corpus)
@@ -38,5 +40,7 @@ def prepare_blueprint(
         vectorizer=vectorizer,
         topic_model=topic_model,
         topic_names=topic_names,
+        *args,
+        **kwargs,
     )
     return blueprint

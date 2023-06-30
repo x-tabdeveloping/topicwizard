@@ -1,10 +1,16 @@
 from typing import Any, Callable, Iterable, List, Optional
 
-from dash_extensions.enrich import DashBlueprint
+from dash_extensions.enrich import DashBlueprint, html
 
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 BlueprintCreator = Callable[..., DashBlueprint]
+
+
+def create_blank_blueprint() -> DashBlueprint:
+    blueprint = DashBlueprint()
+    blueprint.layout = html.Div()
+    return blueprint
 
 
 def prepare_blueprint(

@@ -1,16 +1,16 @@
-from typing import Any, Dict, List
+from io import BytesIO
+from typing import Any, Dict, List, Set
 
 import dash_mantine_components as dmc
 import joblib
-from io import BytesIO
 import numpy as np
 from dash_extensions.enrich import (
     DashBlueprint,
-    exceptions,
     Input,
     Output,
     State,
     dcc,
+    exceptions,
     html,
 )
 from dash_iconify import DashIconify
@@ -18,6 +18,8 @@ from dash_iconify import DashIconify
 import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
+from topicwizard.app import PageName
+from topicwizard.blueprints.template import create_blank_blueprint
 
 
 def create_blueprint(
@@ -30,41 +32,58 @@ def create_blueprint(
     vectorizer: Any,
     topic_model: Any,
     topic_names: List[str],
+    exclude_pages: Set[PageName],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
-    topic_blueprint = topics.create_blueprint(
-        vocab=vocab,
-        document_term_matrix=document_term_matrix,
-        document_topic_matrix=document_topic_matrix,
-        topic_term_matrix=topic_term_matrix,
-        document_names=document_names,
-        corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
-        topic_names=topic_names,
+    topic_blueprint = (
+        topics.create_blueprint(
+            vocab=vocab,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            topic_term_matrix=topic_term_matrix,
+            document_names=document_names,
+            corpus=corpus,
+            vectorizer=vectorizer,
+            topic_model=topic_model,
+            topic_names=topic_names,
+        )
+        if "topics" not in exclude_pages
+        else create_blank_blueprint()
     )
-    documents_blueprint = documents.create_blueprint(
-        vocab=vocab,
-        document_term_matrix=document_term_matrix,
-        document_topic_matrix=document_topic_matrix,
-        topic_term_matrix=topic_term_matrix,
-        document_names=document_names,
-        corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
-        topic_names=topic_names,
+    documents_blueprint = (
+        documents.create_blueprint(
+            vocab=vocab,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            topic_term_matrix=topic_term_matrix,
+            document_names=document_names,
+            corpus=corpus,
+            vectorizer=vectorizer,
+            topic_model=topic_model,
+            topic_names=topic_names,
+        )
+        if "documents" not in exclude_pages
+        else create_blank_blueprint()
     )
-    words_blueprint = words.create_blueprint(
-        vocab=vocab,
-        document_term_matrix=document_term_matrix,
-        document_topic_matrix=document_topic_matrix,
-        topic_term_matrix=topic_term_matrix,
-        document_names=document_names,
-        corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
-        topic_names=topic_names,
+    words_blueprint = (
+        words.create_blueprint(
+            vocab=vocab,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            topic_term_matrix=topic_term_matrix,
+            document_names=document_names,
+            corpus=corpus,
+            vectorizer=vectorizer,
+            topic_model=topic_model,
+            topic_names=topic_names,
+        )
+        if "words" not in exclude_pages
+        else create_blank_blueprint()
     )
+    options = []
+    for option in ["Topics", "Words", "Documents"]:
+        if option.lower() not in exclude_pages:
+            options.append(option)
     blueprints = [
         topic_blueprint,
         words_blueprint,
@@ -84,8 +103,8 @@ def create_blueprint(
                 [
                     dmc.SegmentedControl(
                         id="page_picker",
-                        data=["Topics", "Words", "Documents"],
-                        value="Topics",
+                        data=options,
+                        value=options[0],
                         color="orange",
                         size="md",
                         radius="xl",

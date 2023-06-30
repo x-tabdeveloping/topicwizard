@@ -103,7 +103,7 @@ def get_dash_app(
     return app
 
 
-def load_app(filename: str) -> Dash:
+def load_app(filename: str, exclude_pages: Set[PageName]) -> Dash:
     """Loads and prepares saved app from disk.
 
     Parameters
@@ -117,7 +117,7 @@ def load_app(filename: str) -> Dash:
         Dash application.
     """
     data = joblib.load(filename)
-    return get_dash_app(**data)
+    return get_dash_app(**data, exclude_pages=exclude_pages)
 
 
 def open_url(url: str) -> None:
@@ -179,6 +179,7 @@ def run_app(
 
 def load(
     filename: str,
+    exclude_pages: Optional[Iterable[PageName]] = None,
     port: int = 8050,
 ) -> Optional[threading.Thread]:
     """Visualizes topic model data loaded from disk.
@@ -187,10 +188,13 @@ def load(
     ----------
     filename: str
         Path to the file where the data is stored.
+    exclude_pages: iterable of {"topics", "documents", "words"}
+        Set of pages you want to exclude from the application.
+        This can be relevant as with larger corpora for example,
+        calculating UMAP embeddings for documents or words can take
+        a long time and you might not be interested in them.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
-    enable_notebook: bool, default False
-        Specifies whether topicwizard should run in a Jupyter notebook.
 
     Returns
     -------
@@ -199,7 +203,8 @@ def load(
         returns None otherwise.
     """
     print("Preparing data")
-    app = load_app(filename)
+    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
+    app = load_app(filename, exclude_pages=exclude_pages)
     return run_app(app, port=port)
 
 

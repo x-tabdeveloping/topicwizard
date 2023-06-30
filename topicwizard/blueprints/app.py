@@ -18,7 +18,7 @@ from dash_iconify import DashIconify
 import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
-from topicwizard.blueprints.template import create_blank_blueprint
+from topicwizard.blueprints.template import create_blank_page
 
 
 def create_blueprint(
@@ -47,7 +47,7 @@ def create_blueprint(
             topic_names=topic_names,
         )
         if "topics" not in exclude_pages
-        else create_blank_blueprint()
+        else create_blank_page("topics")
     )
     documents_blueprint = (
         documents.create_blueprint(
@@ -62,7 +62,7 @@ def create_blueprint(
             topic_names=topic_names,
         )
         if "documents" not in exclude_pages
-        else create_blank_blueprint()
+        else create_blank_page("documents")
     )
     words_blueprint = (
         words.create_blueprint(
@@ -77,7 +77,7 @@ def create_blueprint(
             topic_names=topic_names,
         )
         if "words" not in exclude_pages
-        else create_blank_blueprint()
+        else create_blank_page("words")
     )
     options = []
     for option in ["Topics", "Words", "Documents"]:

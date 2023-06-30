@@ -7,9 +7,9 @@ from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 BlueprintCreator = Callable[..., DashBlueprint]
 
 
-def create_blank_blueprint() -> DashBlueprint:
+def create_blank_page(name: str) -> DashBlueprint:
     blueprint = DashBlueprint()
-    blueprint.layout = html.Div()
+    blueprint.layout = html.Div(id=f"{name}_container")
     return blueprint
 
 

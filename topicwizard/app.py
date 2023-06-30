@@ -70,8 +70,8 @@ def get_dash_app(
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
     topic_names: list of str, default None
-        List of topic names in the corpus, if not provided topics will initially
-        be labeled 'Topic <index>'.
+        List of topic names in the corpus, if not provided, topic
+        labels will be inferred.
 
     Returns
     -------
@@ -249,8 +249,8 @@ def visualize(
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
     topic_names: list of str, default None
-        List of topic names in the corpus, if not provided topics will initially
-        be labeled 'Topic <index>'.
+        List of topic names in the corpus, if not provided topic
+        names will be inferred.
     exclude_pages: iterable of {"topics", "documents", "words"}
         Set of pages you want to exclude from the application.
         This can be relevant as with larger corpora for example,

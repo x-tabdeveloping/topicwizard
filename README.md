@@ -73,7 +73,17 @@ Visualize with the topicwizard webapp :bulb:
 ```python
 import topicwizard
 
-topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, topic_names=topic_names)
+topicwizard.visualize(pipeline=topic_pipeline, corpus=texts)
+```
+
+From version 0.3.0 you can also disable pages you do not wish to display thereby sparing a lot of time for yourself:
+
+```python
+import topicwizard
+
+# A large corpus takes a looong time to compute 2D projections for so
+# so you can speed up preprocessing by disabling it alltogether.
+topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, exclude_pages=["documents"])
 ```
 
 ![topics screenshot](assets/screenshot_topics.png)

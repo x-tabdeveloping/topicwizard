@@ -17,11 +17,11 @@ Pretty and opinionated topic model visualization in Python.
 
 https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
 
-## New in version 0.2.5 🌟 🌟
+## New in version 0.3.0 🌟 🌟
 
- - [Compatiblity with Gensim topic models](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html) 💥
- - [Compatibility with BERTopic](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html)(experimental 🧪)
- - Topic name inference 🧠
+ - Exclude pages, that are not needed :bird:
+ - Self-contained interactive figures :gift:
+ - Topic name inference is now default behavior and is done implicitly.
 
 
 ## Features
@@ -66,33 +66,57 @@ topic_pipeline = make_pipeline(
 topic_pipeline.fit(texts)
 ```
 
-### Step 2:
+### Step 2a:
 
-Visualize with topicwizard.
+Visualize with the topicwizard webapp :bulb:
 
 ```python
 import topicwizard
 
-# You can get automatically assigned topic labels, that you can change manually later
-topic_names = topicwizard.infer_topic_names(pipeline=pipeline)
-
-# Then you can visualize your results
 topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, topic_names=topic_names)
 ```
 
-### Step 3:
-
-Investigate :eyes: .
-
-#### a) Topics
-
 ![topics screenshot](assets/screenshot_topics.png)
-
-#### b) Words
-
 ![words screenshot](assets/screenshot_words.png)
 ![words screenshot](assets/screenshot_words_zoomed.png)
-
-#### c) Documents
-
 ![documents screenshot](assets/screenshot_documents.png)
+
+Ooooor...
+
+### Step 2b:
+
+Produce high quality self-contained HTML plots and create your own dashboards/reports :strawberry:
+
+### Map of words
+
+```python
+from topicwizard.figures import word_map
+
+word_map(corpus=texts, pipeline=pipeline)
+```
+
+![word map screenshot](assets/word_map.png)
+
+### Timelines of topic distributions
+
+```python
+from topicwizard.figures import document_topic_timeline
+
+document_topic_timeline(
+    "Joe Biden takes over presidential office from Donald Trump.",
+    pipeline=pipeline,
+)
+```
+![document timeline](assets/document_topic_timeline.png)
+
+### Wordclouds of your topics :cloud:
+
+```python
+from topicwizard.figures import topic_wordclouds
+
+topic_wordclouds(corpus=texts, pipeline=pipeline)
+```
+
+![wordclouds](assets/topic_wordclouds.png)
+
+### And much more ([documentation](https://x-tabdeveloping.github.io/topic-wizard/))

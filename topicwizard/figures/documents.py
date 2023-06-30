@@ -14,7 +14,7 @@ from topicwizard.prepare.topics import infer_topic_names
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 
-def plot_document_topic_distribution(
+def document_topic_distribution(
     documents: Union[List[str], str],
     pipeline: Optional[Pipeline] = None,
     vectorizer: Any = None,
@@ -47,7 +47,7 @@ def plot_document_topic_distribution(
     )
 
 
-def plot_document_wordcloud(
+def document_wordcloud(
     documents: Union[List[str], str],
     pipeline: Optional[Pipeline] = None,
     vectorizer: Any = None,
@@ -71,7 +71,7 @@ def plot_document_wordcloud(
     )
 
 
-def plot_document_topic_timeline(
+def document_topic_timeline(
     document: str,
     pipeline: Optional[Pipeline] = None,
     vectorizer: Any = None,

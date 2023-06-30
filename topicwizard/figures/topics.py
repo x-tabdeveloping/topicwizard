@@ -10,7 +10,7 @@ from topicwizard.app import split_pipeline
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 
-def plot_topic_map(
+def topic_map(
     corpus: Iterable[str],
     pipeline: Optional[Pipeline] = None,
     vectorizer: Any = None,
@@ -45,7 +45,7 @@ def plot_topic_map(
     return fig
 
 
-def plot_most_relevant_words(
+def most_relevant_words(
     topic_id: int,
     corpus: Iterable[str],
     top_n: int = 30,
@@ -78,7 +78,7 @@ def plot_most_relevant_words(
     return plots.topic_plot(top_words)
 
 
-def plot_topic_wordcloud(
+def topic_wordcloud(
     topic_id: int,
     corpus: Iterable[str],
     top_n: int = 30,

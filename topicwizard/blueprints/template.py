@@ -1,10 +1,11 @@
 from typing import Any, Callable, Iterable, List, Optional
-
 from warnings import warn
 
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, html
+from sklearn.pipeline import make_pipeline
 
+from topicwizard.prepare.topics import infer_topic_names
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 BlueprintCreator = Callable[..., DashBlueprint]
@@ -49,7 +50,7 @@ def prepare_blueprint(
         document_names = list(np.array(document_names)[~nan_documents])
     n_topics = topic_term_matrix.shape[0]
     if topic_names is None:
-        topic_names = [f"Topic {i}" for i in range(n_topics)]
+        topic_names = infer_topic_names(pipeline=make_pipeline(vectorizer, topic_model))
     blueprint = create_blueprint(
         vocab=vocab,
         document_term_matrix=document_term_matrix,

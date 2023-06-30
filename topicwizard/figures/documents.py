@@ -185,6 +185,10 @@ def document_topic_timeline(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
+    window_size: int, default 10
+        Windows of tokens to take for timeline construction.
+    step: int, default 1
+        Step size of the window in number of tokens.
 
     Returns
     -------

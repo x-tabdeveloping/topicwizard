@@ -79,10 +79,6 @@ def create_blueprint(
     app_blueprint = DashBlueprint()
     app_blueprint.layout = html.Div(
         [
-            dcc.Store(
-                "topic_names",
-                data=topic_names,
-            ),
             dcc.Store("current_topic", data=0),
             dmc.Grid(
                 [

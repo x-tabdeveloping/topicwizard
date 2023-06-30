@@ -95,6 +95,10 @@ def create_blueprint(
     app_blueprint.layout = html.Div(
         [
             dcc.Download("download_data"),
+            dcc.Store(
+                "topic_names",
+                data=topic_names,
+            ),
             topic_blueprint.layout,
             words_blueprint.layout,
             documents_blueprint.layout,

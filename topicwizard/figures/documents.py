@@ -1,7 +1,9 @@
 """External API for creating self-contained figures for documents."""
-from typing import Any, List, Optional, Union
+from typing import Any, Iterable, List, Literal, Optional, Union
 
 import numpy as np
+import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
 import scipy.sparse as spr
 from plotly import colors
@@ -14,6 +16,90 @@ from topicwizard.prepare.topics import infer_topic_names
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 
+def document_map(
+    corpus: Iterable[str],
+    pipeline: Optional[Pipeline] = None,
+    vectorizer: Any = None,
+    topic_model: Any = None,
+    topic_names: Optional[List[str]] = None,
+    document_names: Optional[List[str]] = None,
+    representation: Literal["term", "topic"] = "term",
+) -> go.Figure:
+    """Plots documents on a scatter plot based on the UMAP projections
+    of their representations in the model into 2D space.
+
+    Parameters
+    ----------
+    corpus: iterable of str
+        List of all works in the corpus you intend to visualize.
+    pipeline: Pipeline, default None
+        Sklearn compatible pipeline, that has two components:
+        a vectorizer and a topic model.
+        Ignored if vectorizer and topic_model are provided.
+    vectorizer: Vectorizer, default None
+        Sklearn compatible vectorizer, that turns texts into
+        bag-of-words representations.
+    topic_model: TopicModel, default None
+        Sklearn compatible topic model, that can transform documents
+        into topic distributions.
+    topic_names: list of str, default None
+        List of topic names in the corpus, if not provided
+        topic names will be inferred.
+    representation: {"term", "topic"}, default "term"
+        Determines which representation of the documents should be
+        projected to 2D space and displayed.
+        If 'term', representations returned from the vectorizer
+        will be used, if 'topic', representations returned by
+        the topic model will be used. This can be particularly
+        advantageous with non-bag-of-words topic models.
+
+    Returns
+    -------
+    go.Figure
+        Map of documents.
+    """
+    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
+    if pipeline is None:
+        pipeline = make_pipeline(vectorizer, topic_model)
+    if topic_names is None:
+        topic_names = infer_topic_names(pipeline)
+    (
+        document_term_matrix,
+        document_topic_matrix,
+        topic_term_matrix,
+    ) = prepare_transformed_data(vectorizer, topic_model, corpus)
+    n_docs = document_term_matrix.shape[0]
+    if document_names is None:
+        document_names = [f"Document {i}" for i in range(n_docs)]
+    if representation == "term":
+        x, y = prepare.document_positions(document_term_matrix)
+    else:
+        x, y = prepare.document_positions(document_topic_matrix)
+    dominant_topic = prepare.dominant_topic(document_topic_matrix)
+    dominant_topic = np.array(topic_names)[dominant_topic]
+    words_df = pd.DataFrame(
+        dict(
+            dominant_topic=dominant_topic,
+            x=x,
+            y=y,
+            document_name=document_names,
+        )
+    )
+    return px.scatter(
+        words_df,
+        x="x",
+        y="y",
+        color="dominant_topic",
+        hover_data={
+            "dominant_topic": True,
+            "document_name": True,
+            "x": False,
+            "y": False,
+        },
+        template="plotly_white",
+    )
+
+
 def document_topic_distribution(
     documents: Union[List[str], str],
     pipeline: Optional[Pipeline] = None,
@@ -21,7 +107,31 @@ def document_topic_distribution(
     topic_model: Any = None,
     topic_names: Optional[List[str]] = None,
 ) -> go.Figure:
-    """Plots the distribution of topics in the given documents."""
+    """Plots distribution of topics in the given documents on a pie chart.
+
+    Parameters
+    ----------
+    documents: str or list of str
+        A single document or list of documents.
+    pipeline: Pipeline, default None
+        Sklearn compatible pipeline, that has two components:
+        a vectorizer and a topic model.
+        Ignored if vectorizer and topic_model are provided.
+    vectorizer: Vectorizer, default None
+        Sklearn compatible vectorizer, that turns texts into
+        bag-of-words representations.
+    topic_model: TopicModel, default None
+        Sklearn compatible topic model, that can transform documents
+        into topic distributions.
+    topic_names: list of str, default None
+        List of topic names in the corpus, if not provided
+        topic names will be inferred.
+
+    Returns
+    -------
+    go.Figure
+        Pie chart of topic distribution.
+    """
     if isinstance(documents, str):
         documents = [documents]
     vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
@@ -47,30 +157,6 @@ def document_topic_distribution(
     )
 
 
-def document_wordcloud(
-    documents: Union[List[str], str],
-    pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
-) -> go.Figure:
-    """Plots word importances for the given documents as a wordcloud."""
-    if isinstance(documents, str):
-        documents = [documents]
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    vocab = get_vocab(vectorizer)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, documents)
-    document_term_matrix = spr.coo_array(document_term_matrix).sum(axis=0)
-    return plots.document_wordcloud(
-        doc_id=0, document_term_matrix=document_term_matrix, vocab=vocab
-    )
-
-
 def document_topic_timeline(
     document: str,
     pipeline: Optional[Pipeline] = None,
@@ -80,7 +166,31 @@ def document_topic_timeline(
     window_size: int = 10,
     step: int = 1,
 ) -> go.Figure:
-    """Plots timeline of topics inside a single document."""
+    """Plots timeline of topics inside a single document.
+
+    Parameters
+    ----------
+    document: str
+        A single document.
+    pipeline: Pipeline, default None
+        Sklearn compatible pipeline, that has two components:
+        a vectorizer and a topic model.
+        Ignored if vectorizer and topic_model are provided.
+    vectorizer: Vectorizer, default None
+        Sklearn compatible vectorizer, that turns texts into
+        bag-of-words representations.
+    topic_model: TopicModel, default None
+        Sklearn compatible topic model, that can transform documents
+        into topic distributions.
+    topic_names: list of str, default None
+        List of topic names in the corpus, if not provided
+        topic names will be inferred.
+
+    Returns
+    -------
+    go.Figure
+        Line chart of topic timeline in the document.
+    """
     vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
     if pipeline is None:
         pipeline = make_pipeline(vectorizer, topic_model)

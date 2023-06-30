@@ -115,7 +115,7 @@ def word_association_barchart(
     vectorizer: Any = None,
     topic_model: Any = None,
     topic_names: Optional[List[str]] = None,
-    n_association: int = 5,
+    n_association: int = 0,
     top_n: int = 20,
 ):
     """Plots bar chart of most important topics for the given words and their closest

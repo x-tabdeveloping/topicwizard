@@ -18,7 +18,6 @@ from dash_iconify import DashIconify
 import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
-from topicwizard.app import PageName
 from topicwizard.blueprints.template import create_blank_blueprint
 
 
@@ -32,7 +31,7 @@ def create_blueprint(
     vectorizer: Any,
     topic_model: Any,
     topic_names: List[str],
-    exclude_pages: Set[PageName],
+    exclude_pages: Set[str],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (

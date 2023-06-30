@@ -4,10 +4,11 @@ Topicwizard is a pretty and opinionated Python library for topic model visualiza
 This website contains the user guide to topicwizard as well as the API reference.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: User guide
 
    getting_started
+   application
    usage.topics
    usage.words
    usage.documents
@@ -16,7 +17,7 @@ This website contains the user guide to topicwizard as well as the API reference
    usage.deployment
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: API reference
 
    api_reference

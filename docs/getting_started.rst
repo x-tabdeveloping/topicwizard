@@ -30,41 +30,20 @@ Train a scikit-learn compatible topic model.
 
    from sklearn.decomposition import NMF
    from sklearn.feature_extraction.text import CountVectorizer
-   from sklearn.pipeline import Pipeline
+   from sklearn.pipeline import make_pipeline
 
    bow_vectorizer = CountVectorizer()
    nmf = NMF(n_components=10)
-   topic_pipeline = Pipeline(
-      [
-         ("bow", bow_vectorizer),
-         ("nmf", nmf),
-      ]
-   )
+   pipeline = make_pipeline(bow_vectorizer, nmf)
    topic_pipeline.fit(texts)
 
-Visualize with topicwizard.
+The easiest and most sensible way to visualize is with the topicwizard web application.
 
 .. code-block:: python
 
    import topicwizard
 
-   # If you want to infer topic names automatically you can do so
-   topic_names = topicwizard.infer_topic_names(pipeline=topic_pipeline)
-
    topicwizard.visualize(pipeline=topic_pipeline, corpus=texts)
 
-   # You can also specify vectorizer and topic_model separately
-   topicwizard.visualize(vectorizer=bow_vectorizer, topic_model=nmf, corpus=texts)
-
-   # You can pass in names of documents if you have a named corpus
-   topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, document_names=document_names)
-
-   # If you already have named topics, you can also pass in topic names
-   topicwizard.visualize(pipeline=topic_pipeline, corpus=texts, topic_names=topic_names)
 
 This will open a new browser tab in which you can investigate topic models visually.
-:ref:`Topics <usage topics>`
-
-:ref:`Documents <usage documents>`
-
-:ref:`Words <usage words>`

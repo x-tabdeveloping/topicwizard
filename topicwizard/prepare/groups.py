@@ -124,16 +124,20 @@ def top_topics(
 def top_words(
     group_id: int,
     top_n: int,
-    group_term_importance: np.ndarray,
+    group_term_importances: np.ndarray,
     vocab: np.ndarray,
 ) -> pd.DataFrame:
     """Finds top words for a given group."""
     vocab = np.array(vocab)
-    importances = group_term_importance[group_id]
+    importances = group_term_importances[group_id]
     importances = np.squeeze(np.asarray(importances))
-    overall_importances = group_term_importance.sum(axis=0)
+    overall_importances = group_term_importances.sum(axis=0)
     overall_importances = np.squeeze(np.asarray(overall_importances))
-    highest = np.argpartition(-importances, top_n)[:top_n]
+    n_vocab = vocab.shape[0]
+    if n_vocab < top_n:
+        highest = np.argsort(-importances)
+    else:
+        highest = np.argpartition(-importances, top_n)[:top_n]
     res = pd.DataFrame(
         {
             "word": vocab[highest],

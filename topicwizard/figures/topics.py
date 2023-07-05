@@ -1,6 +1,7 @@
 """External API for creating self-contained figures for topics."""
 from typing import Any, Iterable, List, Optional
 
+import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from sklearn.pipeline import Pipeline, make_pipeline
@@ -98,7 +99,7 @@ def topic_barcharts(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
-    top_n: int, default 30
+    top_n: int, default 5
         Specifies the number of words to show for each topic.
     alpha: float, default 1.0
         Specifies relevance metric for obtaining the most relevant
@@ -139,12 +140,13 @@ def topic_barcharts(
         cols=n_columns,
         subplot_titles=topic_names,
         vertical_spacing=0.05,
-        horizontal_spacing=0.1,
+        horizontal_spacing=0.01,
     )
     for topic_id in range(n_topics):
         top_words = prepare.calculate_top_words(
             topic_id, top_n, alpha, term_importances, topic_term_importances, vocab
         )
+        max_importance = top_words.overall_importance.max()
         subfig = plots.topic_plot(top_words)
         row, column = (topic_id // n_columns) + 1, (topic_id % n_columns) + 1
         for trace in subfig.data:
@@ -152,6 +154,7 @@ def topic_barcharts(
             if topic_id:
                 trace.showlegend = False
             fig.add_trace(trace, row=row, col=column)
+            fig.update_xaxes(range=[0, max_importance * 1.5], row=row, col=column)
     fig.update_layout(
         barmode="overlay",
         plot_bgcolor="white",

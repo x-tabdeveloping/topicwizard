@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple
+from typing import Any, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -101,7 +101,9 @@ def calculate_timeline(
     """
     document = pd.Series(corpus[doc_id].split())
     windows = document.rolling(window_size, step=step)
-    texts = (" ".join(window) for window in windows)
+    texts = [" ".join(window) for window in windows]
+    if not texts:
+        raise ValueError("This text is not long enough for the given window size.")
     word_timeline = vectorizer.transform(texts)
     topic_timeline = topic_model.transform(word_timeline)
     return topic_timeline

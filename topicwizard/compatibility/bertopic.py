@@ -1,18 +1,39 @@
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 import numpy as np
 import scipy.sparse as spr
 from sklearn.base import BaseEstimator
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline, make_pipeline
 
 
-class _SparseWithText(spr.csr_array):
-    def __init__(self, *args, texts: Iterable[str] = None, **kwargs):
+class SparseWithText(spr.csr_array):
+    """Compressed Sparse Row sparse array with a text attribute,
+    this way the textual content of the sparse array can be
+    passed down in a pipeline."""
+
+    def __init__(self, *args, texts: Optional[list[str]] = None, **kwargs):
         super().__init__(*args, **kwargs)
         if texts is None:
             self.texts = None
         else:
             self.texts = list(texts)
+
+
+class LeakyCountVectorizer(CountVectorizer):
+    """Leaky CountVectorizer class, that does essentially the exact same
+    thing as scikit-learn's CountVectorizer, but returns a sparse
+    array with the text attribute attached. (see SparseWithText)"""
+
+    def fit_transform(self, raw_documents, y=None):
+        raw_documents = list(raw_documents)
+        res = super().fit_transform(raw_documents, y=y)
+        return SparseWithText(res, texts=raw_documents)
+
+    def transform(self, raw_documents):
+        raw_documents = list(raw_documents)
+        res = super().transform(raw_documents)
+        return SparseWithText(res, texts=raw_documents)
 
 
 class _BERTopicVectorizer(BaseEstimator):
@@ -30,10 +51,11 @@ class _BERTopicVectorizer(BaseEstimator):
     def transform(self, raw_documents: Iterable[str]):
         texts = list(raw_documents)
         X = self.vectorizer.transform(texts)
-        X = _SparseWithText(X, texts=texts)
+        X = SparseWithText(X, texts=texts)
         return X
 
     def fit_transform(self, raw_documents: Iterable[str], y=None):
+        raw_documents = list(raw_documents)
         self.fit(raw_documents)
         return self.transform(raw_documents)
 
@@ -57,11 +79,11 @@ class _BERTopicModel(BaseEstimator):
             ctfidf = ctfidf[1:, :]
         return ctfidf.toarray()
 
-    def fit(self, X: _SparseWithText, y=None):
+    def fit(self, X: SparseWithText, y=None):
         self.model.fit(X.texts)
         return self
 
-    def transform(self, X: _SparseWithText) -> np.array:
+    def transform(self, X: SparseWithText) -> np.array:
         dist, _ = self.model.approximate_distribution(X.texts, padding=True)
         return np.array(dist)
 

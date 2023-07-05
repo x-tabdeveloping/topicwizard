@@ -6,6 +6,7 @@ from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
 
 import topicwizard.plots.documents as plots
 import topicwizard.prepare.documents as prepare
+from topicwizard.plots.utils import text_plot
 
 
 def create_timeline(
@@ -33,14 +34,19 @@ def create_timeline(
         if isinstance(selected_document, str):
             selected_document = selected_document.strip()
             selected_document = int(selected_document)
-        topic_timeline = prepare.calculate_timeline(
-            doc_id=selected_document,
-            corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
-            window_size=window_size,
-            step=1,
-        )
+        try:
+            topic_timeline = prepare.calculate_timeline(
+                doc_id=selected_document,
+                corpus=corpus,
+                vectorizer=vectorizer,
+                topic_model=topic_model,
+                window_size=window_size,
+                step=1,
+            )
+        except ValueError:
+            return text_plot(
+                "This document is not long enough to be broken into windows."
+            )
         return plots.document_timeline(
             topic_colors=topic_colors,
             topic_timeline=topic_timeline,

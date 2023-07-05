@@ -1,8 +1,65 @@
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
 from wordcloud import WordCloud
+
+
+def group_map(
+    x: np.ndarray,
+    y: np.ndarray,
+    group_importances: np.ndarray,
+    group_names: np.ndarray,
+) -> go.Figure:
+    """Group map for the app, where you can select things by clicking."""
+    group_trace = go.Scatter(
+        x=x,
+        y=y,
+        mode="text+markers",
+        text=group_names,
+        marker=dict(
+            size=group_importances,
+            sizemode="area",
+            sizeref=2.0 * max(group_importances) / (100.0**2),
+            sizemin=4,
+            color="rgb(168,162,158)",
+        ),
+        customdata=np.atleast_2d(np.arange(x.shape[0])).T,
+    )
+    fig = go.Figure([group_trace])
+    fig.update_layout(
+        clickmode="event",
+        modebar_remove=["lasso2d", "select2d"],
+        showlegend=False,
+        hovermode="closest",
+        plot_bgcolor="white",
+        dragmode="pan",
+        margin=dict(l=0, r=0, b=0, t=0, pad=0),
+    )
+    fig.update_traces(textposition="top center", hovertemplate="", hoverinfo="none")
+    fig.update_coloraxes(showscale=False)
+    fig.update_xaxes(
+        showticklabels=False,
+        title="",
+        gridcolor="#e5e7eb",
+        linecolor="#f9fafb",
+        linewidth=6,
+        mirror=True,
+        zerolinewidth=2,
+        zerolinecolor="#d1d5db",
+    )
+    fig.update_yaxes(
+        showticklabels=False,
+        title="",
+        gridcolor="#e5e7eb",
+        linecolor="#f9fafb",
+        mirror=True,
+        linewidth=6,
+        zerolinewidth=2,
+        zerolinecolor="#d1d5db",
+    )
+    return fig
 
 
 def group_topics_barchart(top_topics: pd.DataFrame):

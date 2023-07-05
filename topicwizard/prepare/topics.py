@@ -141,7 +141,8 @@ def infer_topic_names(pipeline: Pipeline, top_n: int = 4) -> List[str]:
     list of str
         List of topic names.
     """
-    ((_, vectorizer), (_, topic_model)) = pipeline.steps
+    _, vectorizer = pipeline.steps[0]
+    _, topic_model = pipeline.steps[-1]
     components = topic_model.components_
     vocab = vectorizer.get_feature_names_out()
     highest = np.argpartition(-components, top_n)[:, :top_n]

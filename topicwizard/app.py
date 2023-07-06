@@ -53,6 +53,7 @@ def get_dash_app(
     exclude_pages: Set[PageName],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    group_labels: Optional[List[str]] = None,
 ) -> Dash:
     """Returns topicwizard Dash application.
 
@@ -72,6 +73,11 @@ def get_dash_app(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided, topic
         labels will be inferred.
+    group_labels: list of str or None, default None
+        List of preexisting labels for the documents.
+        You can pass it along if you have genre labels for example.
+        In this case an additional page will get created with information
+        about how these groups relate to topics and words in the corpus.
 
     Returns
     -------
@@ -85,6 +91,7 @@ def get_dash_app(
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,
+        group_labels=group_labels,
     )
     app = Dash(
         __name__,
@@ -232,6 +239,7 @@ def visualize(
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
+    group_labels: Optional[List[str]] = None,
     port: int = 8050,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
@@ -263,6 +271,12 @@ def visualize(
         a long time and you might not be interested in them.
     port: int, default 8050
         Port where the application should run in localhost. Defaults to 8050.
+    group_labels: list of str or None, default None
+        List of preexisting labels for the documents.
+        You can pass it along if you have genre labels for example.
+        In this case an additional page will get created with information
+        about how these groups relate to topics and words in the corpus.
+
 
     Returns
     -------
@@ -280,5 +294,6 @@ def visualize(
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,
+        group_labels=group_labels,
     )
     return run_app(app, port=port)

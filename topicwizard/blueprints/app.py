@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import Any, Dict, List, Set
+from typing import Any, Dict, List, Optional, Set
 
 import dash_mantine_components as dmc
 import joblib
@@ -16,6 +16,7 @@ from dash_extensions.enrich import (
 from dash_iconify import DashIconify
 
 import topicwizard.blueprints.documents as documents
+import topicwizard.blueprints.groups as groups
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
 from topicwizard.blueprints.template import create_blank_page
@@ -32,6 +33,7 @@ def create_blueprint(
     topic_model: Any,
     topic_names: List[str],
     exclude_pages: Set[str],
+    group_labels: Optional[List[str]],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
@@ -79,14 +81,33 @@ def create_blueprint(
         if "words" not in exclude_pages
         else create_blank_page("words")
     )
+    groups_blueprint = (
+        groups.create_blueprint(
+            vocab=vocab,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            topic_term_matrix=topic_term_matrix,
+            document_names=document_names,
+            corpus=corpus,
+            vectorizer=vectorizer,
+            topic_model=topic_model,
+            topic_names=topic_names,
+            group_labels=group_labels,
+        )
+        if group_labels is not None
+        else create_blank_page("groups")
+    )
+    if group_labels is None:
+        exclude_pages = exclude_pages | set(["Groups"])
     options = []
-    for option in ["Topics", "Words", "Documents"]:
+    for option in ["Topics", "Words", "Documents", "Groups"]:
         if option.lower() not in exclude_pages:
             options.append(option)
     blueprints = [
         topic_blueprint,
         words_blueprint,
         documents_blueprint,
+        groups_blueprint,
     ]
 
     # --------[ Creating app blueprint ]--------
@@ -102,6 +123,7 @@ def create_blueprint(
             topic_blueprint.layout,
             words_blueprint.layout,
             documents_blueprint.layout,
+            groups_blueprint.layout,
             html.Div(
                 [
                     dmc.SegmentedControl(
@@ -169,20 +191,24 @@ def create_blueprint(
             const visible = 'flex flex-1 flex-col p-3';
             const hidden = 'hidden';
             if (currentPage === 'Topics') {
-                return [visible, hidden, hidden];
+                return [visible, hidden, hidden, hidden];
             }
             if (currentPage === 'Words') {
-                return [hidden, visible, hidden];
+                return [hidden, visible, hidden, hidden];
             }
             if (currentPage === 'Documents') {
-                return [hidden, hidden, visible];
+                return [hidden, hidden, visible, hidden];
             }
-            return [hidden, hidden, hidden];
+            if (currentPage === 'Groups') {
+                return [hidden, hidden, hidden, visible];
+            }
+            return [hidden, hidden, hidden, hidden];
         }
         """,
         Output("topics_container", "className"),
         Output("words_container", "className"),
         Output("documents_container", "className"),
+        Output("groups_container", "className"),
         Input("page_picker", "value"),
     )
     app_blueprint.clientside_callback(
@@ -196,6 +222,9 @@ def create_blueprint(
             }
             if (currentPage === 'Documents') {
                 return 'indigo';
+            }
+            if (currentPage === 'Groups') {
+                return 'pink';
             }
             return 'black';
         }

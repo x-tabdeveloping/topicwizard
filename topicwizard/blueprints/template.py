@@ -64,6 +64,7 @@ def prepare_blueprint(
         vectorizer=vectorizer,
         topic_model=topic_model,
         topic_names=topic_names,
+        group_labels=group_labels,
         *args,
         **kwargs,
     )

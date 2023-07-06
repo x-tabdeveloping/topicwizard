@@ -24,6 +24,7 @@ def prepare_blueprint(
     create_blueprint: BlueprintCreator,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
+    group_labels: Optional[List[str]] = None,
     *args,
     **kwargs,
 ) -> DashBlueprint:
@@ -48,6 +49,8 @@ def prepare_blueprint(
         document_topic_matrix = document_topic_matrix[~nan_documents]
         document_term_matrix = document_term_matrix[~nan_documents]
         document_names = list(np.array(document_names)[~nan_documents])
+        if group_labels:
+            group_labels = list(np.array(group_labels)[~nan_documents])
     n_topics = topic_term_matrix.shape[0]
     if topic_names is None:
         topic_names = infer_topic_names(pipeline=make_pipeline(vectorizer, topic_model))

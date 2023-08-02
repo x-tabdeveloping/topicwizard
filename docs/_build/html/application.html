@@ -166,7 +166,6 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Pipelines</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Web Application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
@@ -225,12 +224,12 @@ as this provides a general and interactive overview of the topic models you wish
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Training a compatible topic model</span>
 <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">NMF</span>
 <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">topicwizard.pipeline</span> <span class="kn">import</span> <span class="n">make_topic_pipeline</span>
 
 <span class="n">bow_vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
 <span class="n">nmf</span> <span class="o">=</span> <span class="n">NMF</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">bow_vectorizer</span><span class="p">,</span> <span class="n">nmf</span><span class="p">)</span>
-<span class="n">topic_pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_topic_pipeline</span><span class="p">(</span><span class="n">bow_vectorizer</span><span class="p">,</span> <span class="n">nmf</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Once you have trained a scikit-learn compatible topicmodel, like NMF,

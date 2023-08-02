@@ -191,7 +191,7 @@ class TopicPipeline(Pipeline):
 
 
 def make_topic_pipeline(
-    *steps, memory=None, verbose=False, pandas_out=True, norm_row=True
+    *steps, memory=None, verbose=False, pandas_out=False, norm_row=True
 ):
     """Shorthand for constructing a topic pipeline.
 

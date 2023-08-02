@@ -287,6 +287,8 @@ def visualize(
     vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
     exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
+    if topic_names is None and hasattr(pipeline, "topic_names"):
+        topic_names = pipeline.topic_names  # type: ignore
     app = get_dash_app(
         vectorizer=vectorizer,
         topic_model=topic_model,

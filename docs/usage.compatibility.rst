@@ -61,7 +61,7 @@ Then you need to create a pipeline with topicwizard.
 
    # BERTopic automatically assigns topic names, you can use these
    # in topicwizard
-   pipeline, topic_names = topicwizard.bertopic_pipeline(model)
+   pipeline = topicwizard.bertopic_pipeline(model)
 
    # Then you can use the pipeline as usual
    topicwizard.visualize(pipeline=pipeline, corpus=corpus)

@@ -8,6 +8,7 @@ This website contains the user guide to topicwizard as well as the API reference
    :caption: User guide
 
    getting_started
+   usage.pipelines
    application
    usage.topics
    usage.words

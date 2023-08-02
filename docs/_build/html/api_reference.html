@@ -167,6 +167,7 @@
   <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Pipelines</a></li>
 <li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.words.html">Investigating Words</a></li>
@@ -357,7 +358,7 @@ automatically assigned topic names can be of low quality.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="topicwizard.gensim_pipeline">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">gensim_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Pipeline</span></span></span><a class="headerlink" href="#topicwizard.gensim_pipeline" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">gensim_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline" title="topicwizard.pipeline.TopicPipeline"><span class="pre">TopicPipeline</span></a></span></span><a class="headerlink" href="#topicwizard.gensim_pipeline" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates sklearn compatible wrapper for a Gensim topic pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -368,28 +369,27 @@ dictionary objects.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Sklearn pipeline wrapping the Gensim topic model.</p>
+<dd class="field-even"><p>Sklearn compatible topic pipeline wrapping the Gensim topic model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicPipeline</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="topicwizard.bertopic_pipeline">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">bertopic_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Pipeline</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#topicwizard.bertopic_pipeline" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">bertopic_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline" title="topicwizard.pipeline.TopicPipeline"><span class="pre">TopicPipeline</span></a></span></span><a class="headerlink" href="#topicwizard.bertopic_pipeline" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates sklearn compatible wrapper for a BERTopic topic pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">BERTopic</span></code>) – Any BERTopic model.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>pipeline</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>) – Sklearn pipeline wrapping the BERTopic topic model.</p></li>
-<li><p><strong>topic_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Names of topics assigned in the BERTopic model.</p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>pipeline</strong> – Sklearn compatible topic pipeline wrapping the BERTopic topic model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicPipeline</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -755,6 +755,198 @@ topic names will be inferred.</p></li>
 </dd></dl>
 
 </section>
+<section id="module-topicwizard.pipeline">
+<span id="pipelines"></span><h2>Pipelines<a class="headerlink" href="#module-topicwizard.pipeline" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.pipeline.</span></span><span class="sig-name descname"><span class="pre">TopicPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">sklearn.base.BaseEstimator</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pandas_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline" title="Permalink to this definition">#</a></dt>
+<dd><p>Scikit-learn compatible topic pipeline.
+It assigns topic names to the output, can return DataFrames
+and validates models and vectorizers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>) – Estimators in the pipeline. The first one has to
+be an sklearn compatible vectorizer, the last one
+has to be an sklearn compatible topic model.</p></li>
+<li><p><strong>memory</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">joblib.Memory</span> <span class="pre">interface</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Used to cache the fitted transformers of the pipeline. The last step
+will never be cached, even if it is a transformer. By default, no
+caching is performed. If a string is given, it is the path to the
+caching directory. Enabling caching triggers a clone of the transformers
+before fitting. Therefore, the transformer instance given to the
+pipeline cannot be inspected directly. Use the attribute <code class="docutils literal notranslate"><span class="pre">named_steps</span></code>
+or <code class="docutils literal notranslate"><span class="pre">steps</span></code> to inspect estimators within the pipeline. Caching the
+transformers is advantageous when fitting is time consuming.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, the time elapsed while fitting each step will be printed as it
+is completed.</p></li>
+<li><p><strong>pandas_out</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, transform() will return a DataFrame.</p></li>
+<li><p><strong>norm_row</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If True, every row in transform() will be sum-normalized so that
+they can be interpreted as probabilities.</p></li>
+<li><p><strong>freeze</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, components of the pipeline will not be fitted when fit()
+is called. This is good for downstream uses of the topic model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.topic_names">
+<span class="sig-name descname"><span class="pre">topic_names</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.topic_names" title="Permalink to this definition">#</a></dt>
+<dd><p>Inferred names of topics. Can be changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.vectorizer_">
+<span class="sig-name descname"><span class="pre">vectorizer_</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.vectorizer_" title="Permalink to this definition">#</a></dt>
+<dd><p>Vectorizer model in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.topic_model_">
+<span class="sig-name descname"><span class="pre">topic_model_</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.topic_model_" title="Permalink to this definition">#</a></dt>
+<dd><p>Topic model in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fits the pipeline, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">self</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.partial_fit">
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.partial_fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fits the pipeline on a batch, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">self</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.transform" title="Permalink to this definition">#</a></dt>
+<dd><p>Turns texts into a document-topic matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – List of documents.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Document-topic importance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_topics)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.get_feature_names_out">
+<span class="sig-name descname"><span class="pre">get_feature_names_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.get_feature_names_out" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns names of topics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.fit_transform" title="Permalink to this definition">#</a></dt>
+<dd><p>Fits the pipeline, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.
+Then turns texts into a document-topic matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Document-topic importance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_topics)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.set_output">
+<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.set_output" title="Permalink to this definition">#</a></dt>
+<dd><p>You can set the output of the pipeline to be a pandas dataframe.
+If you pass ‘pandas’ it will do this, otherwise it will disable pandas output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="topicwizard.pipeline.make_topic_pipeline">
+<span class="sig-prename descclassname"><span class="pre">topicwizard.pipeline.</span></span><span class="sig-name descname"><span class="pre">make_topic_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pandas_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.make_topic_pipeline" title="Permalink to this definition">#</a></dt>
+<dd><p>Shorthand for constructing a topic pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*steps</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>) – Estimators in the pipeline. The first one has to
+be an sklearn compatible vectorizer, the last one
+has to be an sklearn compatible topic model.</p></li>
+<li><p><strong>memory</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">joblib.Memory</span> <span class="pre">interface</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Used to cache the fitted transformers of the pipeline. The last step
+will never be cached, even if it is a transformer. By default, no
+caching is performed. If a string is given, it is the path to the
+caching directory. Enabling caching triggers a clone of the transformers
+before fitting. Therefore, the transformer instance given to the
+pipeline cannot be inspected directly. Use the attribute <code class="docutils literal notranslate"><span class="pre">named_steps</span></code>
+or <code class="docutils literal notranslate"><span class="pre">steps</span></code> to inspect estimators within the pipeline. Caching the
+transformers is advantageous when fitting is time consuming.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, the time elapsed while fitting each step will be printed as it
+is completed.</p></li>
+<li><p><strong>pandas_out</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, transform() will return a DataFrame.</p></li>
+<li><p><strong>norm_row</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If True, every row in transform() will be sum-normalized so that
+they can be interpreted as probabilities.</p></li>
+<li><p><strong>freeze</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, components of the pipeline will not be fitted when fit()
+is called. This is good for downstream uses of the topic model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -807,6 +999,7 @@ topic names will be inferred.</p></li>
 <li><a class="reference internal" href="#">API reference</a><ul>
 <li><a class="reference internal" href="#module-topicwizard">Application</a></li>
 <li><a class="reference internal" href="#module-topicwizard.figures">Individual Figures</a></li>
+<li><a class="reference internal" href="#module-topicwizard.pipeline">Pipelines</a></li>
 </ul>
 </li>
 </ul>

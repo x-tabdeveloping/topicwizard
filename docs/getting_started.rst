@@ -19,7 +19,7 @@ Usage
    </a>
 
 
-Train a scikit-learn compatible topic model.
+Train a scikit-learn compatible topic pipeline.
 
 .. note::
    If you intend to investigate non-scikit-learn models, please have a look at
@@ -30,11 +30,11 @@ Train a scikit-learn compatible topic model.
 
    from sklearn.decomposition import NMF
    from sklearn.feature_extraction.text import CountVectorizer
-   from sklearn.pipeline import make_pipeline
+   from topicwizard.pipeline import make_topic_pipeline
 
    bow_vectorizer = CountVectorizer()
    nmf = NMF(n_components=10)
-   pipeline = make_pipeline(bow_vectorizer, nmf)
+   topic_pipeline = make_topic_pipeline(bow_vectorizer, nmf)
    topic_pipeline.fit(texts)
 
 The easiest and most sensible way to visualize is with the topicwizard web application.

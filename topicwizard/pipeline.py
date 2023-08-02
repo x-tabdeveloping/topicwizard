@@ -37,6 +37,9 @@ class TopicPipeline(Pipeline):
     norm_row: bool, default True
         If True, every row in transform() will be sum-normalized so that
         they can be interpreted as probabilities.
+    freeze: bool, default False
+        If True, components of the pipeline will not be fitted when fit()
+        is called. This is good for downstream uses of the topic model.
 
     Attributes
     ----------
@@ -56,11 +59,13 @@ class TopicPipeline(Pipeline):
         verbose=False,
         pandas_out=False,
         norm_row=True,
+        freeze=False,
     ):
         super().__init__(steps, memory=memory, verbose=verbose)
         self.topic_names = None
         self.pandas_out = pandas_out
         self.norm_row = norm_row
+        self.freeze = freeze
         if len(self) < 2:
             raise ValueError(
                 "A Topic pipeline should at least have a vectorizer and a topic model."
@@ -96,7 +101,8 @@ class TopicPipeline(Pipeline):
         self
             Fitted pipeline.
         """
-        super().fit(X, y)
+        if not self.freeze:
+            super().fit(X, y)
         self._validate()
         self.topic_names = infer_topic_names(self)
         return self
@@ -117,18 +123,19 @@ class TopicPipeline(Pipeline):
         self
             Fitted pipeline.
         """
-        for name, step in self.steps:
-            if not hasattr(step, "partial_fit"):
-                raise ValueError(
-                    f"Step {name} is a {step} which does not have `.partial_fit` implemented."
-                )
-        for name, step in self.steps:
-            if hasattr(step, "predict"):
-                step.partial_fit(X, y, classes=classes, **kwargs)
-            else:
-                step.partial_fit(X, y)
-            if hasattr(step, "transform"):
-                X = step.transform(X)
+        if not self.freeze:
+            for name, step in self.steps:
+                if not hasattr(step, "partial_fit"):
+                    raise ValueError(
+                        f"Step {name} is a {step} which does not have `.partial_fit` implemented."
+                    )
+            for name, step in self.steps:
+                if hasattr(step, "predict"):
+                    step.partial_fit(X, y, classes=classes, **kwargs)
+                else:
+                    step.partial_fit(X, y)
+                if hasattr(step, "transform"):
+                    X = step.transform(X)
         self._validate()
         self.topic_names = infer_topic_names(self)
         return self
@@ -191,7 +198,7 @@ class TopicPipeline(Pipeline):
 
 
 def make_topic_pipeline(
-    *steps, memory=None, verbose=False, pandas_out=False, norm_row=True
+    *steps, memory=None, verbose=False, pandas_out=False, norm_row=True, freeze=False
 ):
     """Shorthand for constructing a topic pipeline.
 
@@ -218,6 +225,10 @@ def make_topic_pipeline(
     norm_row: bool, default True
         If True, every row in transform() will be sum-normalized so that
         they can be interpreted as probabilities.
+    freeze: bool, default False
+        If True, components of the pipeline will not be fitted when fit()
+        is called. This is good for downstream uses of the topic model.
+
 
     """
     return TopicPipeline(
@@ -226,4 +237,5 @@ def make_topic_pipeline(
         verbose=verbose,
         pandas_out=pandas_out,
         norm_row=norm_row,
+        freeze=freeze,
     )

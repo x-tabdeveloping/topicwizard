@@ -4,8 +4,9 @@ from typing import Iterable
 import numpy as np
 import scipy.sparse as spr
 from sklearn.base import BaseEstimator
-from sklearn.pipeline import Pipeline, make_pipeline
 from tqdm import tqdm
+
+from topicwizard.pipeline import TopicPipeline, make_topic_pipeline
 
 
 class DictionaryVectorizer(BaseEstimator):
@@ -169,7 +170,7 @@ class TopicModelWrapper(BaseEstimator):
         return self.transform(X)
 
 
-def gensim_pipeline(dictionary, model) -> Pipeline:
+def gensim_pipeline(dictionary, model) -> TopicPipeline:
     """Creates sklearn compatible wrapper for a Gensim topic pipeline.
 
     Parameters
@@ -182,9 +183,9 @@ def gensim_pipeline(dictionary, model) -> Pipeline:
 
     Returns
     -------
-    Pipeline
-        Sklearn pipeline wrapping the Gensim topic model.
+    TopicPipeline
+        Sklearn compatible topic pipeline wrapping the Gensim topic model.
     """
     vectorizer = DictionaryVectorizer(dictionary)
     topic_model = TopicModelWrapper(model=model, index_to_key=vectorizer.index_to_key)
-    return make_pipeline(vectorizer, topic_model)
+    return make_topic_pipeline(vectorizer, topic_model)

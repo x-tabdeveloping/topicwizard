@@ -17,6 +17,10 @@ Pretty and opinionated topic model visualization in Python.
 
 https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
 
+## New in version 0.4.0 🌟 🌟
+
+- Introduced topic pipelines that make it easier and safer to use topic models in downstream tasks and interpretation.
+
 ## New in version 0.3.1 🌟 🌟
 
 - You can now investigate relations of pre-existing labels to your topics and words :mag:
@@ -81,6 +85,18 @@ pipeline = make_pipeline(
 
 # Then fit it on the given texts
 pipeline.fit(corpus)
+```
+
+From version 0.4.0 you can also use TopicPipelines, which are almost functionally identical but come with a set of built-in conveniences and
+safeties.
+
+```python
+from topicwizard.pipeline import make_topic_pipeline
+
+pipeline = make_topic_pipeline(
+    CountVectorizer(stop_words="english", min_df=10),
+    NMF(n_components=30),
+)
 ```
 
 ### Step 2a:

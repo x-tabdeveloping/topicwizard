@@ -11,12 +11,12 @@ For this example let's train a Non-negative Matrix Factorization model over a co
    # Training a compatible topic model
    from sklearn.decomposition import NMF
    from sklearn.feature_extraction.text import CountVectorizer
-   from sklearn.pipeline import make_pipeline
+   from topicwizard.pipeline import make_topic_pipeline
 
    bow_vectorizer = CountVectorizer()
    nmf = NMF(n_components=10)
-   pipeline = make_pipeline(bow_vectorizer, nmf)
-   topic_pipeline.fit(texts)
+   pipeline = make_topic_pipeline(bow_vectorizer, nmf)
+   pipeline.fit(texts)
 
 Once you have trained a scikit-learn compatible topicmodel, like NMF, 
 interpreting the model in topicwizard is as trivial as starting the web application with the visualize() function.

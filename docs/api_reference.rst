@@ -14,3 +14,9 @@ Individual Figures
 
 .. automodule:: topicwizard.figures
    :members:
+
+Pipelines
+^^^^^^^^^^^^^^^^^^
+
+.. automodule:: topicwizard.pipeline
+   :members:

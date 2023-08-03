@@ -4,7 +4,8 @@ import numpy as np
 import scipy.sparse as spr
 from sklearn.base import BaseEstimator
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.pipeline import Pipeline, make_pipeline
+
+from topicwizard.pipeline import TopicPipeline, make_topic_pipeline
 
 
 class SparseWithText(spr.csr_array):
@@ -92,7 +93,7 @@ class _BERTopicModel(BaseEstimator):
         return self.transform(X)
 
 
-def bertopic_pipeline(model) -> Tuple[Pipeline, List[str]]:
+def bertopic_pipeline(model) -> TopicPipeline:
     """Creates sklearn compatible wrapper for a BERTopic topic pipeline.
 
     Parameters
@@ -102,10 +103,8 @@ def bertopic_pipeline(model) -> Tuple[Pipeline, List[str]]:
 
     Returns
     -------
-    pipeline: Pipeline
-        Sklearn pipeline wrapping the BERTopic topic model.
-    topic_names: list of str
-        Names of topics assigned in the BERTopic model.
+    pipeline: TopicPipeline
+        Sklearn compatible topic pipeline wrapping the BERTopic topic model.
     """
     vectorizer = _BERTopicVectorizer(topic_model=model)
     topic_model = _BERTopicModel(topic_model=model)
@@ -117,4 +116,6 @@ def bertopic_pipeline(model) -> Tuple[Pipeline, List[str]]:
         topic_labels = model.topic_labels_
     for i_topic in range(n_components):
         topic_names.append(topic_labels[i_topic])
-    return make_pipeline(vectorizer, topic_model), topic_names
+    pipeline = make_topic_pipeline(vectorizer, topic_model)
+    pipeline.topic_names = topic_names
+    return pipeline

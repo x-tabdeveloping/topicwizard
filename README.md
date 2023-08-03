@@ -40,9 +40,7 @@ Install from PyPI:
 pip install topic-wizard
 ```
 
-## ([Usage](https://x-tabdeveloping.github.io/topic-wizard/))
-
-### [Pipelines](https://x-tabdeveloping.github.io/topic-wizard/usage.pipelines.html)
+## [Pipelines](https://x-tabdeveloping.github.io/topic-wizard/usage.pipelines.html)
 
 The main abstraction of topicwizard around a topic model is a topic pipeline, which consists of a vectorizer, that turns texts into bag-of-tokens
 representations and a topic model which decomposes these representations into vectors of topic importance.
@@ -138,7 +136,7 @@ classifier = FunctionClassifier(corona_rule)
 cls_pipeline = make_pipeline(topic_pipeline, classifier)
 ```
 
-### [Web Application](https://x-tabdeveloping.github.io/topic-wizard/application.html)
+## [Web Application](https://x-tabdeveloping.github.io/topic-wizard/application.html)
 
 You can launch the topic wizard web application for interactively investigating your topic models. The app is also quite easy to [deploy](https://x-tabdeveloping.github.io/topic-wizard/usage.deployment.html) in case you want to create a client-facing interface.
 
@@ -159,7 +157,7 @@ topicwizard.visualize(corpus, pipeline=topic_pipeline, exclude_pages=["documents
 | :----: | :----: | :----: | :----: |
 | ![topics screenshot](assets/screenshot_topics.png) | ![words screenshot](assets/screenshot_words.png)  | ![documents screenshot](assets/screenshot_documents.png) | ![groups screenshot](docs/_static/screenshot_groups.png) |
 
-### [Figures](https://x-tabdeveloping.github.io/topic-wizard/api_reference.html#module-topicwizard.figures)
+## [Figures](https://x-tabdeveloping.github.io/topic-wizard/api_reference.html#module-topicwizard.figures)
 
 If you want customizable, faster, html-saveable interactive plots, you can use the figures API.
 Here are a couple of examples:
@@ -178,4 +176,4 @@ from topicwizard.figures import word_map, document_topic_timeline, topic_wordclo
 | `topic_wordclouds(corpus, pipeline=topic_pipeline)` | `word_association_barchart(["supreme", "court"], corpus=corpus, pipeline=topic_pipeline)` |
 | ![wordclouds](assets/topic_wordclouds.png) | ![topic_word_imp](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/0767b631-9e83-42cf-8796-8536abc486d0) |
 
-For more information consult our [Documentation](https://x-tabdeveloping.github.io/topic-wizard/index.html)https://x-tabdeveloping.github.io/topic-wizard/index.html
+For more information consult our [Documentation](https://x-tabdeveloping.github.io/topic-wizard/index.html)

@@ -45,7 +45,8 @@ pip install topic-wizard
 The main abstraction of topicwizard around a topic model is a topic pipeline, which consists of a vectorizer, that turns texts into bag-of-tokens
 representations and a topic model which decomposes these representations into vectors of topic importance.
 topicwizard allows you to use both scikit-learn pipelines or its own `TopicPipeline`.
-![image](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/9dd2a629-072b-4841-b733-96e89b897818)
+
+<img align="right" width="300" src="https://x-tabdeveloping.github.io/topic-wizard/_images/pipeline.png">
 
 
 Let's build a pipeline. We will use scikit-learns CountVectorizer as our vectorizer component:

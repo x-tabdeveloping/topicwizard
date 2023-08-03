@@ -17,24 +17,14 @@ Pretty and opinionated topic model visualization in Python.
 
 https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
 
-## New in version 0.4.0 🌟 🌟
+## New in version 0.4.0 🌟 
 
-- Introduced topic pipelines that make it easier and safer to use topic models in downstream tasks and interpretation.
-
-## New in version 0.3.1 🌟 🌟
-
-- You can now investigate relations of pre-existing labels to your topics and words :mag:
-
-## New in version 0.3.0 🌟 
-
- - Exclude pages, that are not needed :bird:
- - Self-contained interactive figures :gift:
- - Topic name inference is now default behavior and is done implicitly.
-
+- Introduced topic pipelines that make it easier and safer to use topic models in downstream tasks and interpretation. 🔩
 
 ## Features
 
 -   Investigate complex relations between topics, words, documents and groups/genres/labels
+-   Easy to use pipelines that can be utilized for downstream tasks
 -   Sklearn, Gensim and BERTopic compatible :nut_and_bolt:
 -   Highly interactive web app
 -   Interactive and composable Plotly figures
@@ -50,11 +40,40 @@ Install from PyPI:
 pip install topic-wizard
 ```
 
-## Usage ([documentation](https://x-tabdeveloping.github.io/topic-wizard/))
+## ([Usage](https://x-tabdeveloping.github.io/topic-wizard/))
 
-### Step 0:
+### [Pipelines](https://x-tabdeveloping.github.io/topic-wizard/usage.pipelines.html)
 
-Have a corpus ready for analysis, in this example I am going to use 20 newgroups from scikit-learn.
+The main abstraction of topicwizard around a topic model is a topic pipeline, which consists of a vectorizer, that turns texts into bag-of-tokens
+representations and a topic model which decomposes these representations into vectors of topic importance.
+topicwizard allows you to use both scikit-learn pipelines or its own `TopicPipeline`.
+
+Let's build a pipeline. We will use scikit-learns CountVectorizer as our vectorizer component:
+```python
+from sklearn.feature_extraction.text import CountVectorizer
+
+vectorizer = CountVectorizer(min_df=5, max_df=0.8, stop_words="english")
+```
+The topic model I will use for this example is Non-negative Matrix Factorization as it is fast and usually finds good topics.
+```python
+from sklearn.decomposition import NMF
+
+model = NMF(n_components=10)
+```
+Then let's put this all together in a pipeline. You can either use sklearn Pipelines...
+```python
+from sklearn.pipeline import make_pipeline
+
+topic_pipeline = make_pipeline(vectorizer, model)
+```
+Or TopicPipeline from topicwizard:
+```python
+from topicwizard.pipeline import make_topic_pipeline
+
+topic_pipeline = make_topic_pipeline(vectorizer, model, norm_rows=False)
+```
+
+Let's load a corpus that we would like to analyze, in this example I will use 20newsgroups from sklearn.
 
 ```python
 from sklearn.datasets import fetch_20newsgroups
@@ -67,46 +86,66 @@ corpus = newsgroups.data
 group_labels = [newsgroups.target_names[label] for label in newsgroups.target]
 ```
 
-### Step 1:
-
-Train a scikit-learn compatible topic model.
-(If you want to use non-scikit-learn topic models, check [compatibility](https://x-tabdeveloping.github.io/topic-wizard/usage.compatibility.html))
-
+Then let's fit our pipeline to this data:
 ```python
-from sklearn.decomposition import NMF
-from sklearn.feature_extraction.text import CountVectorizer
+topic_pipeline.fit(corpus)
+```
+The advantages of using a TopicPipeline over a regular pipeline are numerous:
+ - Output dimensions (topics) are named
+ - You can set the output to be a pandas dataframe (`topic_pipeline.set_output(transform="pandas")`) with topics as columns.
+ - You can treat topic importances as pseudoprobability-distributions (`topic_pipeline.norm_row = True`)
+ - You can freeze components so that the pipeline will stay frozen when fitting downstream components (`topic_pipeline.freeze = True`)
+
+Here's an example of how you can easily display a heatmap over topics in a document using TopicPipelines.
+```python
+import plotly.express as px
+
+pipeline = make_topic_pipeline(vectorizer, model).set_output(transform="pandas")
+texts = [
+   "Coronavirus killed 50000 people today.",
+   "Donald Trump's presidential campaing is going very well",
+   "Protests against police brutality have been going on all around the US.",
+]
+topic_df = pipeline.transform(texts)
+topic_df.index = texts
+px.imshow(topic_df).show()
+```
+![topic_heatmap](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/a5b21aff-3224-45bc-a251-abe1896cd729)
+
+You didn't even have to use topicwizards own visualizations for this!!
+
+You can also use TopicPipelines for downstream tasks, such as unsupervised text labeling with the help of [human-learn](https://github.com/koaning/human-learn).
+```bash
+pip install human-learn
+```
+```python
+from hulearn.classification import FunctionClassifier
 from sklearn.pipeline import make_pipeline
 
-# Create topic pipeline
-pipeline = make_pipeline(
-    CountVectorizer(stop_words="english", min_df=10),
-    NMF(n_components=30),
-)
+topic_pipeline = make_topic_pipeline(vectorizer, model).fit(texts)
 
-# Then fit it on the given texts
-pipeline.fit(corpus)
+# Investigate topics
+topicwizard.visualize(topic_pipeline)
+
+# Creating rule for classifying something as a corona document
+def corona_rule(df, threshold=0.5):
+    is_about_corona = df["11_vaccine_pandemic_virus_coronavirus"] > threshold
+    return is_about_corona.astype(int)
+
+# Freezing topic pipeline
+topic_pipeline.freeze = True
+classifier = FunctionClassifier(corona_rule)
+cls_pipeline = make_pipeline(topic_pipeline, classifier)
 ```
 
-From version 0.4.0 you can also use TopicPipelines, which are almost functionally identical but come with a set of built-in conveniences and
-safeties.
+### [Web Application](https://x-tabdeveloping.github.io/topic-wizard/application.html)
 
-```python
-from topicwizard.pipeline import make_topic_pipeline
-
-pipeline = make_topic_pipeline(
-    CountVectorizer(stop_words="english", min_df=10),
-    NMF(n_components=30),
-)
-```
-
-### Step 2a:
-
-Visualize with the topicwizard webapp :bulb:
+You can launch the topic wizard web application for interactively investigating your topic models. The app is also quite easy to [deploy](https://x-tabdeveloping.github.io/topic-wizard/usage.deployment.html) in case you want to create a client-facing interface.
 
 ```python
 import topicwizard
 
-topicwizard.visualize(corpus, pipeline=pipeline)
+topicwizard.visualize(corpus, pipeline=topic_pipeline)
 ```
 
 From version 0.3.0 you can also disable pages you do not wish to display thereby sparing a lot of time for yourself:
@@ -114,59 +153,29 @@ From version 0.3.0 you can also disable pages you do not wish to display thereby
 ```python
 # A large corpus takes a looong time to compute 2D projections for so
 # so you can speed up preprocessing by disabling it alltogether.
-topicwizard.visualize(corpus, pipeline=pipeline, exclude_pages=["documents"])
+topicwizard.visualize(corpus, pipeline=topic_pipeline, exclude_pages=["documents"])
 ```
+| [Topics](https://x-tabdeveloping.github.io/topic-wizard/usage.topics.html) | [Words](https://x-tabdeveloping.github.io/topic-wizard/usage.words.html) | [Documents](https://x-tabdeveloping.github.io/topic-wizard/usage.documents.html) | [Groups](https://x-tabdeveloping.github.io/topic-wizard/usage.groups.html) |
+| :----: | :----: | :----: | :----: |
+| ![topics screenshot](assets/screenshot_topics.png) | ![words screenshot](assets/screenshot_words.png)  | ![documents screenshot](assets/screenshot_documents.png) | ![groups screenshot](docs/_static/screenshot_groups.png) |
 
+### [Figures](https://x-tabdeveloping.github.io/topic-wizard/api_reference.html#module-topicwizard.figures)
 
-![topics screenshot](assets/screenshot_topics.png)
-![words screenshot](assets/screenshot_words.png)
-![words screenshot](assets/screenshot_words_zoomed.png)
-![documents screenshot](assets/screenshot_documents.png)
-
-From version 0.3.1 you can investigate groups/labels by passing them along to the webapp.
+If you want customizable, faster, html-saveable interactive plots, you can use the figures API.
+Here are a couple of examples:
 
 ```python
-topicwizard.visualize(corpus, pipeline=pipeline, group_labels=group_labels)
+from topicwizard.figures import word_map, document_topic_timeline, topic_wordclouds, word_association_barchart
 ```
 
-![groups screenshot](docs/_static/screenshot_groups.png)
+| Word Map | Timeline of Topics in a Document | 
+| :----: | :----: |
+| `word_map(corpus, pipeline=topic_pipeline)` | `document_topic_timeline( "Joe Biden takes over presidential office from Donald Trump.", pipeline=topic_pipeline)` |
+| ![word map screenshot](assets/word_map.png) | ![doc_timeline](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/cf1faceb-e8ef-411f-80cd-a2a58befcf99) |
 
-Ooooor...
+| Wordclouds of Topics | Topic for Word Importance |
+| :----: | :----: |
+| `topic_wordclouds(corpus, pipeline=topic_pipeline)` | `word_association_barchart(["supreme", "court"], corpus=corpus, pipeline=topic_pipeline)` |
+| ![wordclouds](assets/topic_wordclouds.png) | ![topic_word_imp](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/0767b631-9e83-42cf-8796-8536abc486d0) |
 
-### Step 2b:
-
-Produce high quality self-contained HTML plots and create your own dashboards/reports :strawberry:
-
-### Map of words
-
-```python
-from topicwizard.figures import word_map
-
-word_map(corpus, pipeline=pipeline)
-```
-
-![word map screenshot](assets/word_map.png)
-
-### Timelines of topic distributions
-
-```python
-from topicwizard.figures import document_topic_timeline
-
-document_topic_timeline(
-    "Joe Biden takes over presidential office from Donald Trump.",
-    pipeline=pipeline,
-)
-```
-![document timeline](assets/document_topic_timeline.png)
-
-### Wordclouds of your topics :cloud:
-
-```python
-from topicwizard.figures import topic_wordclouds
-
-topic_wordclouds(corpus, pipeline=pipeline)
-```
-
-![wordclouds](assets/topic_wordclouds.png)
-
-#### And much more... ([documentation](https://x-tabdeveloping.github.io/topic-wizard/))
+For more information consult our [Documentation](https://x-tabdeveloping.github.io/topic-wizard/index.html)https://x-tabdeveloping.github.io/topic-wizard/index.html

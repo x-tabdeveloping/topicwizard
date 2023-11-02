@@ -1,11 +1,12 @@
 """Module containing plotting utilities for topics."""
 from typing import List
+
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
 from wordcloud import WordCloud
-import numpy as np
 
 
 def intertopic_map(
@@ -39,9 +40,7 @@ def intertopic_map(
         dragmode="pan",
         margin=dict(l=0, r=0, b=0, t=0, pad=0),
     )
-    fig.update_traces(
-        textposition="top center", hovertemplate="", hoverinfo="none"
-    )
+    fig.update_traces(textposition="top center", hovertemplate="", hoverinfo="none")
     fig.update_coloraxes(showscale=False)
     fig.update_xaxes(
         showticklabels=False,
@@ -133,7 +132,7 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()
-    image = image.resize((1600, 1600), resample=Image.ANTIALIAS)
+    image = image.resize((1600, 1600), resample=Image.Resampling.LANCZOS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

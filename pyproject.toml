@@ -9,17 +9,17 @@ packages = [{include = "topicwizard"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8.0"
-dash = "~2.7.1"
-dash-extensions = "~0.1.10"
-dash-mantine-components = "~0.11.1"
+dash = "^2.7.1"
+dash-extensions = "^1.0.4"
+dash-mantine-components = "~0.12.1"
 dash-iconify = "~0.1.2"
 joblib = "~1.2.0"
-scikit-learn = "~1.2.0"
+scikit-learn = "^1.2.0"
 scipy = ">=1.8.0"
 umap-learn = ">=0.5.3"
 numpy = ">=1.22.0"
-pandas = "~1.5.2"
-wordcloud = "~1.8.2.2"
+pandas = "^1.5.2"
+wordcloud = "^1.9.2"
 
 
 [build-system]

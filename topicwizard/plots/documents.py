@@ -165,7 +165,7 @@ def document_wordcloud(
         scale=4,
     ).generate_from_frequencies(term_dict)
     image = cloud.to_image()
-    image = image.resize((1600, 1600), resample=Image.ANTIALIAS)
+    image = image.resize((1600, 1600), resample=Image.Resampling.LANCZOS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

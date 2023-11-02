@@ -4,8 +4,12 @@ from dash_extensions.enrich import dcc, html
 TOPIC_MAP = [
     dmc.Title("Topic Map", order=3),
     dmc.Text(
-        "This is the so-called Topic Map. It will help you examine topic importances and intertopic distances.",
+        "On the left side of this page you will find the topic map. It will help you examine topic importances and intertopic distances.",
     ),
+    dmc.Text(
+        "To select a topic to investigate, click on it on the map, or cycle to it with the arrow buttons on top."
+    ),
+    dmc.Text("You can also rename topics using the bar at the top."),
     dmc.Title("How are distances calculated?", order=4),
     dmc.Text(
         """
@@ -60,7 +64,7 @@ TOPIC_WORDS = [
         """
         On the right side of the page you will find a bar plot displaying importances
         of words for the selected topic and their overall importance,
-        alogn with a wordcloud displaying the most relevant words for the selected topic.
+        along with a wordcloud displaying the most relevant words for the selected topic.
         """
     ),
     dmc.Text(
@@ -117,7 +121,7 @@ TOPIC_WORDS = [
                     [
                         html.Td(
                             dcc.Markdown(
-                                "$r_{k_i} = \\lambda \\cdot (log w_{k_i}) + (1 - \\lambda) \\cdot \\frac{log w_{k_i}}{log w_k}$",
+                                "$r_{k_i} = \\lambda \\cdot log (w_{k_i}) + (1 - \\lambda) \\cdot \\frac{log(w_{k_i})}{log(w_k)}$",
                                 mathjax=True,
                             )
                         ),

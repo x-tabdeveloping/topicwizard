@@ -17,17 +17,20 @@ def intertopic_map(
     topic_names: List[str],
 ) -> go.Figure:
     size = 1 + minmax_scale(topic_importances)
+    text = [f"<b>{name}</b>" for name in topic_names]
     topic_trace = go.Scatter(
         x=x,
         y=y,
         mode="text+markers",
-        text=topic_names,
+        text=text,
+        textfont=dict(size=14),
         marker=dict(
             size=size,
             sizemode="area",
             sizeref=2.0 * max(size) / (100.0**2),
             sizemin=4,
             color="rgb(168,162,158)",
+            line=dict(width=3, color="black"),
         ),
         customdata=np.atleast_2d(np.arange(x.shape[0])).T,
     )
@@ -69,23 +72,45 @@ def intertopic_map(
 def topic_plot(top_words: pd.DataFrame):
     """Plots word importances for currently selected topic."""
     top_words = top_words.sort_values("relevance", ascending=True)
+    max_overall = top_words.overall_importance.max()
+    max_specific = top_words.importance.max()
+    overlap = np.any(top_words.overall_importance < top_words.importance)
+    text = top_words.word.map(lambda s: f"<b>{s}</b>")
+    if overlap:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
+    else:
+        params = dict()
     topic_word_trace = go.Bar(
-        name="Estimated frequency in topic",
+        name="Estimated importance in topic",
         y=top_words.word,
         x=top_words.importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="rgb(251,146,60)",
+        marker_color="rgba(251,146,60,0.65)",
+        marker_line=dict(color="black", width=3),
+        **params,
     )
+    if overlap:
+        params = dict()
+    else:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
     overall_word_trace = go.Bar(
-        name="Overall frequency",
+        name="Summed importances over topics",
         y=top_words.word,
         x=top_words.overall_importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="rgb(168,162,158)",
-        textposition="outside",
-        texttemplate=top_words.word,
+        marker_color="rgba(168,162,158, 0.3)",
+        marker_line=dict(color="rgb(168,162,158)", width=3),
+        **params,
     )
     fig = go.Figure(data=[overall_word_trace, topic_word_trace])
     fig.update_layout(
@@ -106,7 +131,7 @@ def topic_plot(top_words: pd.DataFrame):
         margin=dict(l=0, r=0, b=18, t=0, pad=0),
     )
     fig.update_xaxes(
-        range=[0, top_words.overall_importance.max() * 1.3],
+        range=[0, max(max_overall, max_specific) * 1.3],
         showticklabels=False,
     )
     fig.update_yaxes(ticks="", showticklabels=False)

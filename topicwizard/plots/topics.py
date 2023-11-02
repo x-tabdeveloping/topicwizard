@@ -6,6 +6,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
+from sklearn.preprocessing import minmax_scale
 from wordcloud import WordCloud
 
 
@@ -15,16 +16,16 @@ def intertopic_map(
     topic_importances: np.ndarray,
     topic_names: List[str],
 ) -> go.Figure:
-    n_topics = x.shape[0]
+    size = 1 + minmax_scale(topic_importances)
     topic_trace = go.Scatter(
         x=x,
         y=y,
         mode="text+markers",
         text=topic_names,
         marker=dict(
-            size=topic_importances,
+            size=size,
             sizemode="area",
-            sizeref=2.0 * max(topic_importances) / (100.0**2),
+            sizeref=2.0 * max(size) / (100.0**2),
             sizemin=4,
             color="rgb(168,162,158)",
         ),

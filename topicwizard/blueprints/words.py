@@ -5,12 +5,14 @@ import numpy as np
 from dash_extensions.enrich import DashBlueprint, dcc, html
 from plotly import colors
 
+import topicwizard.help.words as help
 import topicwizard.prepare.words as prepare
 from topicwizard.components.color_legend import make_color_legend
 from topicwizard.components.words.association_slider import create_association_slider
 from topicwizard.components.words.word_barplot import create_word_barplot
 from topicwizard.components.words.word_map import create_word_map
 from topicwizard.components.words.word_selector import create_word_selector
+from topicwizard.help.utils import make_helper
 
 
 def create_blueprint(
@@ -86,6 +88,21 @@ def create_blueprint(
                 h-1/4
                 scroll-smooth overflow-y-scroll max-h-full
                 """,
+            ),
+            html.Div(
+                make_helper(
+                    dmc.Group(
+                        [
+                            html.Div(help.WORD_MAP),
+                            html.Div(help.TOPIC_IMPORTANCES),
+                        ],
+                        spacing="lg",
+                        grow=1,
+                        align="start",
+                    ),
+                    width="800px",
+                ),
+                className="fixed bottom-8 right-5",
             ),
         ],
         className="""

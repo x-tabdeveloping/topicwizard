@@ -108,18 +108,20 @@ def create_blueprint(
                 ],
                 className="flex-1 flex flex-row items-stretch p-3",
             ),
-            make_helper(
-                dmc.Group(
-                    [
-                        html.Div(help.TOPIC_MAP),
-                        html.Div(help.TOPIC_WORDS),
-                    ],
-                    spacing="lg",
-                    grow=1,
-                    align="start",
+            html.Div(
+                make_helper(
+                    dmc.Group(
+                        [
+                            html.Div(help.TOPIC_MAP),
+                            html.Div(help.TOPIC_WORDS),
+                        ],
+                        spacing="lg",
+                        grow=1,
+                        align="start",
+                    ),
+                    width="800px",
                 ),
-                position={"bottom": 85, "left": 25},
-                width="800px",
+                className="fixed bottom-8 left-5",
             ),
         ],
         className="""

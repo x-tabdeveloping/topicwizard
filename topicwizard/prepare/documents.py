@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Tuple
+from typing import Callable, List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -72,8 +72,7 @@ def document_topic_importances(
 def calculate_timeline(
     doc_id: int,
     corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
+    transform: Callable[[List[str]], np.ndarray],
     window_size: int,
     step: int,
 ) -> np.ndarray:
@@ -85,10 +84,8 @@ def calculate_timeline(
         Index of the document.
     corpus: list of str
         List of all documents.
-    vectorizer: Any
-        Vectorizer component of the pipeline.
-    topic_model: Any
-        The topic model.
+    transform: (str) -> ndarray
+        Function that transforms texts into topic distributions.
     window_size: int
         Size of the rolling windows.
     step: int
@@ -104,6 +101,5 @@ def calculate_timeline(
     texts = [" ".join(window) for window in windows]
     if not texts:
         raise ValueError("This text is not long enough for the given window size.")
-    word_timeline = vectorizer.transform(texts)
-    topic_timeline = topic_model.transform(word_timeline)
+    topic_timeline = transform(texts)
     return topic_timeline

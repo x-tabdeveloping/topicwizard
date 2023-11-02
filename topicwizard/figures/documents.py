@@ -203,8 +203,7 @@ def document_topic_timeline(
     timeline = prepare.calculate_timeline(
         doc_id=0,
         corpus=[document],
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        transform=pipeline.transform,
         window_size=window_size,
         step=step,
     )

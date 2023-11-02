@@ -18,8 +18,6 @@ def create_blueprint(
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
     corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
     group_labels: List[str],
     **kwargs,
 ) -> DashBlueprint:

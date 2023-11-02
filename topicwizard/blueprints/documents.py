@@ -4,6 +4,7 @@ import dash_mantine_components as dmc
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, dcc, html
 from plotly import colors
+from sklearn.pipeline import Pipeline
 
 import topicwizard.prepare.documents as prepare
 from topicwizard.components.documents.document_map import create_document_map
@@ -23,8 +24,7 @@ def create_blueprint(
     topic_term_matrix: np.ndarray,
     document_names: List[str],
     corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
+    pipeline: Pipeline,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
@@ -50,8 +50,7 @@ def create_blueprint(
     )
     timeline = create_timeline(
         corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        transform=pipeline.transform,
         topic_colors=topic_colors,
     )
     document_wordcloud = create_document_wordcloud(

@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Any, Iterable, Optional
 
 import pandas as pd
 from sklearn.base import BaseEstimator
@@ -7,6 +7,22 @@ from sklearn.pipeline import Pipeline, _name_estimators
 from sklearn.preprocessing import normalize
 
 from topicwizard.prepare.topics import infer_topic_names
+
+
+def split_pipeline(
+    vectorizer: Any, topic_model: Any, pipeline: Optional[Pipeline]
+) -> tuple[Any, Any]:
+    """Check which arguments are provided,
+    raises error if the arguments are not satisfactory, and if needed
+    splits Pipeline into vectorizer and topic model."""
+    if (vectorizer is None) or (topic_model is None):
+        if pipeline is None:
+            raise TypeError(
+                "Either pipeline, or vectorizer and topic model have to be provided"
+            )
+        _, vectorizer = pipeline.steps[0]
+        _, topic_model = pipeline.steps[-1]
+    return vectorizer, topic_model
 
 
 class TopicPipeline(Pipeline):

@@ -1,17 +1,10 @@
-from typing import List
 import functools
+from typing import List
 
 import numpy as np
 import plotly.graph_objects as go
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc, exceptions
 
-from dash_extensions.enrich import (
-    DashBlueprint,
-    dcc,
-    Input,
-    Output,
-    State,
-    exceptions,
-)
 import topicwizard.plots.words as plots
 import topicwizard.prepare.words as prepare
 
@@ -30,7 +23,9 @@ def list_to_tuple(function):
     return wrapper
 
 
-def create_word_barplot(topic_term_matrix: np.ndarray) -> DashBlueprint:
+def create_word_barplot(
+    topic_term_matrix: np.ndarray, topic_colors: np.ndarray
+) -> DashBlueprint:
     word_barplot = DashBlueprint()
 
     word_barplot.layout = dcc.Graph(
@@ -63,6 +58,6 @@ def create_word_barplot(topic_term_matrix: np.ndarray) -> DashBlueprint:
             topic_term_matrix=topic_term_matrix,
             topic_names=topic_names,
         )
-        return plots.word_topics_plot(top_topics)
+        return plots.word_topics_plot(top_topics, topic_colors=topic_colors)
 
     return word_barplot

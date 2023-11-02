@@ -121,6 +121,7 @@ def top_topics(
     res = pd.DataFrame(
         {
             "topic": names[highest],
+            "topic_id": highest,
             "importance": topic_importances[highest],
             "associated_importance": associated_importances[highest],
             "overall_importance": overall_importances[highest],

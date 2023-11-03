@@ -106,7 +106,7 @@ def word_topics_plot(top_topics: pd.DataFrame, topic_colors: np.ndarray) -> go.F
         orientation="h",
         base=dict(x=[0.5, 1]),
         marker_color="rgba(168,162,158, 0.3)",
-        marker_line=dict(color="black", width=3),
+        marker_line=dict(color="rgb(168,162,158)", width=3),
         **params,
     )
     fig = go.Figure(data=[associated_word_trace, topic_word_trace])

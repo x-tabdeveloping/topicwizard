@@ -28,8 +28,10 @@ def create_blueprint(
     dominant_topic = prepare.dominant_topic(topic_term_matrix)
     n_topics = len(topic_names)
     # Creating unified color scheme
-    tempo = colors.get_colorscale("Rainbow")
-    topic_colors = colors.sample_colorscale(tempo, np.arange(n_topics) / n_topics)
+    color_scheme = colors.get_colorscale("Portland")
+    topic_colors = colors.sample_colorscale(
+        color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
+    )
     topic_colors = np.array(topic_colors)
 
     # --------[ Collecting blueprints ]--------
@@ -85,8 +87,8 @@ def create_blueprint(
                 className="""
                 bg-white rounded-md px-4 py-2 fixed bottom-5 left-5
                 opacity-80 hover:opacity-100 shadow-md
-                h-1/4
-                scroll-smooth overflow-y-scroll max-h-full
+                max-h-96
+                scroll-smooth overflow-y-scroll
                 """,
             ),
             html.Div(

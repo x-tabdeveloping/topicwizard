@@ -32,10 +32,22 @@ def create_blueprint(
         document_topic_matrix, document_term_matrix, group_id_labels, n_groups
     )
     group_positions = prepare.group_positions(group_term_importances)
+    dominant_topics = prepare.dominant_topic(
+        group_topic_importances=group_topic_importances
+    )
+    # Creating unified color scheme
+    color_scheme = colors.get_colorscale("Portland")
+    n_topics = topic_term_matrix.shape[0]
+    topic_colors = colors.sample_colorscale(
+        color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
+    )
+    topic_colors = np.array(topic_colors)
     # --------[ Collecting blueprints ]--------
-    group_map = create_group_map(group_positions, group_importances, group_names)
+    group_map = create_group_map(
+        group_positions, group_importances, group_names, dominant_topics, topic_colors
+    )
     group_wordcloud = create_group_wordcloud(group_term_importances, vocab)
-    group_barchart = create_group_barplot(group_topic_importances)
+    group_barchart = create_group_barplot(group_topic_importances, topic_colors)
     blueprints = [
         group_map,
         group_wordcloud,

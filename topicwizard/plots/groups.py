@@ -11,6 +11,8 @@ def group_map(
     y: np.ndarray,
     group_importances: np.ndarray,
     group_names: np.ndarray,
+    dominant_topic: np.ndarray,
+    topic_colors: np.ndarray,
 ) -> go.Figure:
     """Group map for the app, where you can select things by clicking."""
     group_trace = go.Scatter(
@@ -23,7 +25,7 @@ def group_map(
             sizemode="area",
             sizeref=2.0 * max(group_importances) / (100.0**2),
             sizemin=4,
-            color="rgb(168,162,158)",
+            color=topic_colors[dominant_topic],
             line=dict(width=3, color="black"),
         ),
         customdata=np.atleast_2d(np.arange(x.shape[0])).T,
@@ -63,7 +65,7 @@ def group_map(
     return fig
 
 
-def group_topics_barchart(top_topics: pd.DataFrame):
+def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
     """Plots topic importances for currently selected group."""
     top_topics = top_topics.sort_values("importance", ascending=True)
     text = top_topics.topic.map(lambda s: f"<b>{s}</b>")
@@ -82,7 +84,7 @@ def group_topics_barchart(top_topics: pd.DataFrame):
         x=top_topics.importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="rgba(224,49,49)",
+        marker_color=topic_colors[top_topics.topic_id],
         marker_line=dict(color="black", width=3),
         **params,
     )

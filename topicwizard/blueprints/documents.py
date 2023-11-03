@@ -6,6 +6,7 @@ from dash_extensions.enrich import DashBlueprint, dcc, html
 from plotly import colors
 from sklearn.pipeline import Pipeline
 
+import topicwizard.help.documents as help
 import topicwizard.prepare.documents as prepare
 from topicwizard.components.color_legend import make_color_legend
 from topicwizard.components.documents.document_bar import create_document_bar
@@ -13,10 +14,8 @@ from topicwizard.components.documents.document_map import create_document_map
 from topicwizard.components.documents.document_selector import create_document_selector
 from topicwizard.components.documents.document_timeline import create_timeline
 from topicwizard.components.documents.document_viewer import create_document_viewer
-from topicwizard.components.documents.document_wordcloud import (
-    create_document_wordcloud,
-)
 from topicwizard.components.documents.window_slider import create_window_slider
+from topicwizard.help.utils import make_helper
 
 
 def create_blueprint(
@@ -128,6 +127,22 @@ def create_blueprint(
                 max-h-96
                 scroll-smooth overflow-y-scroll
                 """,
+            ),
+            html.Div(
+                make_helper(
+                    dmc.Group(
+                        [
+                            html.Div(help.DOCUMENT_MAP),
+                            html.Div(help.CONTENT),
+                            html.Div(help.TIMELINE),
+                        ],
+                        spacing="lg",
+                        grow=1,
+                        align="start",
+                    ),
+                    width="800px",
+                ),
+                className="fixed bottom-8 right-5",
             ),
         ],
         className="""

@@ -24,7 +24,7 @@ def create_group_wordcloud(
         Input("selected_group", "data"),
     )
     def update_plot(selected_group: int) -> go.Figure:
-        top_words = prepare.top_words(selected_group, 50, group_term_importances, vocab)
+        top_words = prepare.top_words(selected_group, 60, group_term_importances, vocab)
         return plots.wordcloud(top_words)
 
     return group_wordcloud

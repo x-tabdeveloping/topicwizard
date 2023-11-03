@@ -105,7 +105,7 @@ def top_topics(
     topic_importances = group_topic_importances[group_id]
     topic_importances = np.squeeze(np.asarray(topic_importances))
     n_topics = topic_importances.shape[0]
-    if n_topics < top_n:
+    if n_topics <= top_n:
         highest = np.argsort(-topic_importances)
     else:
         highest = np.argpartition(-topic_importances, top_n)[:top_n]
@@ -134,7 +134,7 @@ def top_words(
     overall_importances = group_term_importances.sum(axis=0)
     overall_importances = np.squeeze(np.asarray(overall_importances))
     n_vocab = vocab.shape[0]
-    if n_vocab < top_n:
+    if n_vocab <= top_n:
         highest = np.argsort(-importances)
     else:
         highest = np.argpartition(-importances, top_n)[:top_n]

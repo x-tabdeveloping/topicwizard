@@ -35,9 +35,7 @@ WORD_MAP = [
                 html.Tr(
                     [
                         html.Td(
-                            dcc.Markdown(
-                                "$c_k = arg \\max_i \\phi_{i_k}$", mathjax=True
-                            )
+                            dcc.Markdown("$c_k = argmax_i \\phi_{i_k}$", mathjax=True)
                         ),
                         html.Td("Most important topic for word k"),
                     ]

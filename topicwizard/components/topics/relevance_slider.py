@@ -1,19 +1,20 @@
 """Relevance slider component"""
 
 import dash_mantine_components as dmc
-from dash_extensions.enrich import DashBlueprint
+from dash_extensions.enrich import DashBlueprint, html
 
 relevance_slider = DashBlueprint()
 
 relevance_slider.layout = dmc.Grid(
     [
         dmc.Col(
-            dmc.Badge(
-                "lambda :",
-                size="xl",
-                radius="xl",
-                variant="gradient",
-                gradient={"from": "orange", "to": "pink", "deg": 105},
+            html.Div(
+                "LAMBDA:",
+                className="""
+                        bg-amber-50 py-1.5 px-5
+                        text-amber-800 font-medium
+                        rounded-xl
+                    """,
             ),
             span="content",
         ),
@@ -30,7 +31,7 @@ relevance_slider.layout = dmc.Grid(
                     {"value": value / 5, "label": f"{value*20}%"}
                     for value in range(5 + 1)
                 ],
-                color="pink",
+                color="orange",
                 showLabelOnHover=False,
             ),
             span="auto",

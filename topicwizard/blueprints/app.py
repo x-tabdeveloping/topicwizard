@@ -99,7 +99,7 @@ def create_blueprint(
         else create_blank_page("groups")
     )
     if group_labels is None:
-        exclude_pages = exclude_pages | set(["Groups"])
+        exclude_pages = exclude_pages | set(["groups"])
     options = []
     for option in ["Topics", "Words", "Documents", "Groups"]:
         if option.lower() not in exclude_pages:

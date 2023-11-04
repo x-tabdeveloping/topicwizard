@@ -59,7 +59,7 @@ def create_group_map(
 
     group_map.clientside_callback(
         """
-        function(clickData, currentValue, visibility) {
+        function(clickData, currentValue) {
             if (!clickData) {
                 return 0;
             }
@@ -70,7 +70,6 @@ def create_group_map(
         """,
         Output("selected_group", "data"),
         Input("group_map", "clickData"),
-        Input("groups_container", "className"),
         State("selected_group", "data"),
     )
     return group_map

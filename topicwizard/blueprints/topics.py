@@ -98,13 +98,8 @@ def create_blueprint(
             html.Div(
                 [
                     intertopic_map.layout,
-                    html.Div(
-                        [
-                            topic_barplot.layout,
-                            wordcloud.layout,
-                        ],
-                        className="flex-1 flex flex-col items-stretch",
-                    ),
+                    topic_barplot.layout,
+                    wordcloud.layout,
                 ],
                 className="flex-1 flex flex-row items-stretch p-3",
             ),

@@ -225,7 +225,7 @@ def create_blueprint(
                 return 'indigo';
             }
             if (currentPage === 'Groups') {
-                return 'pink';
+                return 'violet';
             }
             return 'black';
         }

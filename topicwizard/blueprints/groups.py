@@ -60,15 +60,7 @@ def create_blueprint(
         [
             dcc.Store("selected_group", data=0),
             dmc.Group(
-                [
-                    group_map.layout,
-                    dmc.Stack(
-                        [group_barchart.layout, group_wordcloud.layout],
-                        align="stretch",
-                        justify="space-around",
-                        className="flex-1",
-                    ),
-                ],
+                [group_map.layout, group_barchart.layout, group_wordcloud.layout],
                 grow=1,
                 align="stretch",
                 position="apart",

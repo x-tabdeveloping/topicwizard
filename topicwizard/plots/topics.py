@@ -152,13 +152,13 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
     }
     cloud = WordCloud(
         width=800,
-        height=800,
+        height=1060,
         background_color="white",
         colormap="copper",
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()
-    image = image.resize((1600, 1600), resample=Image.Resampling.LANCZOS)
+    image = image.resize((1600, 2120), resample=Image.Resampling.LANCZOS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

@@ -29,8 +29,8 @@ def create_document_viewer(
         id="document_viewer",
         showLabel="Show more",
         hideLabel="Hide",
-        maxHeight=150,
-        className="px-3 pt-1 pb-8",
+        maxHeight=100,
+        className="px-3 pt-1 pb-8 h-1/5 overflow-y-auto",
     )
 
     @document_viewer.callback(

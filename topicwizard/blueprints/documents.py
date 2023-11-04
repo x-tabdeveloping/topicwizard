@@ -101,13 +101,20 @@ def create_blueprint(
             ),
             dmc.Group(
                 [
-                    document_map.layout,
                     dmc.Stack(
                         [
                             dmc.Title("Content:", order=3, className="px-3 mt-2"),
                             document_viewer.layout,
-                            timeline.layout,
+                            document_map.layout,
+                        ],
+                        align="stretch",
+                        justify="space-around",
+                        className="flex-1",
+                    ),
+                    dmc.Stack(
+                        [
                             document_bar.layout,
+                            timeline.layout,
                         ],
                         align="stretch",
                         justify="space-around",
@@ -118,15 +125,6 @@ def create_blueprint(
                 align="stretch",
                 position="apart",
                 className="flex-1 p-3",
-            ),
-            html.Div(
-                make_color_legend(topic_names, topic_colors),
-                className="""
-                bg-white rounded-md px-4 py-2 fixed bottom-5 left-5
-                opacity-80 hover:opacity-100 shadow-md
-                max-h-96
-                scroll-smooth overflow-y-scroll
-                """,
             ),
             html.Div(
                 make_helper(

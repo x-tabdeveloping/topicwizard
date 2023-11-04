@@ -49,13 +49,13 @@ CONTENT = [
     dmc.Title("Content", order=3),
     dmc.Text(
         """
-        In the upper-right corner you will find a component showing the content of the selected document.
+        In the upper-left corner you will find a component showing the content of the selected document.
         Words which are 'significant' for the most important topic in the document are highlighted in grey.
         """
     ),
     dmc.Title("Which words are highlighted?", order=4),
     dmc.Text(
-        "Words which have a higher z-score in the most important topic than 2.0 are displayed."
+        "Words which have a higher z-score in the most important topic than 2.0 are highlighted."
     ),
     dmc.Table(
         html.Tbody(
@@ -126,7 +126,7 @@ TIMELINE = [
     dmc.Title("Topic Importances", order=3),
     dmc.Text(
         """
-        The bar chart in the bottom right corner displays the topical content of the document.
+        The bar chart on the right displays the topical content of the document.
         Topic importances are directly taken from the document-topic-matrix.
         Only the 15 highest ranking topics are displayed on this figure.
         """

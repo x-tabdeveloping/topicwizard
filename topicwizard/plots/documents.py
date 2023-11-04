@@ -83,19 +83,19 @@ def document_topic_barplot(
     topic_importances = topic_importances.sort_values(
         "importance", ascending=False
     ).iloc[:top_n]
-    topic_names = [f"<b>{name}</b>" for name in topic_names]
+    # topic_names = [f"<b>{name}</b>" for name in topic_names]
     fig = px.bar(
         topic_importances,
         x="importance",
         y="topic_name",
         color="topic_name",
         color_discrete_map=color_mapping,
-        text="topic_name",
+        # text="topic_name",
     )
     fig.update_traces(
         textposition="inside", marker=dict(line=dict(color="black", width=3))
     )
-    fig.update_yaxes(ticks="", showticklabels=False, title="")
+    fig.update_yaxes(title="Topic")
     fig.update_xaxes(title="Importance")
     fig.update_xaxes(
         gridcolor="#e5e7eb",

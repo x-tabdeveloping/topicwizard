@@ -6,10 +6,12 @@ import pandas as pd
 from dash_extensions.enrich import DashBlueprint, dcc, html
 from plotly import colors
 
+import topicwizard.help.groups as help
 import topicwizard.prepare.groups as prepare
 from topicwizard.components.groups.group_barplot import create_group_barplot
 from topicwizard.components.groups.group_map import create_group_map
 from topicwizard.components.groups.group_wordcloud import create_group_wordcloud
+from topicwizard.help.utils import make_helper
 
 
 def create_blueprint(
@@ -66,9 +68,16 @@ def create_blueprint(
                 position="apart",
                 className="flex-1 p-3",
             ),
+            html.Div(
+                make_helper(
+                    html.Div(help.GROUP_MAP),
+                    width="400px",
+                ),
+                className="fixed bottom-8 left-5",
+            ),
         ],
         className="""
-        hidden
+            hidden
         """,
         id="groups_container",
     )

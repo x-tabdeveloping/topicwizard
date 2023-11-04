@@ -176,9 +176,9 @@ def create_blueprint(
         data = dict(
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
+            pipeline=pipeline,
             topic_names=topic_names,
+            group_labels=group_labels,
         )
 
         def write_joblib(bytes_io: BytesIO):

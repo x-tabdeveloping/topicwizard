@@ -106,7 +106,7 @@ def get_dash_app(
     return app
 
 
-def load_app(filename: str, exclude_pages: Set[PageName]) -> Dash:
+def load_app(filename: str, exclude_pages: Optional[Iterable[PageName]] = None) -> Dash:
     """Loads and prepares saved app from disk.
 
     Parameters
@@ -120,6 +120,10 @@ def load_app(filename: str, exclude_pages: Set[PageName]) -> Dash:
         Dash application.
     """
     data = joblib.load(filename)
+    if exclude_pages is None:
+        exclude_pages = set()
+    else:
+        exclude_pages = set(exclude_pages)
     return get_dash_app(**data, exclude_pages=exclude_pages)
 
 

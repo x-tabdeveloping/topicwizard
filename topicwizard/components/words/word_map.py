@@ -36,6 +36,7 @@ def create_word_map(
     )
     z_values = zscore(word_frequencies)
     highest = np.arange(len(vocab))[z_values > 2.0]
+    highest = highest[np.argsort(-z_values[highest])[:40]]
     highest_values_str = ", ".join([str(int(h)) for h in highest])
     highest_text = f"[{highest_values_str}]"
 

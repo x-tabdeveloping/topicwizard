@@ -2,7 +2,7 @@ from typing import Any, List
 
 import dash_mantine_components as dmc
 import numpy as np
-from dash_extensions.enrich import DashBlueprint, dcc, html
+from dash_extensions.enrich import DashBlueprint, Input, Output, dcc, html
 from plotly import colors
 from sklearn.pipeline import Pipeline
 

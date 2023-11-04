@@ -59,9 +59,9 @@ def create_group_map(
 
     group_map.clientside_callback(
         """
-        function(clickData, currentValue) {
+        function(clickData, currentValue, visibility) {
             if (!clickData) {
-                return currentValue;
+                return 0;
             }
             const point = clickData.points[0]
             const groupId = point.customdata[0]
@@ -70,6 +70,7 @@ def create_group_map(
         """,
         Output("selected_group", "data"),
         Input("group_map", "clickData"),
+        Input("groups_container", "className"),
         State("selected_group", "data"),
     )
     return group_map

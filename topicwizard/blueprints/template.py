@@ -3,8 +3,9 @@ from warnings import warn
 
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, html
-from sklearn.pipeline import make_pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 
+from topicwizard.pipeline import split_pipeline
 from topicwizard.prepare.topics import infer_topic_names
 from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
@@ -18,8 +19,7 @@ def create_blank_page(name: str) -> DashBlueprint:
 
 
 def prepare_blueprint(
-    vectorizer: Any,
-    topic_model: Any,
+    pipeline: Pipeline,
     corpus: Iterable[str],
     create_blueprint: BlueprintCreator,
     document_names: Optional[List[str]] = None,
@@ -32,6 +32,7 @@ def prepare_blueprint(
     n_documents = len(corpus)
     if document_names is None:
         document_names = [f"Document {i}" for i in range(n_documents)]
+    vectorizer, topic_model = split_pipeline(None, None, pipeline)
     vocab = get_vocab(vectorizer)
     (
         document_term_matrix,
@@ -51,7 +52,6 @@ def prepare_blueprint(
         document_names = list(np.array(document_names)[~nan_documents])
         if group_labels:
             group_labels = list(np.array(group_labels)[~nan_documents])
-    n_topics = topic_term_matrix.shape[0]
     if topic_names is None:
         topic_names = infer_topic_names(pipeline=make_pipeline(vectorizer, topic_model))
     blueprint = create_blueprint(
@@ -61,9 +61,8 @@ def prepare_blueprint(
         topic_term_matrix=topic_term_matrix,
         document_names=document_names,
         corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
         topic_names=topic_names,
+        pipeline=pipeline,
         group_labels=group_labels,
         *args,
         **kwargs,

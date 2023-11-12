@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 
 
@@ -15,18 +14,21 @@ def word_map(
     """Plots all words in relation to each other."""
     n_words = vocab.shape[0]
     customdata = np.array([np.arange(n_words), vocab]).T
+    text = np.array([""] * n_words)
     word_trace = go.Scattergl(
         x=x,
         y=y,
         mode="text+markers",
-        text=[""] * n_words,
+        text=text,
         marker=dict(
             size=word_frequencies,
             sizemode="area",
             sizeref=2.0 * max(word_frequencies) / (100.0**2),
             sizemin=4,
             color=topic_colors[dominant_topic],
+            opacity=0.65,
         ),
+        textfont=dict(color="black"),
         customdata=customdata,
         hovertemplate="%{customdata[1]}",
         name="",
@@ -65,35 +67,47 @@ def word_map(
     return fig
 
 
-def word_topics_plot(top_topics: pd.DataFrame) -> go.Figure:
+def word_topics_plot(top_topics: pd.DataFrame, topic_colors: np.ndarray) -> go.Figure:
     """Plots word importances for currently selected topic."""
     top_topics = top_topics.sort_values("importance", ascending=True)
+    text = top_topics.topic.map(lambda s: f"<b>{s}</b>")
+    overlap = np.any(top_topics.associated_importance < top_topics.importance)
+    color = top_topics.topic_id.map(dict(enumerate(topic_colors)))
+    if overlap:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
+    else:
+        params = dict()
     topic_word_trace = go.Bar(
         name="Importance for selected words",
         y=top_topics.topic,
         x=top_topics.importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="#15AABF",
+        marker_color=color,
+        marker_line=dict(color="black", width=3),
+        **params,
     )
+    if not overlap:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
+    else:
+        params = dict()
     associated_word_trace = go.Bar(
         name="Importance with associated words",
         y=top_topics.topic,
         x=top_topics.associated_importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="#b8eadb",
-        textposition="outside",
-        texttemplate=top_topics.topic,
-    )
-    overall_word_trace = go.Bar(
-        name="Overall topic importance",
-        y=top_topics.topic,
-        x=top_topics.overall_importance,
-        orientation="h",
-        base=dict(x=[0.5, 1]),
-        marker_color="rgb(168,162,158)",
-        opacity=0.3,
+        marker_color="rgba(168,162,158, 0.3)",
+        marker_line=dict(color="rgb(168,162,158)", width=3),
+        **params,
     )
     fig = go.Figure(data=[associated_word_trace, topic_word_trace])
     fig.update_layout(

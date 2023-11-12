@@ -112,7 +112,7 @@ def top_topics(
     associated_importances = topic_term_matrix[:, all_words].sum(axis=1)
     associated_importances = np.squeeze(np.asarray(associated_importances))
     n_topics = topic_importances.shape[0]
-    if n_topics < top_n:
+    if n_topics <= top_n:
         highest = np.argsort(-topic_importances)
     else:
         highest = np.argpartition(-topic_importances, top_n)[:top_n]
@@ -121,6 +121,7 @@ def top_topics(
     res = pd.DataFrame(
         {
             "topic": names[highest],
+            "topic_id": highest,
             "importance": topic_importances[highest],
             "associated_importance": associated_importances[highest],
             "overall_importance": overall_importances[highest],

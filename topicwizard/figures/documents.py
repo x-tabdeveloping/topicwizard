@@ -106,8 +106,9 @@ def document_topic_distribution(
     vectorizer: Any = None,
     topic_model: Any = None,
     topic_names: Optional[List[str]] = None,
+    top_n: int = 8,
 ) -> go.Figure:
-    """Plots distribution of topics in the given documents on a pie chart.
+    """Plots distribution of topics in the given documents on a bar chart.
 
     Parameters
     ----------
@@ -130,7 +131,7 @@ def document_topic_distribution(
     Returns
     -------
     go.Figure
-        Pie chart of topic distribution.
+        Bar chart of topic distribution.
     """
     if isinstance(documents, str):
         documents = [documents]
@@ -147,13 +148,11 @@ def document_topic_distribution(
     topic_importances = prepare.document_topic_importances(document_topic_matrix)
     topic_importances = topic_importances.groupby(["topic_id"]).sum().reset_index()
     n_topics = document_topic_matrix.shape[-1]
-    twilight = colors.get_colorscale("Twilight")
+    twilight = colors.get_colorscale("Portland")
     topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
-    return plots.document_topic_plot(
-        topic_importances,
-        topic_names,
-        topic_colors,
+    return plots.document_topic_barplot(
+        topic_importances, topic_names, topic_colors, top_n=top_n
     )
 
 
@@ -203,13 +202,12 @@ def document_topic_timeline(
     timeline = prepare.calculate_timeline(
         doc_id=0,
         corpus=[document],
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        transform=pipeline.transform,
         window_size=window_size,
         step=step,
     )
     n_topics = len(topic_names)
-    twilight = colors.get_colorscale("Twilight")
+    twilight = colors.get_colorscale("Portland")
     topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
     return plots.document_timeline(timeline, topic_names, topic_colors)

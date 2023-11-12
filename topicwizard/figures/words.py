@@ -174,6 +174,10 @@ def word_association_barchart(
     associated_words = prepare.associated_words(
         word_ids, topic_term_matrix, n_association
     )
+    n_topics = topic_term_matrix.shape[0]
+    tempo = colors.get_colorscale("Rainbow")
+    topic_colors = colors.sample_colorscale(tempo, np.arange(n_topics) / n_topics)
+    topic_colors = np.array(topic_colors)
     top_topics = prepare.top_topics(
         word_ids,
         associated_words,
@@ -181,4 +185,4 @@ def word_association_barchart(
         topic_term_matrix=topic_term_matrix,
         topic_names=topic_names,
     )
-    return plots.word_topics_plot(top_topics)
+    return plots.word_topics_plot(top_topics, topic_colors=topic_colors)

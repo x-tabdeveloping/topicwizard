@@ -25,12 +25,15 @@ def document_map(
         mode="markers+text",
         text=[""] * n_documents,
         marker=dict(
-            color=topic_colors[dominant_topic], line=dict(width=1, color="white")
+            color=topic_colors[dominant_topic],
+            size=15,
+            opacity=0.5,
+            line=dict(color="white", width=1.5),
         ),
         customdata=customdata,
         hovertemplate="%{customdata[1]}",
         name="",
-        textfont=dict(size=16),
+        textfont=dict(size=16, color="black"),
     )
     fig = go.Figure([trace])
     fig.update_layout(
@@ -61,6 +64,58 @@ def document_map(
         linewidth=6,
         zerolinewidth=2,
         zerolinecolor="#d1d5db",
+    )
+    return fig
+
+
+def document_topic_barplot(
+    topic_importances: pd.DataFrame,
+    topic_names: List[str],
+    topic_colors: np.ndarray,
+    top_n: int = 15,
+) -> go.Figure:
+    name_mapping = pd.Series(topic_names)
+    n_topics = len(topic_names)
+    color_mapping = {topic_names[i]: topic_colors[i] for i in range(n_topics)}
+    topic_importances = topic_importances.assign(
+        topic_name=topic_importances.topic_id.map(name_mapping)
+    )
+    topic_importances = topic_importances.sort_values(
+        "importance", ascending=False
+    ).iloc[:top_n]
+    # topic_names = [f"<b>{name}</b>" for name in topic_names]
+    fig = px.bar(
+        topic_importances,
+        x="importance",
+        y="topic_name",
+        color="topic_name",
+        color_discrete_map=color_mapping,
+        # text="topic_name",
+    )
+    fig.update_traces(
+        textposition="inside", marker=dict(line=dict(color="black", width=3))
+    )
+    fig.update_yaxes(title="Topic")
+    fig.update_xaxes(title="Importance")
+    fig.update_xaxes(
+        gridcolor="#e5e7eb",
+        linecolor="#f9fafb",
+        linewidth=6,
+        mirror=True,
+        zerolinewidth=2,
+        zerolinecolor="#d1d5db",
+    )
+    fig.update_yaxes(
+        gridcolor="#e5e7eb",
+        linecolor="#f9fafb",
+        linewidth=6,
+        mirror=True,
+        zerolinewidth=2,
+        zerolinecolor="#d1d5db",
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
+        showlegend=False,
     )
     return fig
 
@@ -129,10 +184,11 @@ def document_timeline(
         hovermode="closest",
         plot_bgcolor="white",
         margin=dict(l=0, r=0, b=0, t=0, pad=0),
+        legend_title="Topic",
     )
     fig.update_coloraxes(showscale=False)
     fig.update_xaxes(
-        title="",
+        title="Window",
         gridcolor="#e5e7eb",
         linecolor="#f9fafb",
         linewidth=6,
@@ -141,7 +197,7 @@ def document_timeline(
         zerolinecolor="#d1d5db",
     )
     fig.update_yaxes(
-        title="",
+        title="Importance",
         gridcolor="#e5e7eb",
         linecolor="#f9fafb",
         mirror=True,
@@ -165,7 +221,7 @@ def document_wordcloud(
         scale=4,
     ).generate_from_frequencies(term_dict)
     image = cloud.to_image()
-    image = image.resize((1600, 1600), resample=Image.ANTIALIAS)
+    image = image.resize((1600, 1600), resample=Image.Resampling.LANCZOS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

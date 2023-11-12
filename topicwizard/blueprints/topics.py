@@ -5,7 +5,9 @@ import dash_mantine_components as dmc
 import numpy as np
 import plotly.graph_objects as go
 from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc, html
+from dash_iconify import DashIconify
 
+import topicwizard.help.topics as help
 import topicwizard.plots.topics as plots
 import topicwizard.prepare.topics as prepare
 from topicwizard.components.topics.intertopic_map import create_intertopic_map
@@ -14,6 +16,7 @@ from topicwizard.components.topics.topic_barplot import topic_barplot
 from topicwizard.components.topics.topic_namer import topic_namer
 from topicwizard.components.topics.topic_switcher import topic_switcher
 from topicwizard.components.topics.wordcloud import wordcloud
+from topicwizard.help.utils import make_helper
 
 # ----Clientside Callbacks----
 switch_topic = [
@@ -95,15 +98,25 @@ def create_blueprint(
             html.Div(
                 [
                     intertopic_map.layout,
-                    html.Div(
-                        [
-                            topic_barplot.layout,
-                            wordcloud.layout,
-                        ],
-                        className="flex-1 flex flex-col items-stretch",
-                    ),
+                    topic_barplot.layout,
+                    wordcloud.layout,
                 ],
                 className="flex-1 flex flex-row items-stretch p-3",
+            ),
+            html.Div(
+                make_helper(
+                    dmc.Group(
+                        [
+                            html.Div(help.TOPIC_MAP),
+                            html.Div(help.TOPIC_WORDS),
+                        ],
+                        spacing="lg",
+                        grow=1,
+                        align="start",
+                    ),
+                    width="800px",
+                ),
+                className="fixed bottom-8 left-5",
             ),
         ],
         className="""

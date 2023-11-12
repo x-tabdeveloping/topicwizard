@@ -22,8 +22,7 @@ def is_colab() -> bool:
 
 
 def get_app_blueprint(
-    vectorizer: Any,
-    topic_model: Any,
+    pipeline: Pipeline,
     corpus: Iterable[str],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
@@ -31,8 +30,7 @@ def get_app_blueprint(
     **kwargs,
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        pipeline=pipeline,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
@@ -47,10 +45,11 @@ PageName = Literal["topics", "documents", "words"]
 
 
 def get_dash_app(
-    vectorizer: Any,
-    topic_model: Any,
     corpus: Iterable[str],
     exclude_pages: Set[PageName],
+    pipeline: Optional[Pipeline] = None,
+    vectorizer: Any = None,
+    topic_model: Any = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -84,9 +83,10 @@ def get_dash_app(
     Dash
         Dash application object for topicwizard.
     """
+    if pipeline is None:
+        pipeline = Pipeline([("Vectorizer", vectorizer), ("Model", topic_model)])
     blueprint = get_app_blueprint(
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        pipeline=pipeline,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
@@ -110,7 +110,7 @@ def get_dash_app(
     return app
 
 
-def load_app(filename: str, exclude_pages: Set[PageName]) -> Dash:
+def load_app(filename: str, exclude_pages: Optional[Iterable[PageName]] = None) -> Dash:
     """Loads and prepares saved app from disk.
 
     Parameters
@@ -124,6 +124,10 @@ def load_app(filename: str, exclude_pages: Set[PageName]) -> Dash:
         Dash application.
     """
     data = joblib.load(filename)
+    if exclude_pages is None:
+        exclude_pages = set()
+    else:
+        exclude_pages = set(exclude_pages)
     return get_dash_app(**data, exclude_pages=exclude_pages)
 
 
@@ -284,14 +288,14 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
+    if pipeline is None:
+        pipeline = Pipeline([("Vectorizer", vectorizer), ("Model", topic_model)])
     exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
     if topic_names is None and hasattr(pipeline, "topic_names"):
         topic_names = pipeline.topic_names  # type: ignore
     app = get_dash_app(
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        pipeline=pipeline,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,

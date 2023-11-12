@@ -1,4 +1,4 @@
-from typing import Any, List, Tuple, Union
+from typing import Callable, List, Union
 
 import numpy as np
 import plotly.graph_objects as go
@@ -10,7 +10,9 @@ from topicwizard.plots.utils import text_plot
 
 
 def create_timeline(
-    corpus: List[str], vectorizer: Any, topic_model: Any, topic_colors: np.ndarray
+    corpus: List[str],
+    transform: Callable[[List[str]], np.ndarray],
+    topic_colors: np.ndarray,
 ):
     timeline = DashBlueprint()
 
@@ -38,8 +40,7 @@ def create_timeline(
             topic_timeline = prepare.calculate_timeline(
                 doc_id=selected_document,
                 corpus=corpus,
-                vectorizer=vectorizer,
-                topic_model=topic_model,
+                transform=transform,
                 window_size=window_size,
                 step=1,
             )

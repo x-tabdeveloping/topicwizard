@@ -39,36 +39,7 @@ This page will be added to the web application:
     :alt: Screenshot of groups.
 
 
-Group map
-^^^^^^^^^^
-
-On the left you will see a bubble chart displaying the group map.
-
-.. image:: _static/group_map.png
-    :width: 800
-    :alt: Group map.
-
-Group positions are calculated from Bag-of-words representations, and projected into 2-dimensional space with UMAP.
-Group sizes correspond to the number of documents in each group.
-
-Group Barchart
-^^^^^^^^^^^^^^
-
-When you click on a group on the map, a bar chart on the right will be displayed with the 10 highest-ranking topics for the given group
-and their importances over all groups for comparison.
-
-.. image:: _static/group_barchart.png
-    :width: 800
-    :alt: Group topic barchart.
-
-Group Wordcloud
-^^^^^^^^^^^^^^^
-
-On the right there will also be a wordcloud of the most frequent words in the given group.
-
-.. image:: _static/group_wordcloud.png
-    :width: 800
-    :alt: Group wordcloud.
+To get more information about how to interpret the graphs and how they are produced, hover your cursor over the helper in the corner.
 
 Self-Contained Plots
 --------------------

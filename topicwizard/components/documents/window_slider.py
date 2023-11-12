@@ -1,7 +1,7 @@
 """Window slider component."""
 
 import dash_mantine_components as dmc
-from dash_extensions.enrich import DashBlueprint
+from dash_extensions.enrich import DashBlueprint, html
 
 
 def create_window_slider() -> DashBlueprint:
@@ -10,12 +10,13 @@ def create_window_slider() -> DashBlueprint:
     window_slider.layout = dmc.Grid(
         [
             dmc.Col(
-                dmc.Badge(
-                    "window size:",
-                    size="xl",
-                    radius="xl",
-                    variant="gradient",
-                    gradient={"from": "indigo", "to": "violet", "deg": 105},
+                html.Div(
+                    "WINDOW SIZE:",
+                    className="""
+                                bg-indigo-50 py-1.5 px-5
+                                text-indigo-800 font-medium
+                                rounded-xl
+                            """,
                 ),
                 span="content",
             ),
@@ -35,7 +36,7 @@ def create_window_slider() -> DashBlueprint:
                         {"value": 200, "label": "200"},
                         {"value": 500, "label": "500"},
                     ],
-                    color="violet",
+                    color="indigo",
                     showLabelOnHover=False,
                 ),
                 span="auto",

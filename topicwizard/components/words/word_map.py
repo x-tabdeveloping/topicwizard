@@ -1,7 +1,9 @@
+from string import Template
 from typing import Tuple
 
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
+from scipy.stats import zscore
 
 import topicwizard.plots.words as plots
 
@@ -32,10 +34,21 @@ def create_word_map(
         ),
         className="flex-1",
     )
+    z_values = zscore(word_frequencies)
+    highest = np.arange(len(vocab))[z_values > 2.0]
+    highest = highest[np.argsort(-z_values[highest])[:40]]
+    highest_values_str = ", ".join([str(int(h)) for h in highest])
+    highest_text = f"[{highest_values_str}]"
 
     word_map.clientside_callback(
-        """
+        Template(
+            """
         function(selectedWords, associatedWords, currentPlot, vocab) {
+            opacity = 0.4
+            if (selectedWords === undefined || selectedWords.length == 0) {
+                opacity = 0.5
+                selectedWords = $highest
+            }
             if (!currentPlot || !vocab){
                 return {'data': [], 'layout': {}};
             }
@@ -50,25 +63,29 @@ def create_word_map(
             selectedWords.forEach(index => {
                 text[index] = vocab[index];
                 colors[index] = '#15AABF';
-                textColor[index] = '#0B7285';
-                textSize[index] = 22;
+                textColor[index] = 'black';
+                textSize[index] = 16;
             })
             associatedWords.forEach(index => {
                 text[index] = vocab[index];
+                textSize[index] = 10;
+                textColor[index] = 'rgba(40,40,40,0.6)';
                 colors[index] = '#89dcc3';
             })
             const textFont = {'color': textColor, 'size': textSize};
             // const marker = {...trace.marker, 'color': colors};
-            const marker = {...trace.marker}
+            const marker = {...trace.marker, 'opacity': opacity}
             const newTrace = {...trace, 'marker': marker, 'text': text, 'textfont': textFont};
             const newFigure = {...currentPlot, 'data': [newTrace]};
             return newFigure;
         }
-        """,
+        """
+        ).substitute(highest=highest_text),
         Output("word_map", "figure"),
         Input("selected_words", "data"),
         Input("associated_words", "data"),
         State("word_map", "figure"),
         State("vocab", "data"),
+        prevent_initial_call=True,
     )
     return word_map

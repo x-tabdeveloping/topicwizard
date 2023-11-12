@@ -1,9 +1,9 @@
 """Association slider component"""
 from typing import List
 
-import numpy as np
 import dash_mantine_components as dmc
-from dash_extensions.enrich import DashBlueprint, Output, Input
+import numpy as np
+from dash_extensions.enrich import DashBlueprint, Input, Output, html
 
 import topicwizard.prepare.words as prepare
 
@@ -14,12 +14,13 @@ def create_association_slider(topic_term_matrix: np.ndarray) -> DashBlueprint:
     association_slider.layout = dmc.Grid(
         [
             dmc.Col(
-                dmc.Badge(
-                    "associations:",
-                    size="xl",
-                    radius="xl",
-                    variant="gradient",
-                    gradient={"from": "teal", "to": "cyan", "deg": 105},
+                html.Div(
+                    "ASSOCIATIONS:",
+                    className="""
+                        bg-teal-50 py-1.5 px-5
+                        text-teal-800 font-medium
+                        rounded-xl
+                    """,
                 ),
                 span="content",
             ),
@@ -36,7 +37,7 @@ def create_association_slider(topic_term_matrix: np.ndarray) -> DashBlueprint:
                         {"value": value * 5, "label": f"{value*5}"}
                         for value in range(9)
                     ],
-                    color="cyan",
+                    color="teal",
                     showLabelOnHover=False,
                 ),
                 span="auto",
@@ -49,9 +50,7 @@ def create_association_slider(topic_term_matrix: np.ndarray) -> DashBlueprint:
         Input("selected_words", "data"),
         Input("association_slider", "value"),
     )
-    def update_associated_words(
-        selected_words: List[int], n_associations: int
-    ):
+    def update_associated_words(selected_words: List[int], n_associations: int):
         if not selected_words or not n_associations:
             return []
         return prepare.associated_words(

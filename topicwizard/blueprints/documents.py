@@ -2,18 +2,20 @@ from typing import Any, List
 
 import dash_mantine_components as dmc
 import numpy as np
-from dash_extensions.enrich import DashBlueprint, dcc, html
+from dash_extensions.enrich import DashBlueprint, Input, Output, dcc, html
 from plotly import colors
+from sklearn.pipeline import Pipeline
 
+import topicwizard.help.documents as help
 import topicwizard.prepare.documents as prepare
+from topicwizard.components.color_legend import make_color_legend
+from topicwizard.components.documents.document_bar import create_document_bar
 from topicwizard.components.documents.document_map import create_document_map
-from topicwizard.components.documents.document_pie import create_document_pie
 from topicwizard.components.documents.document_selector import create_document_selector
 from topicwizard.components.documents.document_timeline import create_timeline
-from topicwizard.components.documents.document_wordcloud import (
-    create_document_wordcloud,
-)
+from topicwizard.components.documents.document_viewer import create_document_viewer
 from topicwizard.components.documents.window_slider import create_window_slider
+from topicwizard.help.utils import make_helper
 
 
 def create_blueprint(
@@ -21,23 +23,25 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
+    topic_names: List[str],
     document_names: List[str],
     corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
+    pipeline: Pipeline,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     n_topics = topic_term_matrix.shape[0]
     document_positions = prepare.document_positions(
-        document_term_matrix=document_term_matrix
+        document_topic_matrix=document_topic_matrix
     )
     dominant_topics = prepare.dominant_topic(
         document_topic_matrix=document_topic_matrix
     )
     # Creating unified color scheme
-    twilight = colors.get_colorscale("Twilight")
-    topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
+    color_scheme = colors.get_colorscale("Portland")
+    topic_colors = colors.sample_colorscale(
+        color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
+    )
     topic_colors = np.array(topic_colors)
 
     # --------[ Collecting blueprints ]--------
@@ -50,23 +54,28 @@ def create_blueprint(
     )
     timeline = create_timeline(
         corpus=corpus,
-        vectorizer=vectorizer,
-        topic_model=topic_model,
+        transform=pipeline.transform,
         topic_colors=topic_colors,
     )
-    document_wordcloud = create_document_wordcloud(
-        document_term_matrix=document_term_matrix, vocab=vocab
-    )
-    document_selector = create_document_selector(document_names=document_names)
-    window_slider = create_window_slider()
-    document_pie = create_document_pie(
+    # document_wordcloud = create_document_wordcloud(
+    #     document_term_matrix=document_term_matrix, vocab=vocab
+    # )
+    document_bar = create_document_bar(
         document_topic_matrix=document_topic_matrix, topic_colors=topic_colors
     )
+    document_selector = create_document_selector(document_names=document_names)
+    document_viewer = create_document_viewer(
+        corpus=corpus,
+        vocab=vocab,
+        topic_term_matrix=topic_term_matrix,
+        dominant_topic=dominant_topics,
+    )
+    window_slider = create_window_slider()
     blueprints = [
         document_map,
         document_selector,
-        document_wordcloud,
-        document_pie,
+        document_bar,
+        document_viewer,
         timeline,
         window_slider,
     ]
@@ -92,20 +101,20 @@ def create_blueprint(
             ),
             dmc.Group(
                 [
-                    document_map.layout,
                     dmc.Stack(
                         [
+                            dmc.Title("Content:", order=3, className="px-3 mt-2"),
+                            document_viewer.layout,
+                            document_map.layout,
+                        ],
+                        align="stretch",
+                        justify="space-around",
+                        className="flex-1",
+                    ),
+                    dmc.Stack(
+                        [
+                            document_bar.layout,
                             timeline.layout,
-                            dmc.Group(
-                                [
-                                    document_pie.layout,
-                                    document_wordcloud.layout,
-                                ],
-                                grow=1,
-                                align="stretch",
-                                position="apart",
-                                className="flex-1",
-                            ),
                         ],
                         align="stretch",
                         justify="space-around",
@@ -116,6 +125,22 @@ def create_blueprint(
                 align="stretch",
                 position="apart",
                 className="flex-1 p-3",
+            ),
+            html.Div(
+                make_helper(
+                    dmc.Group(
+                        [
+                            html.Div(help.DOCUMENT_MAP),
+                            html.Div(help.CONTENT),
+                            html.Div(help.TIMELINE),
+                        ],
+                        spacing="lg",
+                        grow=1,
+                        align="start",
+                    ),
+                    width="800px",
+                ),
+                className="fixed bottom-8 right-5",
             ),
         ],
         className="""

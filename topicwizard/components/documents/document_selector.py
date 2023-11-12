@@ -1,20 +1,13 @@
 from typing import List
 
-from dash_extensions.enrich import (
-    DashBlueprint,
-    Input,
-    Output,
-    dcc,
-    State,
-)
+from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc
 
 
 def create_document_selector(
     document_names: List[str],
 ) -> DashBlueprint:
     docs = [
-        {"value": index, "label": name}
-        for index, name in enumerate(document_names)
+        {"value": index, "label": name} for index, name in enumerate(document_names)
     ]
 
     document_selector = DashBlueprint()
@@ -39,9 +32,9 @@ def create_document_selector(
 
     document_selector.clientside_callback(
         """
-        function(clickData, currentValue) {
+        function(clickData, currentValue, visibility) {
             if (!clickData) {
-                return currentValue;
+                return 0;
             }
             const point = clickData.points[0]
             const documentId = point.customdata[0]
@@ -50,6 +43,7 @@ def create_document_selector(
         """,
         Output("document_selector", "value"),
         Input("document_map", "clickData"),
+        Input("documents_container", "className"),
         State("document_selector", "value"),
     )
     return document_selector

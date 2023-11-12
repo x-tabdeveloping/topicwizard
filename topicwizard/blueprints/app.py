@@ -14,12 +14,14 @@ from dash_extensions.enrich import (
     html,
 )
 from dash_iconify import DashIconify
+from sklearn.pipeline import Pipeline
 
 import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.groups as groups
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
 from topicwizard.blueprints.template import create_blank_page
+from topicwizard.pipeline import split_pipeline
 
 
 def create_blueprint(
@@ -29,12 +31,12 @@ def create_blueprint(
     topic_term_matrix: np.ndarray,
     document_names: List[str],
     corpus: List[str],
-    vectorizer: Any,
-    topic_model: Any,
+    pipeline: Pipeline,
     topic_names: List[str],
     exclude_pages: Set[str],
     group_labels: Optional[List[str]],
 ) -> DashBlueprint:
+    vectorizer, topic_model = split_pipeline(None, None, pipeline)
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
         topics.create_blueprint(
@@ -59,8 +61,7 @@ def create_blueprint(
             topic_term_matrix=topic_term_matrix,
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
+            pipeline=pipeline,
             topic_names=topic_names,
         )
         if "documents" not in exclude_pages
@@ -98,7 +99,7 @@ def create_blueprint(
         else create_blank_page("groups")
     )
     if group_labels is None:
-        exclude_pages = exclude_pages | set(["Groups"])
+        exclude_pages = exclude_pages | set(["groups"])
     options = []
     for option in ["Topics", "Words", "Documents", "Groups"]:
         if option.lower() not in exclude_pages:
@@ -175,9 +176,9 @@ def create_blueprint(
         data = dict(
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
+            pipeline=pipeline,
             topic_names=topic_names,
+            group_labels=group_labels,
         )
 
         def write_joblib(bytes_io: BytesIO):
@@ -224,7 +225,7 @@ def create_blueprint(
                 return 'indigo';
             }
             if (currentPage === 'Groups') {
-                return 'pink';
+                return 'violet';
             }
             return 'black';
         }

@@ -11,6 +11,8 @@ def group_map(
     y: np.ndarray,
     group_importances: np.ndarray,
     group_names: np.ndarray,
+    dominant_topic: np.ndarray,
+    topic_colors: np.ndarray,
 ) -> go.Figure:
     """Group map for the app, where you can select things by clicking."""
     group_trace = go.Scatter(
@@ -23,7 +25,8 @@ def group_map(
             sizemode="area",
             sizeref=2.0 * max(group_importances) / (100.0**2),
             sizemin=4,
-            color="rgb(168,162,158)",
+            color=topic_colors[dominant_topic],
+            line=dict(width=3, color="black"),
         ),
         customdata=np.atleast_2d(np.arange(x.shape[0])).T,
     )
@@ -62,26 +65,46 @@ def group_map(
     return fig
 
 
-def group_topics_barchart(top_topics: pd.DataFrame):
+def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
     """Plots topic importances for currently selected group."""
     top_topics = top_topics.sort_values("importance", ascending=True)
+    text = top_topics.topic.map(lambda s: f"<b>{s}</b>")
+    overlap = np.any(top_topics.overall_importance < top_topics.importance)
+    if overlap:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
+    else:
+        params = dict()
     topic_word_trace = go.Bar(
         name="Estimated importance in group",
         y=top_topics.topic,
         x=top_topics.importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="#E03131",
+        marker_color=topic_colors[top_topics.topic_id],
+        marker_line=dict(color="black", width=3),
+        **params,
     )
+    if overlap:
+        params = dict()
+    else:
+        params = dict(
+            textposition="outside",
+            texttemplate=text,
+            textfont=dict(color="black"),
+        )
     overall_word_trace = go.Bar(
         name="Overall importance",
         y=top_topics.topic,
         x=top_topics.overall_importance,
         orientation="h",
         base=dict(x=[0.5, 1]),
-        marker_color="rgb(168,162,158)",
-        textposition="outside",
-        texttemplate=top_topics.topic,
+        marker_color="rgba(168,162,158, 0.3)",
+        marker_line=dict(color="rgb(168,162,158)", width=3),
+        **params,
     )
     fig = go.Figure(data=[overall_word_trace, topic_word_trace])
     fig.update_layout(
@@ -123,13 +146,13 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
     }
     cloud = WordCloud(
         width=800,
-        height=800,
+        height=1060,
         background_color="white",
-        colormap="gnuplot",
+        colormap="twilight",
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()
-    image = image.resize((1600, 1600), resample=Image.ANTIALIAS)
+    image = image.resize((1600, 2120), resample=Image.Resampling.LANCZOS)
     fig = px.imshow(image)
     fig.update_layout(
         dragmode="pan",

@@ -14,8 +14,9 @@ Pretty and opinionated topic model visualization in Python.
 <br>
 
 
+https://github.com/x-tabdeveloping/topicwizard/assets/13087737/9736f33c-6865-4ed4-bc17-d8e6369bda80
 
-https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
+
 
 ## New in version 0.5.0 🌟 
 

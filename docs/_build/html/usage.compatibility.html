@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Deployment" href="usage.deployment.html" /><link rel="prev" title="Persistence" href="usage.persistence.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 5.0.2 and Furo 2022.12.07 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Compatibility - topicwizard</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -217,11 +217,11 @@
         </div>
         <article role="main">
           <section id="compatibility">
-<span id="usage-compatibility"></span><h1>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this heading">#</a></h1>
+<span id="usage-compatibility"></span><h1>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading">#</a></h1>
 <p>Compatibility layers have been introduced with version 0.2.4,
 Gensim and BERTopic can now be used with topicwizard.</p>
 <section id="gensim">
-<h2>Gensim<a class="headerlink" href="#gensim" title="Permalink to this heading">#</a></h2>
+<h2>Gensim<a class="headerlink" href="#gensim" title="Link to this heading">#</a></h2>
 <p>sklearn compatible pipelines for Gensim models can be created once you have a dictionary
 and a topic model object available, topicwizard is compatible with LSI, LDA (also multicore) and NMF.</p>
 <p>First you need to train a Gensim dictionary and topic model.</p>
@@ -250,7 +250,7 @@ and a topic model object available, topicwizard is compatible with LSI, LDA (als
 </div>
 </section>
 <section id="bertopic">
-<h2>BERTopic<a class="headerlink" href="#bertopic" title="Permalink to this heading">#</a></h2>
+<h2>BERTopic<a class="headerlink" href="#bertopic" title="Link to this heading">#</a></h2>
 <p>You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.</p>
 <p>First you need to train a BERTopic topic model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
@@ -282,7 +282,7 @@ In the future there is a possiblity of a BERTopic-specific visualization dashboa
 </div>
 </section>
 <section id="custom-topic-models">
-<h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Permalink to this heading">#</a></h2>
+<h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Link to this heading">#</a></h2>
 <p>You can write topic models, which are compatible with topicwizard.
 If you have a topic model, which rests on the bag-of-words assumption this is
 a fairly straightforward task.</p>
@@ -398,11 +398,9 @@ a fairly straightforward task.</p>
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/furo.js"></script>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
     </body>
 </html>

@@ -50,43 +50,7 @@ If you only want to see this page you should disable all else when calling visua
    topicwizard.visualize(corpus=texts, pipeline=pipeline, exclude_pages=["topics", "documents"])
 
 
-Word map
-^^^^^^^^^^^^^
-
-On the left you will see a plot showing you all the words, aka. the word map.
-On the map positions are determined by 2-dimensional UMAP projections of the transposed
-components of the topic model.
-
-.. image:: _static/word_map.png
-    :width: 800
-    :alt: Word map.
-
-Selecting Words
-^^^^^^^^^^^^^^^^^^^^
-
-You can select words by typing them into the field on the top left and searching for them.
-Multiple words may be selected at the same time.
-Clicking a word on the map adds the word to the selection.
-
-Associations
-^^^^^^^^^^^^^
-Closely associated words also get highlighted on the graph and are included in calculations.
-The most closely associated words are the ones that have the lowest distance to the given words.
-Topicwizard finds the specified amount of closest words to the selected ones.
-The number of associated words can be adjusted with this slider:
-
-.. image:: _static/association_slider.png
-    :width: 800
-    :alt: Association slider.
-
-Important Topics
-^^^^^^^^^^^^^^^^^^^^^^
-You can see which topics use the selected word and their associations most frequently by glancing at the bar plot
-to the right.
-
-.. image:: _static/word_barplot.png
-    :width: 800
-    :alt: Bar chart.
+To get more information about how to interpret the graphs and how they are produced, hover your cursor over the helper in the corner.
 
 Self-Contained Plots
 --------------------

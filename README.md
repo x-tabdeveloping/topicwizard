@@ -17,9 +17,12 @@ Pretty and opinionated topic model visualization in Python.
 
 https://user-images.githubusercontent.com/13087737/234209888-0d20ede9-2ea1-4d6e-b69b-71b863287cc9.mp4
 
-## New in version 0.4.0 🌟 
+## New in version 0.5.0 🌟 
 
-- Introduced topic pipelines that make it easier and safer to use topic models in downstream tasks and interpretation. 🔩
+- Enhanced readibility and legibility of graphs.
+- Added helper tooltips to help you understand and interpret the graphs.
+- Improved stability.
+- Negative topic distributions are now supported in documents.
 
 ## Features
 

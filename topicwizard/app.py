@@ -45,9 +45,11 @@ PageName = Literal["topics", "documents", "words"]
 
 
 def get_dash_app(
-    pipeline: Pipeline,
     corpus: Iterable[str],
     exclude_pages: Set[PageName],
+    pipeline: Optional[Pipeline] = None,
+    vectorizer: Any = None,
+    topic_model: Any = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -81,6 +83,8 @@ def get_dash_app(
     Dash
         Dash application object for topicwizard.
     """
+    if pipeline is None:
+        pipeline = Pipeline([("Vectorizer", vectorizer), ("Model", topic_model)])
     blueprint = get_app_blueprint(
         pipeline=pipeline,
         corpus=corpus,

@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly import colors
 from plotly.subplots import make_subplots
 from sklearn.pipeline import Pipeline, make_pipeline
 
@@ -182,6 +183,12 @@ def group_topic_barcharts(
         vertical_spacing=0.03,
         horizontal_spacing=0.01,
     )
+    n_topics = len(topic_names)
+    color_scheme = colors.get_colorscale("Portland")
+    topic_colors = colors.sample_colorscale(
+        color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
+    )
+    topic_colors = np.array(topic_colors)
     # Here I am collecting the maximal importance for each group,
     # So that the x axis can be adjusted to this.
     for group_id in range(n_groups):
@@ -189,7 +196,7 @@ def group_topic_barcharts(
             group_id, top_n, group_topic_importances, topic_names
         )
         max_importance = top_topics.overall_importance.max()
-        subfig = plots.group_topics_barchart(top_topics)
+        subfig = plots.group_topics_barchart(top_topics, topic_colors=topic_colors)
         row, column = (group_id // n_columns) + 1, (group_id % n_columns) + 1
         for trace in subfig.data:
             # hiding legend if it isn't the first trace.

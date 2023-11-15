@@ -27,10 +27,9 @@ https://github.com/x-tabdeveloping/topicwizard/assets/13087737/9736f33c-6865-4ed
 
 ## Features
 
--   Investigate complex relations between topics, words, documents and groups/genres/labels
+-   Investigate complex relations between topics, words, documents and groups/genres/labels interactively
 -   Easy to use pipelines that can be utilized for downstream tasks
--   Sklearn, Gensim and BERTopic compatible :nut_and_bolt:
--   Highly interactive web app
+-   Sklearn, Gensim and BERTopic compatible (stay tuned for more) :nut_and_bolt:
 -   Interactive and composable Plotly figures
 -   Automatically infer topic names, oooor...
 -   Name topics manually
@@ -115,9 +114,13 @@ From version 0.3.0 you can also disable pages you do not wish to display thereby
 # so you can speed up preprocessing by disabling it alltogether.
 topicwizard.visualize(corpus, pipeline=topic_pipeline, exclude_pages=["documents"])
 ```
-| [Topics](https://x-tabdeveloping.github.io/topicwizard/usage.topics.html) | [Words](https://x-tabdeveloping.github.io/topicwizard/usage.words.html) | [Documents](https://x-tabdeveloping.github.io/topicwizard/usage.documents.html) | [Groups](https://x-tabdeveloping.github.io/topicwizard/usage.groups.html) |
-| :----: | :----: | :----: | :----: |
-| ![topics screenshot](assets/screenshot_topics.png) | ![words screenshot](assets/screenshot_words.png)  | ![documents screenshot](assets/screenshot_documents.png) | ![groups screenshot](docs/_static/screenshot_groups.png) |
+| [Topics](https://x-tabdeveloping.github.io/topicwizard/usage.topics.html) | [Words](https://x-tabdeveloping.github.io/topicwizard/usage.words.html) |
+| :----: | :----: |
+| ![topics screenshot](assets/screenshot_topics.png) | ![words screenshot](assets/screenshot_words.png)  |
+
+[Documents](https://x-tabdeveloping.github.io/topicwizard/usage.documents.html) | [Groups](https://x-tabdeveloping.github.io/topicwizard/usage.groups.html) |
+| :----: | :----: |
+| ![documents screenshot](assets/screenshot_documents.png) | ![groups screenshot](docs/_static/screenshot_groups.png) |
 
 ## [Figures](https://x-tabdeveloping.github.io/topicwizard/api_reference.html#module-topicwizard.figures)
 

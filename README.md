@@ -71,11 +71,13 @@ from sklearn.pipeline import make_pipeline
 
 topic_pipeline = make_pipeline(vectorizer, model)
 ```
-Or TopicPipeline from topicwizard:
+
+Or topicwizard's [TopicPipeline](https://x-tabdeveloping.github.io/topicwizard/usage.pipelines.html#topicpipeline)
+
 ```python
 from topicwizard.pipeline import make_topic_pipeline
 
-topic_pipeline = make_topic_pipeline(vectorizer, model, norm_rows=False)
+topic_pipeline = make_topic_pipeline(vectorizer, model)
 ```
 
 Let's load a corpus that we would like to analyze, in this example I will use 20newsgroups from sklearn.
@@ -94,53 +96,6 @@ group_labels = [newsgroups.target_names[label] for label in newsgroups.target]
 Then let's fit our pipeline to this data:
 ```python
 topic_pipeline.fit(corpus)
-```
-The advantages of using a TopicPipeline over a regular pipeline are numerous:
- - Output dimensions (topics) are named
- - You can set the output to be a pandas dataframe (`topic_pipeline.set_output(transform="pandas")`) with topics as columns.
- - You can treat topic importances as pseudoprobability-distributions (`topic_pipeline.norm_row = True`)
- - You can freeze components so that the pipeline will stay frozen when fitting downstream components (`topic_pipeline.freeze = True`)
-
-Here's an example of how you can easily display a heatmap over topics in a document using TopicPipelines.
-```python
-import plotly.express as px
-
-pipeline = make_topic_pipeline(vectorizer, model).set_output(transform="pandas")
-texts = [
-   "Coronavirus killed 50000 people today.",
-   "Donald Trump's presidential campaing is going very well",
-   "Protests against police brutality have been going on all around the US.",
-]
-topic_df = pipeline.transform(texts)
-topic_df.index = texts
-px.imshow(topic_df).show()
-```
-![topic_heatmap](https://github.com/x-tabdeveloping/topic-wizard/assets/13087737/a5b21aff-3224-45bc-a251-abe1896cd729)
-
-You didn't even have to use topicwizards own visualizations for this!!
-
-You can also use TopicPipelines for downstream tasks, such as unsupervised text labeling with the help of [human-learn](https://github.com/koaning/human-learn).
-```bash
-pip install human-learn
-```
-```python
-from hulearn.classification import FunctionClassifier
-from sklearn.pipeline import make_pipeline
-
-topic_pipeline = make_topic_pipeline(vectorizer, model).fit(texts)
-
-# Investigate topics
-topicwizard.visualize(topic_pipeline)
-
-# Creating rule for classifying something as a corona document
-def corona_rule(df, threshold=0.5):
-    is_about_corona = df["11_vaccine_pandemic_virus_coronavirus"] > threshold
-    return is_about_corona.astype(int)
-
-# Freezing topic pipeline
-topic_pipeline.freeze = True
-classifier = FunctionClassifier(corona_rule)
-cls_pipeline = make_pipeline(topic_pipeline, classifier)
 ```
 
 ## [Web Application](https://x-tabdeveloping.github.io/topicwizard/application.html)

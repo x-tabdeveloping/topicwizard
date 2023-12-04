@@ -1,10 +1,9 @@
-from typing import Any, List
+from typing import Any, Callable, List, Optional
 
 import dash_mantine_components as dmc
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, Input, Output, dcc, html
 from plotly import colors
-from sklearn.pipeline import Pipeline
 
 import topicwizard.help.documents as help
 import topicwizard.prepare.documents as prepare
@@ -20,20 +19,17 @@ from topicwizard.help.utils import make_helper
 
 def create_blueprint(
     vocab: np.ndarray,
-    document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
-    topic_names: List[str],
     document_names: List[str],
     corpus: List[str],
-    pipeline: Pipeline,
+    transform: Optional[Callable],
+    document_representation: np.ndarray,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     n_topics = topic_term_matrix.shape[0]
-    document_positions = prepare.document_positions(
-        document_topic_matrix=document_topic_matrix
-    )
+    document_positions = prepare.document_positions(document_representation)
     dominant_topics = prepare.dominant_topic(
         document_topic_matrix=document_topic_matrix
     )
@@ -54,12 +50,9 @@ def create_blueprint(
     )
     timeline = create_timeline(
         corpus=corpus,
-        transform=pipeline.transform,
+        transform=transform,
         topic_colors=topic_colors,
     )
-    # document_wordcloud = create_document_wordcloud(
-    #     document_term_matrix=document_term_matrix, vocab=vocab
-    # )
     document_bar = create_document_bar(
         document_topic_matrix=document_topic_matrix, topic_colors=topic_colors
     )

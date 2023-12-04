@@ -7,21 +7,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly import colors
 from plotly.subplots import make_subplots
-from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.base import TransformerMixin
+from sklearn.pipeline import Pipeline
 
 import topicwizard.plots.groups as plots
 import topicwizard.prepare.groups as prepare
-from topicwizard.app import split_pipeline
-from topicwizard.prepare.topics import infer_topic_names
-from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
+from topicwizard.prepare.data import prepare_topic_data
 
 
 def group_map(
     corpus: Iterable[str],
     group_labels: List[str],
     pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     representation: Literal["term", "topic"] = "term",
 ) -> go.Figure:
@@ -37,13 +35,8 @@ def group_map(
     pipeline: Pipeline, default None
         Sklearn compatible pipeline, that has two components:
         a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    contextual_model: TransformerMixin, default None
+        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -60,16 +53,14 @@ def group_map(
     go.Figure
         Map of groups.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, corpus)
+    topic_data = prepare_topic_data(
+        corpus=corpus,
+        pipeline=pipeline,
+        contextual_model=contextual_model,
+        topic_names=topic_names,
+        group_labels=group_labels,
+        representation=representation,
+    )
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -78,14 +69,17 @@ def group_map(
         group_term_importances,
         group_topic_importances,
     ) = prepare.group_importances(
-        document_topic_matrix, document_term_matrix, group_id_labels, n_groups
+        topic_data["document_topic_matrix"],
+        topic_data["document_term_matrix"],
+        group_id_labels,
+        n_groups,
     )
     if representation == "term":
         x, y = prepare.group_positions(group_term_importances)
     else:
         x, y = prepare.group_positions(group_topic_importances)
     dominant_topic = prepare.dominant_topic(group_topic_importances)
-    dominant_topic = np.array(topic_names)[dominant_topic]
+    dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
     groups_df = pd.DataFrame(
         dict(
             dominant_topic=dominant_topic,
@@ -118,8 +112,7 @@ def group_topic_barcharts(
     corpus: Iterable[str],
     group_labels: List[str],
     pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     top_n: int = 5,
     n_columns: int = 4,
@@ -135,13 +128,8 @@ def group_topic_barcharts(
     pipeline: Pipeline, default None
         Sklearn compatible pipeline, that has two components:
         a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    contextual_model: TransformerMixin, default None
+        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -155,16 +143,13 @@ def group_topic_barcharts(
     go.Figure
         Topic importance barcharts for all groups.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, corpus)
+    topic_data = prepare_topic_data(
+        corpus=corpus,
+        pipeline=pipeline,
+        contextual_model=contextual_model,
+        topic_names=topic_names,
+        group_labels=group_labels,
+    )
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -173,7 +158,10 @@ def group_topic_barcharts(
         group_term_importances,
         group_topic_importances,
     ) = prepare.group_importances(
-        document_topic_matrix, document_term_matrix, group_id_labels, n_groups
+        topic_data["document_topic_matrix"],
+        topic_data["document_term_matrix"],
+        group_id_labels,
+        n_groups,
     )
     n_rows = (n_groups // n_columns) + 1
     fig = make_subplots(
@@ -183,7 +171,7 @@ def group_topic_barcharts(
         vertical_spacing=0.03,
         horizontal_spacing=0.01,
     )
-    n_topics = len(topic_names)
+    n_topics = len(topic_data["topic_names"])
     color_scheme = colors.get_colorscale("Portland")
     topic_colors = colors.sample_colorscale(
         color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
@@ -193,7 +181,7 @@ def group_topic_barcharts(
     # So that the x axis can be adjusted to this.
     for group_id in range(n_groups):
         top_topics = prepare.top_topics(
-            group_id, top_n, group_topic_importances, topic_names
+            group_id, top_n, group_topic_importances, topic_data["topic_names"]
         )
         max_importance = top_topics.overall_importance.max()
         subfig = plots.group_topics_barchart(top_topics, topic_colors=topic_colors)
@@ -238,8 +226,7 @@ def group_wordclouds(
     corpus: Iterable[str],
     group_labels: List[str],
     pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     top_n: int = 30,
     n_columns: int = 4,
@@ -255,13 +242,8 @@ def group_wordclouds(
     pipeline: Pipeline, default None
         Sklearn compatible pipeline, that has two components:
         a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    contextual_model: TransformerMixin, default None
+        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -275,16 +257,13 @@ def group_wordclouds(
     go.Figure
         Topic importance barcharts for all groups.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, corpus)
+    topic_data = prepare_topic_data(
+        corpus=corpus,
+        pipeline=pipeline,
+        contextual_model=contextual_model,
+        topic_names=topic_names,
+        group_labels=group_labels,
+    )
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -293,9 +272,11 @@ def group_wordclouds(
         group_term_importances,
         group_topic_importances,
     ) = prepare.group_importances(
-        document_topic_matrix, document_term_matrix, group_id_labels, n_groups
+        topic_data["document_topic_matrix"],
+        topic_data["document_term_matrix"],
+        group_id_labels,
+        n_groups,
     )
-    vocab = get_vocab(vectorizer)
     n_rows = (n_groups // n_columns) + 1
     fig = make_subplots(
         rows=n_rows,
@@ -305,7 +286,9 @@ def group_wordclouds(
         horizontal_spacing=0.01,
     )
     for group_id in range(n_groups):
-        top_words = prepare.top_words(group_id, top_n, group_term_importances, vocab)
+        top_words = prepare.top_words(
+            group_id, top_n, group_term_importances, topic_data["vocab"]
+        )
         subfig = plots.wordcloud(top_words)
         row, column = (group_id // n_columns) + 1, (group_id % n_columns) + 1
         fig.add_trace(subfig.data[0], row=row, col=column)

@@ -7,6 +7,7 @@ from typing import Any, Callable, Iterable, List, Literal, Optional, Set
 
 import joblib
 from dash_extensions.enrich import Dash, DashBlueprint
+from sklearn.base import TransformerMixin
 from sklearn.pipeline import Pipeline
 
 from topicwizard.blueprints.app import create_blueprint
@@ -22,8 +23,9 @@ def is_colab() -> bool:
 
 
 def get_app_blueprint(
-    pipeline: Pipeline,
     corpus: Iterable[str],
+    pipeline: Optional[Pipeline] = None,
+    contextual_model: Optional[TransformerMixin] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     *args,
@@ -31,6 +33,7 @@ def get_app_blueprint(
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
         pipeline=pipeline,
+        contextual_model=contextual_model,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
@@ -48,8 +51,7 @@ def get_dash_app(
     corpus: Iterable[str],
     exclude_pages: Set[PageName],
     pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    contextual_model: Optional[TransformerMixin] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -58,14 +60,14 @@ def get_dash_app(
 
     Parameters
     ----------
-    vectorizer: Vectorizer
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
+    exclude_pages: set of {"topics", "documents", "words"}
+        Pages to exclude from the app.
+    pipeline: Pipeline = None,
+        BoW-based topic pipeline.
+    contextual_model: TransformerMixin = None,
+        Contextual topic model
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -83,11 +85,10 @@ def get_dash_app(
     Dash
         Dash application object for topicwizard.
     """
-    if pipeline is None:
-        pipeline = Pipeline([("Vectorizer", vectorizer), ("Model", topic_model)])
     blueprint = get_app_blueprint(
-        pipeline=pipeline,
         corpus=corpus,
+        pipeline=pipeline,
+        contextual_model=contextual_model,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,
@@ -175,14 +176,6 @@ def run_app(
         )
         return thread
 
-    # elif is_notebook():
-    #     from IPython.display import IFrame, display
-    #
-    #     thread = threading.Thread(target=run_silent(app, port))
-    #     thread.start()
-    #     time.sleep(4)
-    #     display(IFrame(src=url, width="1200", height="1000"))
-    #     return thread
     else:
         open_url(url)
         app.run_server(port=port)
@@ -237,9 +230,8 @@ def split_pipeline(
 
 def visualize(
     corpus: Iterable[str],
-    vectorizer: Optional[Any] = None,
-    topic_model: Optional[Any] = None,
     pipeline: Optional[Pipeline] = None,
+    contextual_model: Optional[TransformerMixin] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
@@ -252,16 +244,11 @@ def visualize(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
     pipeline: Pipeline, default None
         Sklearn compatible pipeline, that has two components:
         a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
+    contextual_model: TransformerMixin, default None
+        Contextual topic model to be visualized in topicwizard.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -288,15 +275,14 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    if pipeline is None:
-        pipeline = Pipeline([("Vectorizer", vectorizer), ("Model", topic_model)])
     exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
     if topic_names is None and hasattr(pipeline, "topic_names"):
         topic_names = pipeline.topic_names  # type: ignore
     app = get_dash_app(
-        pipeline=pipeline,
         corpus=corpus,
+        pipeline=pipeline,
+        contextual_model=contextual_model,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,

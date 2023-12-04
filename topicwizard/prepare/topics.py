@@ -124,27 +124,13 @@ def calculate_top_words(
     return res
 
 
-def infer_topic_names(pipeline: Pipeline, top_n: int = 4) -> List[str]:
+def infer_topic_names(
+    vocab: np.ndarray, components: np.ndarray, top_n: int = 4
+) -> List[str]:
     """Infers names of topics from a trained topic model's components.
     This method does not take empirical counts or relevance into account, therefore
     automatically assigned topic names can be of low quality.
-
-    Parameters
-    ----------
-    pipeline: Pipeline
-        Sklearn compatible topic pipeline.
-    top_n: int, default 4
-        Number of words used to name the topic.
-
-    Returns
-    -------
-    list of str
-        List of topic names.
     """
-    _, vectorizer = pipeline.steps[0]
-    _, topic_model = pipeline.steps[-1]
-    components = topic_model.components_
-    vocab = vectorizer.get_feature_names_out()
     highest = np.argpartition(-components, top_n)[:, :top_n]
     top_words = vocab[highest]
     topic_names = []

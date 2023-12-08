@@ -1,5 +1,5 @@
 """External API for creating self-contained figures for topics."""
-from typing import Any, Iterable, List, Optional
+from typing import Any, Iterable, List, Optional, Union
 
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -13,8 +13,7 @@ from topicwizard.prepare.data import prepare_topic_data
 
 def topic_map(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
 ) -> go.Figure:
     """Plots topics on a scatter plot based on the UMAP projections
@@ -24,11 +23,8 @@ def topic_map(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -40,8 +36,7 @@ def topic_map(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     x, y = prepare.topic_positions(topic_data["topic_term_matrix"])
@@ -65,8 +60,7 @@ def topic_map(
 
 def topic_barcharts(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     top_n: int = 30,
     alpha: float = 1.0,
@@ -78,11 +72,8 @@ def topic_barcharts(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -103,8 +94,7 @@ def topic_barcharts(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     (
@@ -175,8 +165,7 @@ def topic_barcharts(
 
 def topic_wordclouds(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     top_n: int = 30,
     alpha: float = 1.0,
@@ -188,11 +177,8 @@ def topic_wordclouds(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -213,8 +199,7 @@ def topic_wordclouds(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     n_topics = topic_data["topic_term_matrix"].shape[0]

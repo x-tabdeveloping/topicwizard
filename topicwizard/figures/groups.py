@@ -17,9 +17,8 @@ from topicwizard.prepare.data import prepare_topic_data
 
 def group_map(
     corpus: Iterable[str],
+    model: Union[TransformerMixin, Pipeline],
     group_labels: List[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     representation: Literal["term", "topic"] = "term",
 ) -> go.Figure:
@@ -30,13 +29,10 @@ def group_map(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     group_labels: list of str
         List of group labels for each document.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -55,8 +51,7 @@ def group_map(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
         group_labels=group_labels,
         representation=representation,
@@ -110,9 +105,8 @@ def group_map(
 
 def group_topic_barcharts(
     corpus: Iterable[str],
+    model: Union[Pipeline, TransformerMixin],
     group_labels: List[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     top_n: int = 5,
     n_columns: int = 4,
@@ -123,13 +117,10 @@ def group_topic_barcharts(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     group_labels: list of str
         List of group labels for each document.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -145,8 +136,7 @@ def group_topic_barcharts(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
         group_labels=group_labels,
     )
@@ -224,9 +214,8 @@ def group_topic_barcharts(
 
 def group_wordclouds(
     corpus: Iterable[str],
+    model: Union[TransformerMixin, Pipeline],
     group_labels: List[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
     topic_names: Optional[List[str]] = None,
     top_n: int = 30,
     n_columns: int = 4,
@@ -237,13 +226,10 @@ def group_wordclouds(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     group_labels: list of str
         List of group labels for each document.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -259,8 +245,7 @@ def group_wordclouds(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
         group_labels=group_labels,
     )

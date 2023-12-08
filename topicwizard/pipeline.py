@@ -120,7 +120,9 @@ class TopicPipeline(Pipeline):
         if not self.freeze:
             super().fit(X, y)
         self._validate()
-        self.topic_names = infer_topic_names(self)
+        self.topic_names = infer_topic_names(
+            self.vectorizer_.get_feature_names_out(), self.topic_model_.components_
+        )
         return self
 
     def partial_fit(self, X, y=None, classes=None, **kwargs):
@@ -153,7 +155,9 @@ class TopicPipeline(Pipeline):
                 if hasattr(step, "transform"):
                     X = step.transform(X)
         self._validate()
-        self.topic_names = infer_topic_names(self)
+        self.topic_names = infer_topic_names(
+            self.vectorizer_.get_feature_names_out(), self.topic_model_.components_
+        )
         return self
 
     def transform(self, X: Iterable[str]):

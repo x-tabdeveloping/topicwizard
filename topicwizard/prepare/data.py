@@ -9,6 +9,7 @@ from typing import (
     Set,
     Tuple,
     TypedDict,
+    Union,
 )
 from warnings import warn
 
@@ -62,6 +63,8 @@ def prepare_pipeline_data(
         "topic_term_matrix": topic_term_matrix,
     }
     try:
+        # Here we check if the model is transductive or inductive
+        # If it is transductive we do not assign the transform method in the topic data
         pipeline.transform(["Something."])
         res["transform"] = pipeline.transform
     except AttributeError:
@@ -82,7 +85,7 @@ def prepare_contextual_data(
     document_term_matrix = contextual_model.vectorizer.transform(corpus)
     topic_term_matrix = contextual_model.components_
     document_representation = contextual_model.encoder_.encode(corpus)
-    vocab = contextual_model.vectorizer.get_feature_names_out()
+    vocab = contextual_model.get_vocab()
     res = {
         "corpus": corpus,
         "document_term_matrix": document_term_matrix,
@@ -92,6 +95,8 @@ def prepare_contextual_data(
         "topic_term_matrix": topic_term_matrix,
     }
     try:
+        # Here we check if the model is transductive or inductive
+        # If it is transductive we do not assign the transform method in the topic data
         contextual_model.transform(["Something."])
         res["transform"] = contextual_model.transform
     except AttributeError:
@@ -127,9 +132,8 @@ def filter_nan_docs(topic_data: Dict) -> None:
 
 
 def prepare_topic_data(
-    pipeline: Optional[Pipeline],
-    contextual_model: Optional[TransformerMixin],
     corpus: Iterable[str],
+    model: Union[Pipeline, TransformerMixin],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -143,11 +147,8 @@ def prepare_topic_data(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model to be visualized in topicwizard.
+    model: Pipeline or TransformerMixin
+        Bag-of-words topic pipeline or contextual topic model.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -167,16 +168,10 @@ def prepare_topic_data(
     n_documents = len(corpus)
     if document_names is None:
         document_names = [f"Document {i}" for i in range(n_documents)]
-    if (pipeline is not None) and (contextual_model is None):
-        topic_data = prepare_pipeline_data(
-            pipeline, corpus, representation=representation
-        )
-    elif (pipeline is None) and (contextual_model is not None):
-        topic_data = prepare_contextual_data(contextual_model, corpus)
+    if isinstance(model, Pipeline):
+        topic_data = prepare_pipeline_data(model, corpus, representation=representation)
     else:
-        raise ValueError(
-            "You can only specify a pipeline XOR a contextual model, not both."
-        )
+        topic_data = prepare_contextual_data(model, corpus)
     topic_data["group_labels"] = group_labels
     topic_data["document_names"] = document_names
     filter_nan_docs(topic_data)

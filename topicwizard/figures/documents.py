@@ -17,8 +17,7 @@ from topicwizard.prepare.topics import infer_topic_names
 
 def document_map(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     document_names: Optional[List[str]] = None,
     representation: Literal["term", "topic"] = "term",
@@ -30,11 +29,8 @@ def document_map(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model to be visualized in topicwizard.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -56,8 +52,7 @@ def document_map(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
         document_names=document_names,
         representation=representation,
@@ -90,8 +85,7 @@ def document_map(
 
 def document_topic_distribution(
     documents: Union[List[str], str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     top_n: int = 8,
 ) -> go.Figure:
@@ -101,11 +95,8 @@ def document_topic_distribution(
     ----------
     documents: str or list of str
         A single document or list of documents.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model to be visualized in topicwizard.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -123,8 +114,7 @@ def document_topic_distribution(
         documents = [documents]
     topic_data = prepare_topic_data(
         corpus=documents,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     topic_importances = prepare.document_topic_importances(
@@ -142,8 +132,7 @@ def document_topic_distribution(
 
 def document_topic_timeline(
     document: str,
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     window_size: int = 10,
     step: int = 1,
@@ -154,11 +143,8 @@ def document_topic_timeline(
     ----------
     document: str
         A single document.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model to be visualized in topicwizard.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -172,20 +158,21 @@ def document_topic_timeline(
     go.Figure
         Line chart of topic timeline in the document.
     """
-    if (pipeline is not None) and (contextual_model is None):
-        transform = pipeline.transform
-        _, vectorizer = pipeline.steps[0]
-        _, topic_model = pipeline.steps[-1]
+    try:
+        transform = model.transform
+    except AttributeError:
+        raise ValueError(
+            "Looks like your model is transductive, "
+            "you can only generate timelines with inductive models."
+        )
+    if isinstance(model, Pipeline):
+        _, vectorizer = model.steps[0]
+        _, topic_model = model.steps[-1]
         components = topic_model.components_
         vocab = vectorizer.get_feature_names_out()
-    elif (pipeline is None) and (contextual_model is not None):
-        transform = contextual_model.transform
-        components = contextual_model.components_
-        vocab = contextual_model.vectorizer.get_feature_names_out()
     else:
-        raise ValueError(
-            "You can only specify a pipeline XOR a contextual model, not both."
-        )
+        components = model.components_
+        vocab = model.get_vocab()
     if topic_names is None:
         topic_names = infer_topic_names(vocab, components)
     timeline = prepare.calculate_timeline(

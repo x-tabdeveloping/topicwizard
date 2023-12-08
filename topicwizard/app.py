@@ -3,7 +3,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Callable, Iterable, List, Literal, Optional, Set
+from typing import Any, Callable, Iterable, List, Literal, Optional, Set, Union
 
 import joblib
 from dash_extensions.enrich import Dash, DashBlueprint
@@ -24,16 +24,14 @@ def is_colab() -> bool:
 
 def get_app_blueprint(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     *args,
     **kwargs,
 ) -> DashBlueprint:
     blueprint = prepare_blueprint(
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
@@ -49,9 +47,8 @@ PageName = Literal["topics", "documents", "words"]
 
 def get_dash_app(
     corpus: Iterable[str],
+    model: Union[Pipeline, TransformerMixin],
     exclude_pages: Set[PageName],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -62,12 +59,10 @@ def get_dash_app(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     exclude_pages: set of {"topics", "documents", "words"}
         Pages to exclude from the app.
-    pipeline: Pipeline = None,
-        BoW-based topic pipeline.
-    contextual_model: TransformerMixin = None,
-        Contextual topic model
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -86,9 +81,8 @@ def get_dash_app(
         Dash application object for topicwizard.
     """
     blueprint = get_app_blueprint(
+        model=model,
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,
@@ -230,8 +224,7 @@ def split_pipeline(
 
 def visualize(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
@@ -244,11 +237,8 @@ def visualize(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, default None
-        Contextual topic model to be visualized in topicwizard.
+    model: Pipeline or TransformerMixin
+        Bag of words topic pipeline or contextual topic model.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -277,12 +267,11 @@ def visualize(
     """
     exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
-    if topic_names is None and hasattr(pipeline, "topic_names"):
-        topic_names = pipeline.topic_names  # type: ignore
+    if topic_names is None and hasattr(model, "topic_names"):
+        topic_names = model.topic_names  # type: ignore
     app = get_dash_app(
+        model=model,
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,

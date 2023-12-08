@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 import dash_mantine_components as dmc
 import joblib
@@ -33,11 +33,10 @@ def create_blueprint(
     document_representation: np.ndarray,
     corpus: List[str],
     transform: Optional[Callable],
-    pipeline: Optional[Pipeline],
-    contextual_model: Optional[TransformerMixin],
     topic_names: List[str],
     exclude_pages: Set[str],
     group_labels: Optional[List[str]],
+    model: Union[TransformerMixin, Pipeline],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
@@ -173,8 +172,7 @@ def create_blueprint(
         data = dict(
             document_names=document_names,
             corpus=corpus,
-            pipeline=pipeline,
-            contextual_model=contextual_model,
+            model=model,
             topic_names=topic_names,
             group_labels=group_labels,
         )

@@ -19,8 +19,7 @@ from topicwizard.prepare.topics import infer_topic_names
 
 def word_map(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     z_threshold: float = 2.0,
 ) -> go.Figure:
@@ -31,11 +30,8 @@ def word_map(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, None
-        Contextual topic model.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -55,8 +51,7 @@ def word_map(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     x, y = prepare.word_positions(topic_data["topic_term_matrix"])
@@ -100,8 +95,7 @@ def word_map(
 def word_association_barchart(
     words: Union[List[str], str],
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    contextual_model: Optional[TransformerMixin] = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     n_association: int = 0,
     top_n: int = 20,
@@ -111,13 +105,12 @@ def word_association_barchart(
 
     Parameters
     ----------
+    words: list of str or str
+        Words you want to start the association from.
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-    contextual_model: TransformerMixin, None
-        Contextual topic model.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -135,8 +128,7 @@ def word_association_barchart(
     """
     topic_data = prepare_topic_data(
         corpus=corpus,
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         topic_names=topic_names,
     )
     if isinstance(words, str):

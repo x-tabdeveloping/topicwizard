@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 from dash_extensions.enrich import DashBlueprint, html
@@ -17,9 +17,8 @@ def create_blank_page(name: str) -> DashBlueprint:
 
 
 def prepare_blueprint(
-    pipeline: Optional[Pipeline],
-    contextual_model: Optional[TransformerMixin],
     corpus: Iterable[str],
+    model: Union[TransformerMixin, Pipeline],
     create_blueprint: BlueprintCreator,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
@@ -28,8 +27,7 @@ def prepare_blueprint(
     **kwargs,
 ) -> DashBlueprint:
     topic_data = prepare_topic_data(
-        pipeline=pipeline,
-        contextual_model=contextual_model,
+        model=model,
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,

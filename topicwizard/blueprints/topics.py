@@ -4,18 +4,18 @@ from typing import Any, List, Tuple
 import dash_mantine_components as dmc
 import numpy as np
 import plotly.graph_objects as go
-from dash_extensions.enrich import DashBlueprint, Input, Output, State, dcc, html
+from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
+                                    html)
 from dash_iconify import DashIconify
 
 import topicwizard.help.topics as help
 import topicwizard.plots.topics as plots
 import topicwizard.prepare.topics as prepare
 from topicwizard.components.topics.intertopic_map import create_intertopic_map
-from topicwizard.components.topics.relevance_slider import relevance_slider
-from topicwizard.components.topics.topic_barplot import topic_barplot
+from topicwizard.components.topics.topic_barplot import create_topic_barplot
 from topicwizard.components.topics.topic_namer import topic_namer
 from topicwizard.components.topics.topic_switcher import topic_switcher
-from topicwizard.components.topics.wordcloud import wordcloud
+from topicwizard.components.topics.wordcloud import create_wordcloud
 from topicwizard.help.utils import make_helper
 
 # ----Clientside Callbacks----
@@ -56,28 +56,20 @@ def create_blueprint(
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     topic_positions = prepare.topic_positions(topic_term_matrix)
-    (
-        topic_importances,
-        term_importances,
-        topic_term_importances,
-    ) = prepare.topic_importances(
-        topic_term_matrix, document_term_matrix, document_topic_matrix
-    )
-
+    topic_importances = document_topic_matrix.sum(axis=0)
     # --------[ Collecting blueprints ]--------
     intertopic_map = create_intertopic_map(
         topic_positions, topic_importances, topic_names
     )
+    topic_barplot = create_topic_barplot(topic_term_matrix, vocab)
+    wordcloud = create_wordcloud(topic_term_matrix, vocab)
     blueprints = [
         intertopic_map,
-        relevance_slider,
         topic_switcher,
         topic_namer,
         topic_barplot,
         wordcloud,
     ]
-    # layouts = [blueprint.layout for blueprint in blueprints]
-
     # --------[ Creating app blueprint ]--------
     app_blueprint = DashBlueprint()
     app_blueprint.layout = html.Div(
@@ -86,8 +78,7 @@ def create_blueprint(
             dmc.Grid(
                 [
                     dmc.Col(topic_switcher.layout, span="content"),
-                    dmc.Col(topic_namer.layout, span=4),
-                    dmc.Col(relevance_slider.layout, span=4),
+                    dmc.Col(topic_namer.layout, span=6),
                 ],
                 columns=10,
                 align="center",
@@ -125,38 +116,6 @@ def create_blueprint(
         """,
         id="topics_container",
     )
-
-    # --------[ Registering callbacks ]--------
-    @app_blueprint.callback(
-        Output("topic_barplot", "figure"),
-        Output("wordcloud", "figure"),
-        Input("lambda_slider", "value"),
-        Input("current_topic", "data"),
-    )
-    @functools.lru_cache
-    def update_plots(
-        relevance: float, current_topic: int
-    ) -> Tuple[go.Figure, go.Figure]:
-        top_bar = prepare.calculate_top_words(
-            topic_id=current_topic,
-            top_n=30,
-            alpha=relevance,
-            term_frequency=term_importances,
-            topic_term_frequency=topic_term_importances,
-            vocab=vocab,
-        )
-        top_wordcloud = prepare.calculate_top_words(
-            topic_id=current_topic,
-            top_n=200,
-            alpha=relevance,
-            term_frequency=term_importances,
-            topic_term_frequency=topic_term_importances,
-            vocab=vocab,
-        )
-        bar = plots.topic_plot(top_words=top_bar)
-        wordcloud = plots.wordcloud(top_words=top_wordcloud)
-        return bar, wordcloud
-
     app_blueprint.clientside_callback(*switch_topic)
     for blueprint in blueprints:
         blueprint.register_callbacks(app_blueprint)

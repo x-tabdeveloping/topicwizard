@@ -35,8 +35,7 @@ def prepare_blueprint(
     )
     blueprint = create_blueprint(
         *args,
-        contextual_model=contextual_model,
-        pipeline=pipeline,
+        model=model,
         **topic_data,
         **kwargs,
     )

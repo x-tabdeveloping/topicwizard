@@ -89,10 +89,15 @@ def word_relevance(
     ndarray of shape (n_topics, n_vocab)
         Topic word relevance matrix.
     """
-    probability = np.log(topic_term_frequency[topic_id])
+    eps = np.finfo(float).eps
+    probability = np.log(topic_term_frequency[topic_id] + eps)
     probability[probability == -np.inf] = np.nan
-    lift = np.log(topic_term_frequency[topic_id] / term_frequency)
+    lift = np.log(topic_term_frequency[topic_id] / term_frequency + eps)
     lift[lift == -np.inf] = np.nan
+    if alpha == 1:
+        return probability
+    if alpha == 0:
+        return lift
     relevance = alpha * probability + (1 - alpha) * lift
     return relevance
 
@@ -100,25 +105,17 @@ def word_relevance(
 def calculate_top_words(
     topic_id: int,
     top_n: int,
-    alpha: float,
-    term_frequency: np.ndarray,
-    topic_term_frequency: np.ndarray,
+    components: np.ndarray,
     vocab: np.ndarray,
 ) -> pd.DataFrame:
     """Arranges top N words by relevance for the given topic into a DataFrame."""
-    vocab = np.array(vocab)
-    term_frequency = np.array(term_frequency)
-    topic_term_frequency = np.array(topic_term_frequency)
-    relevance = word_relevance(
-        topic_id, term_frequency, topic_term_frequency, alpha=alpha
-    )
-    highest = np.argpartition(-relevance, top_n)[:top_n]
+    highest = np.argpartition(-components[topic_id], top_n)[:top_n]
     res = pd.DataFrame(
         {
             "word": vocab[highest],
-            "importance": topic_term_frequency[topic_id, highest],
-            "overall_importance": term_frequency[highest],
-            "relevance": relevance[highest],
+            "importance": components[topic_id, highest],
+            "overall_importance": components.sum(axis=0)[highest],
+            "relevance": components[topic_id, highest],
         }
     )
     return res

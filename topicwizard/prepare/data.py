@@ -1,20 +1,7 @@
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Literal,
-    Optional,
-    Set,
-    Tuple,
-    TypedDict,
-    Union,
-)
+from typing import Callable, Dict, Iterable, List, Literal, Optional, TypedDict, Union
 from warnings import warn
 
 import numpy as np
-from dash_extensions.enrich import DashBlueprint, html
 from sklearn.base import TransformerMixin
 from sklearn.exceptions import NotFittedError
 from sklearn.pipeline import Pipeline
@@ -50,7 +37,6 @@ def prepare_pipeline_data(
         print("Fitting pipeline, as it was not or cannot be prefitted.")
         document_topic_matrix = pipeline.fit_transform(corpus)
     document_term_matrix = vectorizer.transform(corpus)
-    topic_term_matrix = topic_model.components_
     vocab = vectorizer.get_feature_names_out()
     res = {
         "corpus": corpus,
@@ -60,7 +46,7 @@ def prepare_pipeline_data(
         if representation == "term"
         else document_topic_matrix,
         "vocab": vocab,
-        "topic_term_matrix": topic_term_matrix,
+        "topic_term_matrix": topic_model.components_,
     }
     try:
         # Here we check if the model is transductive or inductive

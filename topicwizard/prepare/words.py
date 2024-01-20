@@ -108,7 +108,7 @@ def top_topics(
     overall_importances = np.squeeze(np.asarray(overall_importances))
     topic_importances = topic_term_matrix[:, selected_words].sum(axis=1)
     topic_importances = np.squeeze(np.asarray(topic_importances))
-    all_words = selected_words + associated_words
+    all_words = list(selected_words) + list(associated_words)
     associated_importances = topic_term_matrix[:, all_words].sum(axis=1)
     associated_importances = np.squeeze(np.asarray(associated_importances))
     n_topics = topic_importances.shape[0]

@@ -49,6 +49,7 @@ def create_word_barplot(
         associated_words: List[int],
         topic_names: List[str],
     ) -> go.Figure:
+        selected_words = [int(word) for word in selected_words]
         if not selected_words or not topic_names:
             raise exceptions.PreventUpdate
         top_topics = prepare.top_topics(

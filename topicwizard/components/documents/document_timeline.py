@@ -1,4 +1,4 @@
-from typing import Callable, List, Union
+from typing import Callable, List, Optional, Union
 
 import numpy as np
 import plotly.graph_objects as go
@@ -11,8 +11,8 @@ from topicwizard.plots.utils import text_plot
 
 def create_timeline(
     corpus: List[str],
-    transform: Callable[[List[str]], np.ndarray],
     topic_colors: np.ndarray,
+    transform: Optional[Callable[[List[str]], np.ndarray]] = None,
 ):
     timeline = DashBlueprint()
 
@@ -33,6 +33,10 @@ def create_timeline(
         topic_names: List[str],
         window_size: int,
     ) -> go.Figure:
+        if transform is None:
+            return text_plot(
+                "This topic model cannot dynamically infer topical content."
+            )
         if isinstance(selected_document, str):
             selected_document = selected_document.strip()
             selected_document = int(selected_document)

@@ -89,10 +89,15 @@ def word_relevance(
     ndarray of shape (n_topics, n_vocab)
         Topic word relevance matrix.
     """
-    probability = np.log(topic_term_frequency[topic_id])
+    eps = np.finfo(float).eps
+    probability = np.log(topic_term_frequency[topic_id] + eps)
     probability[probability == -np.inf] = np.nan
-    lift = np.log(topic_term_frequency[topic_id] / term_frequency)
+    lift = np.log(topic_term_frequency[topic_id] / term_frequency + eps)
     lift[lift == -np.inf] = np.nan
+    if alpha == 1:
+        return probability
+    if alpha == 0:
+        return lift
     relevance = alpha * probability + (1 - alpha) * lift
     return relevance
 
@@ -100,51 +105,29 @@ def word_relevance(
 def calculate_top_words(
     topic_id: int,
     top_n: int,
-    alpha: float,
-    term_frequency: np.ndarray,
-    topic_term_frequency: np.ndarray,
+    components: np.ndarray,
     vocab: np.ndarray,
 ) -> pd.DataFrame:
     """Arranges top N words by relevance for the given topic into a DataFrame."""
-    vocab = np.array(vocab)
-    term_frequency = np.array(term_frequency)
-    topic_term_frequency = np.array(topic_term_frequency)
-    relevance = word_relevance(
-        topic_id, term_frequency, topic_term_frequency, alpha=alpha
-    )
-    highest = np.argpartition(-relevance, top_n)[:top_n]
+    highest = np.argpartition(-components[topic_id], top_n)[:top_n]
     res = pd.DataFrame(
         {
             "word": vocab[highest],
-            "importance": topic_term_frequency[topic_id, highest],
-            "overall_importance": term_frequency[highest],
-            "relevance": relevance[highest],
+            "importance": components[topic_id, highest],
+            "overall_importance": components.sum(axis=0)[highest],
+            "relevance": components[topic_id, highest],
         }
     )
     return res
 
 
-def infer_topic_names(pipeline: Pipeline, top_n: int = 4) -> List[str]:
+def infer_topic_names(
+    vocab: np.ndarray, components: np.ndarray, top_n: int = 4
+) -> List[str]:
     """Infers names of topics from a trained topic model's components.
     This method does not take empirical counts or relevance into account, therefore
     automatically assigned topic names can be of low quality.
-
-    Parameters
-    ----------
-    pipeline: Pipeline
-        Sklearn compatible topic pipeline.
-    top_n: int, default 4
-        Number of words used to name the topic.
-
-    Returns
-    -------
-    list of str
-        List of topic names.
     """
-    _, vectorizer = pipeline.steps[0]
-    _, topic_model = pipeline.steps[-1]
-    components = topic_model.components_
-    vocab = vectorizer.get_feature_names_out()
     highest = np.argpartition(-components, top_n)[:, :top_n]
     top_words = vocab[highest]
     topic_names = []

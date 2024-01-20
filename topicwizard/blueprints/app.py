@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 import dash_mantine_components as dmc
 import joblib
@@ -14,6 +14,7 @@ from dash_extensions.enrich import (
     html,
 )
 from dash_iconify import DashIconify
+from sklearn.base import TransformerMixin
 from sklearn.pipeline import Pipeline
 
 import topicwizard.blueprints.documents as documents
@@ -21,7 +22,6 @@ import topicwizard.blueprints.groups as groups
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
 from topicwizard.blueprints.template import create_blank_page
-from topicwizard.pipeline import split_pipeline
 
 
 def create_blueprint(
@@ -30,13 +30,14 @@ def create_blueprint(
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
     document_names: List[str],
+    document_representation: np.ndarray,
     corpus: List[str],
-    pipeline: Pipeline,
+    transform: Optional[Callable],
     topic_names: List[str],
     exclude_pages: Set[str],
     group_labels: Optional[List[str]],
+    model: Union[TransformerMixin, Pipeline],
 ) -> DashBlueprint:
-    vectorizer, topic_model = split_pipeline(None, None, pipeline)
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
         topics.create_blueprint(
@@ -46,8 +47,6 @@ def create_blueprint(
             topic_term_matrix=topic_term_matrix,
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
             topic_names=topic_names,
         )
         if "topics" not in exclude_pages
@@ -60,8 +59,9 @@ def create_blueprint(
             document_topic_matrix=document_topic_matrix,
             topic_term_matrix=topic_term_matrix,
             document_names=document_names,
+            document_representation=document_representation,
+            transform=transform,
             corpus=corpus,
-            pipeline=pipeline,
             topic_names=topic_names,
         )
         if "documents" not in exclude_pages
@@ -75,8 +75,6 @@ def create_blueprint(
             topic_term_matrix=topic_term_matrix,
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
             topic_names=topic_names,
         )
         if "words" not in exclude_pages
@@ -90,8 +88,6 @@ def create_blueprint(
             topic_term_matrix=topic_term_matrix,
             document_names=document_names,
             corpus=corpus,
-            vectorizer=vectorizer,
-            topic_model=topic_model,
             topic_names=topic_names,
             group_labels=group_labels,
         )
@@ -176,7 +172,7 @@ def create_blueprint(
         data = dict(
             document_names=document_names,
             corpus=corpus,
-            pipeline=pipeline,
+            model=model,
             topic_names=topic_names,
             group_labels=group_labels,
         )

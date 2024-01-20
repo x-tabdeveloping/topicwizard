@@ -1,7 +1,7 @@
 """Topic namer component."""
 
 import dash_mantine_components as dmc
-from dash_extensions.enrich import DashBlueprint, Output, Input, State
+from dash_extensions.enrich import DashBlueprint, Input, Output, State
 from dash_iconify import DashIconify
 
 topic_namer = DashBlueprint()
@@ -43,7 +43,7 @@ topic_namer.clientside_callback(
 topic_namer.clientside_callback(
     """
     function (value, currentNames, currentTopic) {
-        if (value === '') {
+        if (!value) {
             return currentNames;
         } else {
             const newNames = [...currentNames];

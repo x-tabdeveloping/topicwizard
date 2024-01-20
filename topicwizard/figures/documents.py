@@ -5,22 +5,19 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import scipy.sparse as spr
 from plotly import colors
-from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.base import TransformerMixin
+from sklearn.pipeline import Pipeline
 
 import topicwizard.plots.documents as plots
 import topicwizard.prepare.documents as prepare
-from topicwizard.app import split_pipeline
+from topicwizard.prepare.data import prepare_topic_data
 from topicwizard.prepare.topics import infer_topic_names
-from topicwizard.prepare.utils import get_vocab, prepare_transformed_data
 
 
 def document_map(
     corpus: Iterable[str],
-    pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     document_names: Optional[List[str]] = None,
     representation: Literal["term", "topic"] = "term",
@@ -32,19 +29,13 @@ def document_map(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
+    document_names: list of str, default None
+        Names of documents to be displayed.
     representation: {"term", "topic"}, default "term"
         Determines which representation of the documents should be
         projected to 2D space and displayed.
@@ -52,30 +43,22 @@ def document_map(
         will be used, if 'topic', representations returned by
         the topic model will be used. This can be particularly
         advantageous with non-bag-of-words topic models.
+        This parameter only has an effect when a pipeline is used.
 
     Returns
     -------
     go.Figure
         Map of documents.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, corpus)
-    n_docs = document_term_matrix.shape[0]
-    if document_names is None:
-        document_names = [f"Document {i}" for i in range(n_docs)]
-    if representation == "term":
-        x, y = prepare.document_positions(document_term_matrix)
-    else:
-        x, y = prepare.document_positions(document_topic_matrix)
-    dominant_topic = prepare.dominant_topic(document_topic_matrix)
+    topic_data = prepare_topic_data(
+        corpus=corpus,
+        model=model,
+        topic_names=topic_names,
+        document_names=document_names,
+        representation=representation,
+    )
+    x, y = prepare.document_positions(topic_data["document_representation"])
+    dominant_topic = prepare.dominant_topic(topic_data["document_topic_matrix"])
     dominant_topic = np.array(topic_names)[dominant_topic]
     words_df = pd.DataFrame(
         dict(
@@ -102,9 +85,7 @@ def document_map(
 
 def document_topic_distribution(
     documents: Union[List[str], str],
-    pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     top_n: int = 8,
 ) -> go.Figure:
@@ -114,19 +95,15 @@ def document_topic_distribution(
     ----------
     documents: str or list of str
         A single document or list of documents.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
+    document_names: list of str, default None
+        Names of documents to be displayed.
+    top_n: int, default 8
+        Number of topics to display.
 
     Returns
     -------
@@ -135,32 +112,27 @@ def document_topic_distribution(
     """
     if isinstance(documents, str):
         documents = [documents]
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
-    if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
-    (
-        document_term_matrix,
-        document_topic_matrix,
-        topic_term_matrix,
-    ) = prepare_transformed_data(vectorizer, topic_model, documents)
-    topic_importances = prepare.document_topic_importances(document_topic_matrix)
+    topic_data = prepare_topic_data(
+        corpus=documents,
+        model=model,
+        topic_names=topic_names,
+    )
+    topic_importances = prepare.document_topic_importances(
+        topic_data["document_topic_matrix"]
+    )
     topic_importances = topic_importances.groupby(["topic_id"]).sum().reset_index()
-    n_topics = document_topic_matrix.shape[-1]
+    n_topics = topic_data["document_topic_matrix"].shape[-1]
     twilight = colors.get_colorscale("Portland")
     topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
     return plots.document_topic_barplot(
-        topic_importances, topic_names, topic_colors, top_n=top_n
+        topic_importances, topic_data["topic_names"], topic_colors, top_n=top_n
     )
 
 
 def document_topic_timeline(
     document: str,
-    pipeline: Optional[Pipeline] = None,
-    vectorizer: Any = None,
-    topic_model: Any = None,
+    model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     window_size: int = 10,
     step: int = 1,
@@ -171,16 +143,8 @@ def document_topic_timeline(
     ----------
     document: str
         A single document.
-    pipeline: Pipeline, default None
-        Sklearn compatible pipeline, that has two components:
-        a vectorizer and a topic model.
-        Ignored if vectorizer and topic_model are provided.
-    vectorizer: Vectorizer, default None
-        Sklearn compatible vectorizer, that turns texts into
-        bag-of-words representations.
-    topic_model: TopicModel, default None
-        Sklearn compatible topic model, that can transform documents
-        into topic distributions.
+    model: Pipeline or TransformerMixin
+        Bow topic pipeline or contextual topic model.
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
@@ -194,15 +158,27 @@ def document_topic_timeline(
     go.Figure
         Line chart of topic timeline in the document.
     """
-    vectorizer, topic_model = split_pipeline(vectorizer, topic_model, pipeline)
-    if pipeline is None:
-        pipeline = make_pipeline(vectorizer, topic_model)
+    try:
+        transform = model.transform
+    except AttributeError:
+        raise ValueError(
+            "Looks like your model is transductive, "
+            "you can only generate timelines with inductive models."
+        )
+    if isinstance(model, Pipeline):
+        _, vectorizer = model.steps[0]
+        _, topic_model = model.steps[-1]
+        components = topic_model.components_
+        vocab = vectorizer.get_feature_names_out()
+    else:
+        components = model.components_
+        vocab = model.get_vocab()
     if topic_names is None:
-        topic_names = infer_topic_names(pipeline)
+        topic_names = infer_topic_names(vocab, components)
     timeline = prepare.calculate_timeline(
         doc_id=0,
         corpus=[document],
-        transform=pipeline.transform,
+        transform=transform,
         window_size=window_size,
         step=step,
     )

@@ -4,9 +4,7 @@ from typing import Iterable
 import numpy as np
 import scipy.sparse as spr
 from sklearn.base import BaseEstimator
-from tqdm import tqdm
-
-from topicwizard.pipeline import TopicPipeline, make_topic_pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 
 
 class DictionaryVectorizer(BaseEstimator):
@@ -25,8 +23,7 @@ class DictionaryVectorizer(BaseEstimator):
     key_to_index: dict of int to int
         Mapping of Gensim Dictionary IDs to feature indices.
     vocabulary_: dict of str to int
-        Mapping of terms to feature indices.
-    """
+        Mapping of terms to feature indices."""
 
     def __init__(self, dictionary):
         self.dictionary = dictionary
@@ -83,7 +80,7 @@ class DictionaryVectorizer(BaseEstimator):
                 rows.append(i_document)
                 columns.append(self.key_to_index[key])
         X = spr.coo_array((counts, (rows, columns)), shape=(n_docs, n_features))
-        return spr.csr_array(X)
+        return spr.csr_matrix(X)
 
     def fit(self, raw_documents: Iterable[str], y=None):
         """Does not do anything, kept for compatiblity reasons."""
@@ -97,6 +94,17 @@ class DictionaryVectorizer(BaseEstimator):
         """Does the same as transform(), kept for compatiblity reasons."""
         self.fit(raw_documents)
         return self.transform(raw_documents)
+
+
+def sparse_topic_array_to_dense(
+    array: list[list[tuple[int, float]]], n_topics: int
+) -> np.ndarray:
+    n_docs = len(array)
+    out_array = np.zeros((n_docs, n_topics))
+    for i_doc, doc in enumerate(array):
+        for i_topic, value in doc:
+            out_array[i_doc, i_topic] = value
+    return out_array
 
 
 class TopicModelWrapper(BaseEstimator):
@@ -159,7 +167,8 @@ class TopicModelWrapper(BaseEstimator):
             Sparse array of document-topic distributions.
         """
         corpus = self._prepare_corpus(X)
-        X_trans = self.model.inference(corpus)[0]
+        X_trans_sparse = [self.model[doc] for doc in corpus]
+        X_trans = sparse_topic_array_to_dense(X_trans_sparse, self.n_components)
         # Normalizing probabilities (so that all docs add up to one)
         X_trans = (X_trans.T / X_trans.sum(axis=1)).T
         return X_trans
@@ -170,7 +179,7 @@ class TopicModelWrapper(BaseEstimator):
         return self.transform(X)
 
 
-def gensim_pipeline(dictionary, model) -> TopicPipeline:
+def gensim_pipeline(dictionary, model) -> Pipeline:
     """Creates sklearn compatible wrapper for a Gensim topic pipeline.
 
     Parameters
@@ -188,4 +197,4 @@ def gensim_pipeline(dictionary, model) -> TopicPipeline:
     """
     vectorizer = DictionaryVectorizer(dictionary)
     topic_model = TopicModelWrapper(model=model, index_to_key=vectorizer.index_to_key)
-    return make_topic_pipeline(vectorizer, topic_model)
+    return make_pipeline(vectorizer, topic_model)

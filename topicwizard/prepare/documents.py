@@ -23,28 +23,18 @@ def dominant_topic(document_topic_matrix: np.ndarray) -> np.ndarray:
 
 
 def document_positions(
-    document_topic_matrix: np.ndarray,
+    document_representation: np.ndarray,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Calculates document positions.
-
-    Parameters
-    ----------
-    document_term_matrix: array of shape (n_documents, n_terms)
-
-    Returns
-    -------
-    x: array of shape (n_topics)
-    y: array of shape (n_topics)
-    """
+    """Calculates document positions."""
     # Calculating distances
-    n_docs = document_topic_matrix.shape[0]
+    n_docs = document_representation.shape[0]
     perplexity = np.min((40, n_docs - 1))
     manifold = umap.UMAP(
         n_components=2,
         n_neighbors=perplexity,
         metric="cosine",
     )
-    x, y = manifold.fit_transform(document_topic_matrix).T
+    x, y = manifold.fit_transform(document_representation).T
     return x, y
 
 

@@ -4,7 +4,6 @@ from typing import Iterable
 import numpy as np
 import scipy.sparse as spr
 from sklearn.base import BaseEstimator
-from tqdm import tqdm
 
 from topicwizard.pipeline import TopicPipeline, make_topic_pipeline
 
@@ -159,7 +158,7 @@ class TopicModelWrapper(BaseEstimator):
             Sparse array of document-topic distributions.
         """
         corpus = self._prepare_corpus(X)
-        X_trans = self.model.inference(corpus)[0]
+        X_trans = self.model[corpus][0]
         # Normalizing probabilities (so that all docs add up to one)
         X_trans = (X_trans.T / X_trans.sum(axis=1)).T
         return X_trans

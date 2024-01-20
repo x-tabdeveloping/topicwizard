@@ -26,27 +26,38 @@ class TopicData(TypedDict):
 def prepare_pipeline_data(
     pipeline: Pipeline,
     corpus: Iterable[str],
-    representation: Literal["term", "topic"] = "term",
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
 ) -> Dict:
     """Transforms corpus with the topic model, and extracts important matrices."""
     vectorizer, topic_model = split_pipeline(None, None, pipeline)
+    if document_topic_matrix is None:
+        try:
+            print("Inferring topical content for documents.")
+            document_topic_matrix = pipeline.transform(corpus)
+        except (NotFittedError, AttributeError) as e:
+            if e is NotFittedError:
+                print("Pipeline has not been fitted, fitting.")
+            if e is AttributeError:
+                print(
+                    "Looks like the topic model is transductive. Running fit_transform()"
+                )
+            document_topic_matrix = pipeline.fit_transform(corpus)
     try:
-        print("Inferring topical content for documents.")
-        document_topic_matrix = pipeline.transform(corpus)
-    except (NotFittedError, AttributeError):
-        print("Fitting pipeline, as it was not or cannot be prefitted.")
-        document_topic_matrix = pipeline.fit_transform(corpus)
+        components = topic_model.components_
+    except AttributeError as e:
+        raise ValueError("Topic model does not have components_ attribute.") from e
     document_term_matrix = vectorizer.transform(corpus)
     vocab = vectorizer.get_feature_names_out()
+    if document_representations is None:
+        document_representations = document_term_matrix
     res = {
         "corpus": corpus,
         "document_term_matrix": document_term_matrix,
         "document_topic_matrix": document_topic_matrix,
-        "document_representation": document_term_matrix
-        if representation == "term"
-        else document_topic_matrix,
+        "document_representation": document_representations,
         "vocab": vocab,
-        "topic_term_matrix": topic_model.components_,
+        "topic_term_matrix": components,
     }
     try:
         # Here we check if the model is transductive or inductive
@@ -59,26 +70,43 @@ def prepare_pipeline_data(
 
 
 def prepare_contextual_data(
-    contextual_model: TransformerMixin, corpus: Iterable[str]
+    contextual_model: TransformerMixin,
+    corpus: Iterable[str],
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
 ) -> Dict:
     """Transform corpus with a given contextual model."""
-    try:
-        print("Inferring topical content for documents.")
-        document_topic_matrix = contextual_model.transform(corpus)
-    except (NotFittedError, AttributeError):
-        print("Fitting pipeline, as it was not or cannot be prefitted.")
-        document_topic_matrix = contextual_model.fit_transform(corpus)
+    if document_topic_matrix is None:
+        try:
+            print("Inferring topical content for documents.")
+            document_topic_matrix = contextual_model.transform(
+                corpus, embeddings=document_representations
+            )
+        except (NotFittedError, AttributeError) as e:
+            if e is NotFittedError:
+                print("Pipeline has not been fitted, fitting.")
+            if e is AttributeError:
+                print(
+                    "Looks like the topic model is transductive. Running fit_transform()"
+                )
+            document_topic_matrix = contextual_model.fit_transform(
+                corpus, embeddings=document_representations
+            )
     document_term_matrix = contextual_model.vectorizer.transform(corpus)
-    topic_term_matrix = contextual_model.components_
-    document_representation = contextual_model.encoder_.encode(corpus)
+    try:
+        components = contextual_model.components_
+    except AttributeError as e:
+        raise ValueError("Topic model does not have components_ attribute.") from e
+    if document_representations is None:
+        document_representations = contextual_model.encoder_.encode(corpus)
     vocab = contextual_model.get_vocab()
     res = {
         "corpus": corpus,
         "document_term_matrix": document_term_matrix,
         "document_topic_matrix": document_topic_matrix,
-        "document_representation": document_representation,
+        "document_representation": document_representations,
         "vocab": vocab,
-        "topic_term_matrix": topic_term_matrix,
+        "topic_term_matrix": components,
     }
     try:
         # Here we check if the model is transductive or inductive
@@ -120,10 +148,11 @@ def filter_nan_docs(topic_data: Dict) -> None:
 def prepare_topic_data(
     corpus: Iterable[str],
     model: Union[Pipeline, TransformerMixin],
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
-    representation: Literal["term", "topic"] = "term",
 ) -> TopicData:
     """Prepares data from a topic model, a corpus and data about that corpus.
     Fits models if necessary, transforms data and extracts vocab along with document
@@ -135,6 +164,13 @@ def prepare_topic_data(
         List of all works in the corpus you intend to visualize.
     model: Pipeline or TransformerMixin
         Bag-of-words topic pipeline or contextual topic model.
+    document_topic_matrix: ndarray of shape (n_documents, n_topics), default None
+        Importance of each topic for each document in a matrix.
+        If not passed (default) it is inferred from the corpus.
+    document_representations: ndarray of shape (n_documents, n_dims), default None
+        Document representations to use for displaying.
+        If None, either BoW or contextual representations are used
+        depending on the model.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -146,18 +182,25 @@ def prepare_topic_data(
         You can pass it along if you have genre labels for example.
         In this case an additional page will get created with information
         about how these groups relate to topics and words in the corpus.
-    representation: "term" or "topic", default "term"
-        Specifies which representation to use to display documents.
-        Only in effect when the model is not contextual.
     """
     corpus = list(corpus)
     n_documents = len(corpus)
     if document_names is None:
         document_names = [f"Document {i}" for i in range(n_documents)]
     if isinstance(model, Pipeline):
-        topic_data = prepare_pipeline_data(model, corpus, representation=representation)
+        topic_data = prepare_pipeline_data(
+            model,
+            corpus,
+            document_topic_matrix=document_topic_matrix,
+            document_representations=document_representations,
+        )
     else:
-        topic_data = prepare_contextual_data(model, corpus)
+        topic_data = prepare_contextual_data(
+            model,
+            corpus,
+            document_topic_matrix=document_topic_matrix,
+            document_representations=document_representations,
+        )
     topic_data["group_labels"] = group_labels
     topic_data["document_names"] = document_names
     filter_nan_docs(topic_data)

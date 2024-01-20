@@ -20,6 +20,8 @@ def prepare_blueprint(
     corpus: Iterable[str],
     model: Union[TransformerMixin, Pipeline],
     create_blueprint: BlueprintCreator,
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -30,6 +32,8 @@ def prepare_blueprint(
         model=model,
         corpus=corpus,
         document_names=document_names,
+        document_representations=document_representations,
+        document_topic_matrix=document_topic_matrix,
         topic_names=topic_names,
         group_labels=group_labels,
     )

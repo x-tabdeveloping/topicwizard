@@ -6,6 +6,7 @@ import time
 from typing import Any, Callable, Iterable, List, Literal, Optional, Set, Union
 
 import joblib
+import numpy as np
 from dash_extensions.enrich import Dash, DashBlueprint
 from sklearn.base import TransformerMixin
 from sklearn.pipeline import Pipeline
@@ -25,6 +26,8 @@ def is_colab() -> bool:
 def get_app_blueprint(
     corpus: Iterable[str],
     model: Union[Pipeline, TransformerMixin],
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     *args,
@@ -35,6 +38,8 @@ def get_app_blueprint(
         corpus=corpus,
         document_names=document_names,
         topic_names=topic_names,
+        document_representations=document_representations,
+        document_topic_matrix=document_topic_matrix,
         create_blueprint=create_blueprint,
         *args,
         **kwargs,
@@ -49,6 +54,8 @@ def get_dash_app(
     corpus: Iterable[str],
     model: Union[Pipeline, TransformerMixin],
     exclude_pages: Set[PageName],
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
@@ -83,6 +90,8 @@ def get_dash_app(
     blueprint = get_app_blueprint(
         model=model,
         corpus=corpus,
+        document_representations=document_representations,
+        document_topic_matrix=document_topic_matrix,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,
@@ -225,6 +234,8 @@ def split_pipeline(
 def visualize(
     corpus: Iterable[str],
     model: Union[Pipeline, TransformerMixin],
+    document_representations: Optional[np.ndarray] = None,
+    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
     topic_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
@@ -239,6 +250,13 @@ def visualize(
         List of all works in the corpus you intend to visualize.
     model: Pipeline or TransformerMixin
         Bag of words topic pipeline or contextual topic model.
+    document_topic_matrix: ndarray of shape (n_documents, n_topics), default None
+        Importance of each topic for each document in a matrix.
+        If not passed (default) it is inferred from the corpus.
+    document_representations: ndarray of shape (n_documents, n_dims), default None
+        Document representations to use for displaying.
+        If None, either BoW or contextual representations are used
+        depending on the model.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
@@ -272,6 +290,8 @@ def visualize(
     app = get_dash_app(
         model=model,
         corpus=corpus,
+        document_topic_matrix=document_topic_matrix,
+        document_representations=document_representations,
         document_names=document_names,
         topic_names=topic_names,
         exclude_pages=exclude_pages,

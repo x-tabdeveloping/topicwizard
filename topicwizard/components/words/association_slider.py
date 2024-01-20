@@ -51,6 +51,7 @@ def create_association_slider(topic_term_matrix: np.ndarray) -> DashBlueprint:
         Input("association_slider", "value"),
     )
     def update_associated_words(selected_words: List[int], n_associations: int):
+        selected_words = [int(word) for word in selected_words]
         if not selected_words or not n_associations:
             return []
         return prepare.associated_words(

@@ -1,5 +1,5 @@
 """External API for creating self-contained figures for documents."""
-from typing import List, Union
+from typing import List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -12,23 +12,30 @@ import topicwizard.prepare.documents as prepare
 from topicwizard.data import TopicData
 
 
-def document_map(topic_data: TopicData, document_metadata: pd.DataFrame) -> go.Figure:
+def document_map(
+    topic_data: TopicData, document_metadata: Optional[pd.DataFrame] = None
+) -> go.Figure:
     x, y = prepare.document_positions(topic_data["document_representation"])
     dominant_topic = prepare.dominant_topic(topic_data["document_topic_matrix"])
     dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
-    docs_df = document_metadata.copy()
-    docs_df = docs_df.assign(
+    display_data = dict(
         dominant_topic=dominant_topic,
         x=x,
         y=y,
     )
+    if document_metadata is not None:
+        docs_df = document_metadata.copy()
+        docs_df = docs_df.assign(**display_data)
+    else:
+        docs_df = pd.DataFrame(display_data)
     hover_data = {
         "dominant_topic": True,
         "x": False,
         "y": False,
     }
-    for column in document_metadata.columns:
-        hover_data[column] = True
+    if document_metadata is not None:
+        for column in document_metadata.columns:
+            hover_data[column] = True
     return px.scatter(
         docs_df,
         x="x",

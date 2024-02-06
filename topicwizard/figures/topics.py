@@ -1,44 +1,19 @@
 """External API for creating self-contained figures for topics."""
-from typing import Any, Iterable, List, Optional, Union
 
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from sklearn.base import TransformerMixin
-from sklearn.pipeline import Pipeline
 
 import topicwizard.plots.topics as plots
 import topicwizard.prepare.topics as prepare
-from topicwizard.prepare.data import prepare_topic_data
+from topicwizard.data import TopicData
 
 
 def topic_map(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    topic_names: Optional[List[str]] = None,
+    topic_data: TopicData,
 ) -> go.Figure:
     """Plots topics on a scatter plot based on the UMAP projections
     of their parameters into 2D space.
-
-    Parameters
-    ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
-
-    Returns
-    -------
-    go.Figure
-        Bubble chart of topics.
     """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-    )
     x, y = prepare.topic_positions(topic_data["topic_term_matrix"])
     (
         topic_importances,
@@ -59,8 +34,7 @@ def topic_map(
 
 
 def topic_barcharts(
-    model: Union[Pipeline, TransformerMixin],
-    topic_names: Optional[List[str]] = None,
+    topic_data: TopicData,
     top_n: int = 5,
     n_columns: int = 4,
 ) -> go.Figure:
@@ -68,11 +42,7 @@ def topic_barcharts(
 
     Parameters
     ----------
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
+
     top_n: int, default 5
         Specifies the number of words to show for each topic.
     n_columns: int, default 4
@@ -83,12 +53,8 @@ def topic_barcharts(
     go.Figure
         Bar chart of topics.
     """
-    if isinstance(model, Pipeline):
-        vocab = model.steps[0][1].get_feature_names_out()
-        components = model.steps[-1][1].components_
-    else:
-        vocab = model.get_vocab()
-        components = model.components_
+    vocab = topic_data["vocab"]
+    components = topic_data["topic_term_matrix"]
     topic_names = prepare.infer_topic_names(vocab, components)
     n_topics = len(topic_names)
     n_rows = (n_topics // n_columns) + 1
@@ -140,9 +106,7 @@ def topic_barcharts(
 
 
 def topic_wordclouds(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    topic_names: Optional[List[str]] = None,
+    topic_data: TopicData,
     top_n: int = 30,
     alpha: float = 1.0,
     n_columns: int = 4,
@@ -151,13 +115,6 @@ def topic_wordclouds(
 
     Parameters
     ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
     top_n: int, default 30
         Specifies the number of words to show for each topic.
     alpha: float, default 1.0
@@ -173,11 +130,6 @@ def topic_wordclouds(
     go.Figure
         Word clouds of topics.
     """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-    )
     n_topics = topic_data["topic_term_matrix"].shape[0]
     (
         topic_importances,

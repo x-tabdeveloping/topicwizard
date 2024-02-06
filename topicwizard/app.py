@@ -3,6 +3,7 @@ import subprocess
 import sys
 import threading
 import time
+import warnings
 from typing import Callable, Iterable, List, Literal, Optional, Set, Union
 
 import joblib
@@ -11,7 +12,7 @@ from dash_extensions.enrich import Dash
 from sklearn.pipeline import Pipeline
 
 from topicwizard.blueprints.app import create_blueprint
-from topicwizard.data import TopicData, filter_nan_docs
+from topicwizard.data import TopicData
 from topicwizard.model_interface import TopicModel
 from topicwizard.pipeline import TopicPipeline
 
@@ -179,11 +180,28 @@ def load(
     app = load_app(filename, exclude_pages=exclude_pages)
     return run_app(app, port=port)
 
+def filter_nan_docs(topic_data: TopicData) -> None:
+    """Filters out documents, the topical content of which contains nans.
+    NOTE: The function works in place.
+    """
+    nan_documents = np.isnan(topic_data["document_topic_matrix"]).any(axis=1)
+    n_nan_docs = np.sum(nan_documents)
+    if n_nan_docs: warnings.warn(
+            f"{n_nan_docs} documents had nan values in the output of the topic model,"
+            " these are removed in preprocessing and will not be visible in the app."
+        )
+        topic_data["corpus"] = list(np.array(topic_data["corpus"])[~nan_documents])
+        topic_data["document_topic_matrix"] = topic_data["document_topic_matrix"][
+            ~nan_documents
+        ]
+        topic_data["document_term_matrix"] = topic_data["document_term_matrix"][
+            ~nan_documents
+        ]
 
 def visualize(
-    corpus: List[str],
-    model: Union[Pipeline, TopicModel],
-    *args,
+    corpus: Optional[List[str]] = None,
+    model: Optional[Union[Pipeline, TopicModel]] = None,
+    topic_data: Optional[TopicData] = None,
     document_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
     group_labels: Optional[List[str]] = None,
@@ -221,12 +239,33 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
     if isinstance(model, Pipeline):
         model = TopicPipeline.from_pipeline(model)
-    topic_data = model.prepare_topic_data(corpus, *args, **kwargs)
-    filter_nan_docs(topic_data)
+    if topic_data is None:
+        if (model is None) or (corpus is None):
+            raise TypeError(
+                "Either corpus and model or topic_data has to be specified."
+            )
+        topic_data = model.prepare_topic_data(corpus, **kwargs)
+    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
+    # We filter out all documents that contain nans
+    nan_documents = np.isnan(topic_data["document_topic_matrix"]).any(axis=1)
+    n_nan_docs = np.sum(nan_documents)
+    if n_nan_docs:
+        warnings.warn(
+            f"{n_nan_docs} documents had nan values in the output of the topic model,"
+            " these are removed in preprocessing and will not be visible in the app."
+        )
+        topic_data["corpus"] = list(np.array(topic_data["corpus"])[~nan_documents])
+        topic_data["document_topic_matrix"] = topic_data["document_topic_matrix"][
+            ~nan_documents
+        ]
+        topic_data["document_term_matrix"] = topic_data["document_term_matrix"][
+            ~nan_documents
+        ]
+        document_names = list(np.array(document_names)[~nan_documents])
+        group_labels = list(np.array(group_labels)[~nan_documents])
     app = get_dash_app(
         topic_data=topic_data,
         document_names=document_names,

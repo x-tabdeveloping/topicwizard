@@ -1,5 +1,5 @@
 """External API for creating self-contained figures for words."""
-from typing import Any, Iterable, List, Optional, Union
+from typing import List, Union
 
 import numpy as np
 import pandas as pd
@@ -7,20 +7,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly import colors
 from scipy.stats import zscore
-from sklearn.base import TransformerMixin
-from sklearn.pipeline import Pipeline, make_pipeline
 
 import topicwizard.plots.words as plots
 import topicwizard.prepare.words as prepare
-from topicwizard.app import split_pipeline
-from topicwizard.prepare.data import prepare_topic_data
-from topicwizard.prepare.topics import infer_topic_names
+from topicwizard.data import TopicData
 
 
 def word_map(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    topic_names: Optional[List[str]] = None,
+    topic_data: TopicData,
     z_threshold: float = 2.0,
 ) -> go.Figure:
     """Plots words on a scatter plot based on the UMAP projections
@@ -28,13 +22,6 @@ def word_map(
 
     Parameters
     ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
     z_threshold: float, default 2.0
         Z-score frequency threshold over which words get labels on the
         plot. The default roughly corresponds to 95% percentile
@@ -49,11 +36,6 @@ def word_map(
     go.Figure
         Map of words.
     """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-    )
     x, y = prepare.word_positions(topic_data["topic_term_matrix"])
     word_frequencies = prepare.word_importances(topic_data["document_term_matrix"])
     freq_z = zscore(word_frequencies)
@@ -93,10 +75,8 @@ def word_map(
 
 
 def word_association_barchart(
+    topic_data: TopicData,
     words: Union[List[str], str],
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    topic_names: Optional[List[str]] = None,
     n_association: int = 0,
     top_n: int = 20,
 ):
@@ -107,13 +87,6 @@ def word_association_barchart(
     ----------
     words: list of str or str
         Words you want to start the association from.
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
     n_association: int, default 0
         Number of words to associate with the given words.
         None get displayed by default.
@@ -126,11 +99,6 @@ def word_association_barchart(
         Bar chart of most important topics for the given words and
         their associations.
     """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-    )
     if isinstance(words, str):
         words = [words]
     word_to_id = {word: id for id, word in enumerate(topic_data["vocab"])}

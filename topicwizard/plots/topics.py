@@ -73,6 +73,8 @@ def topic_plot(top_words: pd.DataFrame):
     """Plots word importances for currently selected topic."""
     top_words = top_words.sort_values("relevance", ascending=True)
     overlap = np.any(top_words.overall_importance < top_words.importance)
+    if overlap:
+        print(top_words[top_words.overall_importance < top_words.importance])
     text = top_words.word.map(lambda s: f"<b>{s}</b>")
     fig = go.Figure()
     if not overlap:
@@ -91,7 +93,7 @@ def topic_plot(top_words: pd.DataFrame):
         y=top_words.word,
         x=top_words.importance,
         text=text,
-        textposition="outside",
+        textposition="auto",
         orientation="h",
         base=dict(x=[0.5, 1]),
         marker_color="rgba(251,146,60,0.65)",
@@ -115,9 +117,17 @@ def topic_plot(top_words: pd.DataFrame):
         ),
         margin=dict(l=0, r=0, b=18, t=0, pad=0),
     )
+    max_overall = top_words.overall_importance.max()
+    max_specific = top_words.importance.max()
+    max_val = max(max_overall, max_specific)
+    min_overall = top_words.overall_importance.min()
+    min_specific = top_words.importance.min()
+    min_val = min(min_overall, min_specific)
+    lower = min_val * 1.3 if min_val < 0 else 0
+    upper = max_val * 1.3
     fig.update_xaxes(
-        # range=[0, max(max_overall, max_specific) * 1.3],
-        # showticklabels=False,
+        range=[lower, upper],
+        showticklabels=False,
     )
     fig.update_yaxes(ticks="", showticklabels=False)
     fig.update_xaxes(

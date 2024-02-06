@@ -61,7 +61,7 @@ def topic_map(
 def topic_barcharts(
     model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
-    top_n: int = 30,
+    top_n: int = 5,
     n_columns: int = 4,
 ) -> go.Figure:
     """Plots most relevant words as bar charts for every topic.
@@ -84,8 +84,8 @@ def topic_barcharts(
         Bar chart of topics.
     """
     if isinstance(model, Pipeline):
-        vocab = model.steps[0].get_feature_names_out()
-        components = model.steps[-1].components_
+        vocab = model.steps[0][1].get_feature_names_out()
+        components = model.steps[-1][1].components_
     else:
         vocab = model.get_vocab()
         components = model.components_
@@ -198,12 +198,10 @@ def topic_wordclouds(
     )
     for topic_id in range(n_topics):
         top_words = prepare.calculate_top_words(
-            topic_id,
-            top_n,
-            alpha,
-            term_importances,
-            topic_term_importances,
-            topic_data["vocab"],
+            topic_id=topic_id,
+            top_n=top_n,
+            components=topic_term_importances,
+            vocab=topic_data["vocab"],
         )
         subfig = plots.wordcloud(top_words)
         row, column = (topic_id // n_columns) + 1, (topic_id % n_columns) + 1

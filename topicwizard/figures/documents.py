@@ -20,7 +20,7 @@ def document_map(
     model: Union[Pipeline, TransformerMixin],
     topic_names: Optional[List[str]] = None,
     document_names: Optional[List[str]] = None,
-    representation: Literal["term", "topic"] = "term",
+    document_representations: Optional[np.ndarray] = None,
 ) -> go.Figure:
     """Plots documents on a scatter plot based on the UMAP projections
     of their representations in the model into 2D space.
@@ -36,14 +36,10 @@ def document_map(
         topic names will be inferred.
     document_names: list of str, default None
         Names of documents to be displayed.
-    representation: {"term", "topic"}, default "term"
-        Determines which representation of the documents should be
-        projected to 2D space and displayed.
-        If 'term', representations returned from the vectorizer
-        will be used, if 'topic', representations returned by
-        the topic model will be used. This can be particularly
-        advantageous with non-bag-of-words topic models.
-        This parameter only has an effect when a pipeline is used.
+    document_representations: ndarray of shape (n_docs, n_dims), default None
+        Document representations to project into 2D space.
+        If not specified, either BoW or contextual representations
+        will be used depending on the model.
 
     Returns
     -------
@@ -55,11 +51,11 @@ def document_map(
         model=model,
         topic_names=topic_names,
         document_names=document_names,
-        representation=representation,
+        document_representations=document_representations,
     )
     x, y = prepare.document_positions(topic_data["document_representation"])
     dominant_topic = prepare.dominant_topic(topic_data["document_topic_matrix"])
-    dominant_topic = np.array(topic_names)[dominant_topic]
+    dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
     words_df = pd.DataFrame(
         dict(
             dominant_topic=dominant_topic,

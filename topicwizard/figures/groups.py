@@ -20,7 +20,7 @@ def group_map(
     model: Union[TransformerMixin, Pipeline],
     group_labels: List[str],
     topic_names: Optional[List[str]] = None,
-    representation: Literal["term", "topic"] = "term",
+    document_representations: Optional[np.ndarray] = None,
 ) -> go.Figure:
     """Plots groups on a scatter plot based on the UMAP projections
     of their representations in the model into 2D space.
@@ -36,13 +36,10 @@ def group_map(
     topic_names: list of str, default None
         List of topic names in the corpus, if not provided
         topic names will be inferred.
-    representation: {"term", "topic"}, default "term"
-        Determines which representation of the groups should be
-        projected to 2D space and displayed.
-        If 'term', representations returned from the vectorizer
-        will be used, if 'topic', representations returned by
-        the topic model will be used. This can be particularly
-        advantageous with non-bag-of-words topic models.
+    document_representations: ndarray of shape (n_docs, n_dims), default None
+        Document representations to project into 2D space.
+        If not specified, either BoW or contextual representations
+        will be used depending on the model.
 
     Returns
     -------
@@ -54,7 +51,7 @@ def group_map(
         model=model,
         topic_names=topic_names,
         group_labels=group_labels,
-        representation=representation,
+        document_representations=document_representations,
     )
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
@@ -69,10 +66,7 @@ def group_map(
         group_id_labels,
         n_groups,
     )
-    if representation == "term":
-        x, y = prepare.group_positions(group_term_importances)
-    else:
-        x, y = prepare.group_positions(group_topic_importances)
+    x, y = prepare.group_positions(group_term_importances)
     dominant_topic = prepare.dominant_topic(group_topic_importances)
     dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
     groups_df = pd.DataFrame(

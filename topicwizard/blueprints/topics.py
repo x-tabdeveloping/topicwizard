@@ -1,12 +1,9 @@
-import functools
-from typing import Any, List, Tuple
+from typing import List
 
 import dash_mantine_components as dmc
 import numpy as np
-import plotly.graph_objects as go
 from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
                                     html)
-from dash_iconify import DashIconify
 
 import topicwizard.help.topics as help
 import topicwizard.plots.topics as plots

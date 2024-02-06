@@ -180,13 +180,15 @@ def load(
     app = load_app(filename, exclude_pages=exclude_pages)
     return run_app(app, port=port)
 
+
 def filter_nan_docs(topic_data: TopicData) -> None:
     """Filters out documents, the topical content of which contains nans.
     NOTE: The function works in place.
     """
     nan_documents = np.isnan(topic_data["document_topic_matrix"]).any(axis=1)
     n_nan_docs = np.sum(nan_documents)
-    if n_nan_docs: warnings.warn(
+    if n_nan_docs:
+        warnings.warn(
             f"{n_nan_docs} documents had nan values in the output of the topic model,"
             " these are removed in preprocessing and will not be visible in the app."
         )
@@ -197,6 +199,7 @@ def filter_nan_docs(topic_data: TopicData) -> None:
         topic_data["document_term_matrix"] = topic_data["document_term_matrix"][
             ~nan_documents
         ]
+
 
 def visualize(
     corpus: Optional[List[str]] = None,

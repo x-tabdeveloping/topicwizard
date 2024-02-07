@@ -1,11 +1,14 @@
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, List, Literal, Optional
 
+import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.exceptions import NotFittedError
 from sklearn.pipeline import Pipeline, _name_estimators
 from sklearn.preprocessing import normalize
 
+from topicwizard.data import TopicData
+from topicwizard.model_interface import TopicModel
 from topicwizard.prepare.topics import infer_topic_names
 
 
@@ -25,7 +28,7 @@ def split_pipeline(
     return vectorizer, topic_model
 
 
-class TopicPipeline(Pipeline):
+class TopicPipeline(Pipeline, TopicModel):
     """Scikit-learn compatible topic pipeline.
     It assigns topic names to the output, can return DataFrames
     and validates models and vectorizers.
@@ -74,7 +77,7 @@ class TopicPipeline(Pipeline):
         memory=None,
         verbose=False,
         pandas_out=False,
-        norm_row=True,
+        norm_row=False,
         freeze=False,
     ):
         super().__init__(steps, memory=memory, verbose=verbose)
@@ -100,6 +103,27 @@ class TopicPipeline(Pipeline):
             )
         if not hasattr(self.topic_model_, "components_"):
             raise TypeError("A fitted topic model should have a components_ attribute.")
+
+    @property
+    def topic_model(self) -> BaseEstimator:
+        return self.steps[-1][1]
+
+    @property
+    def vectorizer(self) -> BaseEstimator:
+        return self.steps[0][1]
+
+    @classmethod
+    def from_pipeline(
+        cls, pipeline: Pipeline, pandas_out=False, norm_row=False, freeze=False
+    ):
+        return cls(
+            steps=pipeline.steps,
+            memory=pipeline.memory,
+            verbose=pipeline.verbose,
+            pandas_out=pandas_out,
+            norm_row=norm_row,
+            freeze=freeze,
+        )
 
     def fit(self, X: Iterable[str], y=None):
         """Fits the pipeline, infers topic names and validates that the
@@ -215,6 +239,43 @@ class TopicPipeline(Pipeline):
         else:
             self.pandas_out = False
         return self
+
+    def prepare_topic_data(
+        self,
+        corpus: List[str],
+        document_representation: Literal["term", "topic"] = "term",
+    ) -> TopicData:
+        """Prepares topic data"""
+        try:
+            print("Inferring topical content for documents.")
+            document_topic_matrix = np.asarray(self.transform(corpus))
+        except (NotFittedError, AttributeError) as e:
+            if e is NotFittedError:
+                print("Pipeline has not been fitted, fitting.")
+            if e is AttributeError:
+                print(
+                    "Looks like the topic model is transductive. Running fit_transform()"
+                )
+            document_topic_matrix = np.asarray(self.fit_transform(corpus))
+        try:
+            components = self.topic_model.components_  # type: ignore
+        except AttributeError as e:
+            raise ValueError("Topic model does not have components_ attribute.") from e
+        document_term_matrix = self.vectorizer.transform(corpus)  # type: ignore
+        vocab = self.vectorizer.get_feature_names_out()  # type: ignore
+        res = TopicData(
+            corpus=corpus,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            document_representation=document_term_matrix
+            if document_representation == "term"
+            else document_topic_matrix,
+            vocab=vocab,
+            topic_term_matrix=components,
+            transform=self.transform,
+            topic_names=self.topic_names or [],
+        )
+        return res
 
 
 def make_topic_pipeline(

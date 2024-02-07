@@ -4,15 +4,8 @@ from typing import Any, Callable, Dict, List, Optional, Set, Union
 import dash_mantine_components as dmc
 import joblib
 import numpy as np
-from dash_extensions.enrich import (
-    DashBlueprint,
-    Input,
-    Output,
-    State,
-    dcc,
-    exceptions,
-    html,
-)
+from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
+                                    exceptions, html)
 from dash_iconify import DashIconify
 from sklearn.base import TransformerMixin
 from sklearn.pipeline import Pipeline
@@ -36,7 +29,6 @@ def create_blueprint(
     topic_names: List[str],
     exclude_pages: Set[str],
     group_labels: Optional[List[str]],
-    model: Union[TransformerMixin, Pipeline],
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
@@ -172,7 +164,6 @@ def create_blueprint(
         data = dict(
             document_names=document_names,
             corpus=corpus,
-            model=model,
             topic_names=topic_names,
             group_labels=group_labels,
         )

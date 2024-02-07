@@ -3,16 +3,18 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Callable, Iterable, List, Literal, Optional, Set, Union
+import warnings
+from typing import Callable, Iterable, List, Literal, Optional, Set, Union
 
 import joblib
 import numpy as np
-from dash_extensions.enrich import Dash, DashBlueprint
-from sklearn.base import TransformerMixin
+from dash_extensions.enrich import Dash
 from sklearn.pipeline import Pipeline
 
 from topicwizard.blueprints.app import create_blueprint
-from topicwizard.blueprints.template import prepare_blueprint
+from topicwizard.data import TopicData
+from topicwizard.model_interface import TopicModel
+from topicwizard.pipeline import TopicPipeline
 
 
 def is_notebook() -> bool:
@@ -23,59 +25,26 @@ def is_colab() -> bool:
     return "google.colab" in sys.modules
 
 
-def get_app_blueprint(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    document_representations: Optional[np.ndarray] = None,
-    document_topic_matrix: Optional[np.ndarray] = None,
-    document_names: Optional[List[str]] = None,
-    topic_names: Optional[List[str]] = None,
-    *args,
-    **kwargs,
-) -> DashBlueprint:
-    blueprint = prepare_blueprint(
-        model=model,
-        corpus=corpus,
-        document_names=document_names,
-        topic_names=topic_names,
-        document_representations=document_representations,
-        document_topic_matrix=document_topic_matrix,
-        create_blueprint=create_blueprint,
-        *args,
-        **kwargs,
-    )
-    return blueprint
-
-
 PageName = Literal["topics", "documents", "words"]
 
 
 def get_dash_app(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
+    topic_data: TopicData,
     exclude_pages: Set[PageName],
-    document_representations: Optional[np.ndarray] = None,
-    document_topic_matrix: Optional[np.ndarray] = None,
     document_names: Optional[List[str]] = None,
-    topic_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
 ) -> Dash:
     """Returns topicwizard Dash application.
 
     Parameters
     ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
+    topic_data: TopicData
+        Data about topical inference.
     exclude_pages: set of {"topics", "documents", "words"}
         Pages to exclude from the app.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided, topic
-        labels will be inferred.
     group_labels: list of str or None, default None
         List of preexisting labels for the documents.
         You can pass it along if you have genre labels for example.
@@ -87,15 +56,12 @@ def get_dash_app(
     Dash
         Dash application object for topicwizard.
     """
-    blueprint = get_app_blueprint(
-        model=model,
-        corpus=corpus,
-        document_representations=document_representations,
-        document_topic_matrix=document_topic_matrix,
-        document_names=document_names,
-        topic_names=topic_names,
-        exclude_pages=exclude_pages,
+    blueprint = create_blueprint(
+        **topic_data,
+        document_names=document_names
+        or [f"Document {i}" for i, _ in enumerate(topic_data["corpus"])],
         group_labels=group_labels,
+        exclude_pages=exclude_pages,
     )
     app = Dash(
         __name__,
@@ -215,32 +181,35 @@ def load(
     return run_app(app, port=port)
 
 
-def split_pipeline(
-    vectorizer: Any, topic_model: Any, pipeline: Optional[Pipeline]
-) -> tuple[Any, Any]:
-    """Check which arguments are provided,
-    raises error if the arguments are not satisfactory, and if needed
-    splits Pipeline into vectorizer and topic model."""
-    if (vectorizer is None) or (topic_model is None):
-        if pipeline is None:
-            raise TypeError(
-                "Either pipeline, or vectorizer and topic model have to be provided"
-            )
-        _, vectorizer = pipeline.steps[0]
-        _, topic_model = pipeline.steps[-1]
-    return vectorizer, topic_model
+def filter_nan_docs(topic_data: TopicData) -> None:
+    """Filters out documents, the topical content of which contains nans.
+    NOTE: The function works in place.
+    """
+    nan_documents = np.isnan(topic_data["document_topic_matrix"]).any(axis=1)
+    n_nan_docs = np.sum(nan_documents)
+    if n_nan_docs:
+        warnings.warn(
+            f"{n_nan_docs} documents had nan values in the output of the topic model,"
+            " these are removed in preprocessing and will not be visible in the app."
+        )
+        topic_data["corpus"] = list(np.array(topic_data["corpus"])[~nan_documents])
+        topic_data["document_topic_matrix"] = topic_data["document_topic_matrix"][
+            ~nan_documents
+        ]
+        topic_data["document_term_matrix"] = topic_data["document_term_matrix"][
+            ~nan_documents
+        ]
 
 
 def visualize(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    document_representations: Optional[np.ndarray] = None,
-    document_topic_matrix: Optional[np.ndarray] = None,
+    corpus: Optional[List[str]] = None,
+    model: Optional[Union[Pipeline, TopicModel]] = None,
+    topic_data: Optional[TopicData] = None,
     document_names: Optional[List[str]] = None,
-    topic_names: Optional[List[str]] = None,
     exclude_pages: Optional[Iterable[PageName]] = None,
     group_labels: Optional[List[str]] = None,
     port: int = 8050,
+    **kwargs,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
 
@@ -248,21 +217,11 @@ def visualize(
     ----------
     corpus: iterable of str
         List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
+    model: Pipeline or TopicModel
         Bag of words topic pipeline or contextual topic model.
-    document_topic_matrix: ndarray of shape (n_documents, n_topics), default None
-        Importance of each topic for each document in a matrix.
-        If not passed (default) it is inferred from the corpus.
-    document_representations: ndarray of shape (n_documents, n_dims), default None
-        Document representations to use for displaying.
-        If None, either BoW or contextual representations are used
-        depending on the model.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided topic
-        names will be inferred.
     exclude_pages: iterable of {"topics", "documents", "words"}
         Set of pages you want to exclude from the application.
         This can be relevant as with larger corpora for example,
@@ -283,17 +242,36 @@ def visualize(
         Returns a Thread if running in a Jupyter notebook (so you can close the server)
         returns None otherwise.
     """
-    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
     print("Preprocessing")
-    if topic_names is None and hasattr(model, "topic_names"):
-        topic_names = model.topic_names  # type: ignore
+    if isinstance(model, Pipeline):
+        model = TopicPipeline.from_pipeline(model)
+    if topic_data is None:
+        if (model is None) or (corpus is None):
+            raise TypeError(
+                "Either corpus and model or topic_data has to be specified."
+            )
+        topic_data = model.prepare_topic_data(corpus, **kwargs)
+    exclude_pages = set() if exclude_pages is None else set(exclude_pages)
+    # We filter out all documents that contain nans
+    nan_documents = np.isnan(topic_data["document_topic_matrix"]).any(axis=1)
+    n_nan_docs = np.sum(nan_documents)
+    if n_nan_docs:
+        warnings.warn(
+            f"{n_nan_docs} documents had nan values in the output of the topic model,"
+            " these are removed in preprocessing and will not be visible in the app."
+        )
+        topic_data["corpus"] = list(np.array(topic_data["corpus"])[~nan_documents])
+        topic_data["document_topic_matrix"] = topic_data["document_topic_matrix"][
+            ~nan_documents
+        ]
+        topic_data["document_term_matrix"] = topic_data["document_term_matrix"][
+            ~nan_documents
+        ]
+        document_names = list(np.array(document_names)[~nan_documents])
+        group_labels = list(np.array(group_labels)[~nan_documents])
     app = get_dash_app(
-        model=model,
-        corpus=corpus,
-        document_topic_matrix=document_topic_matrix,
-        document_representations=document_representations,
+        topic_data=topic_data,
         document_names=document_names,
-        topic_names=topic_names,
         exclude_pages=exclude_pages,
         group_labels=group_labels,
     )

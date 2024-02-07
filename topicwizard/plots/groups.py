@@ -67,46 +67,34 @@ def group_map(
 
 def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
     """Plots topic importances for currently selected group."""
+    print(top_topics)
     top_topics = top_topics.sort_values("importance", ascending=True)
     text = top_topics.topic.map(lambda s: f"<b>{s}</b>")
     overlap = np.any(top_topics.overall_importance < top_topics.importance)
-    if overlap:
-        params = dict(
-            textposition="outside",
-            texttemplate=text,
-            textfont=dict(color="black"),
+    fig = go.Figure()
+    if not overlap:
+        overall_trace = go.Bar(
+            name="Summed importances over groups",
+            y=top_topics.topic,
+            x=top_topics.overall_importance,
+            orientation="h",
+            base=dict(x=[0.5, 1]),
+            marker_color="rgba(168,162,158, 0.3)",
+            marker_line=dict(color="rgb(168,162,158)", width=3),
         )
-    else:
-        params = dict()
+        fig.add_trace(overall_trace)
     topic_word_trace = go.Bar(
         name="Estimated importance in group",
         y=top_topics.topic,
         x=top_topics.importance,
+        text=text,
+        textposition="auto",
         orientation="h",
         base=dict(x=[0.5, 1]),
         marker_color=topic_colors[top_topics.topic_id],
         marker_line=dict(color="black", width=3),
-        **params,
     )
-    if overlap:
-        params = dict()
-    else:
-        params = dict(
-            textposition="outside",
-            texttemplate=text,
-            textfont=dict(color="black"),
-        )
-    overall_word_trace = go.Bar(
-        name="Overall importance",
-        y=top_topics.topic,
-        x=top_topics.overall_importance,
-        orientation="h",
-        base=dict(x=[0.5, 1]),
-        marker_color="rgba(168,162,158, 0.3)",
-        marker_line=dict(color="rgb(168,162,158)", width=3),
-        **params,
-    )
-    fig = go.Figure(data=[overall_word_trace, topic_word_trace])
+    fig.add_trace(topic_word_trace)
     fig.update_layout(
         barmode="overlay",
         plot_bgcolor="white",
@@ -124,8 +112,16 @@ def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
         ),
         margin=dict(l=0, r=0, b=18, t=0, pad=0),
     )
+    max_overall = top_topics.overall_importance.max()
+    max_specific = top_topics.importance.max()
+    max_val = max(max_overall, max_specific)
+    min_overall = top_topics.overall_importance.min()
+    min_specific = top_topics.importance.min()
+    min_val = min(min_overall, min_specific)
+    lower = min_val * 1.3 if min_val < 0 else 0
+    upper = max_val * 1.3
     fig.update_xaxes(
-        range=[0, top_topics.overall_importance.max() * 1.3],
+        range=[lower, upper],
         showticklabels=False,
     )
     fig.update_yaxes(ticks="", showticklabels=False)

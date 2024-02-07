@@ -1,5 +1,5 @@
 """External API for creating self-contained figures for groups."""
-from typing import Any, Iterable, List, Literal, Optional, Union
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -7,55 +7,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly import colors
 from plotly.subplots import make_subplots
-from sklearn.base import TransformerMixin
-from sklearn.pipeline import Pipeline
 
 import topicwizard.plots.groups as plots
 import topicwizard.prepare.groups as prepare
-from topicwizard.prepare.data import prepare_topic_data
+from topicwizard.data import TopicData
 
 
-def group_map(
-    corpus: Iterable[str],
-    model: Union[TransformerMixin, Pipeline],
-    group_labels: List[str],
-    topic_names: Optional[List[str]] = None,
-    representation: Literal["term", "topic"] = "term",
-) -> go.Figure:
-    """Plots groups on a scatter plot based on the UMAP projections
-    of their representations in the model into 2D space.
-
-    Parameters
-    ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    group_labels: list of str
-        List of group labels for each document.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
-    representation: {"term", "topic"}, default "term"
-        Determines which representation of the groups should be
-        projected to 2D space and displayed.
-        If 'term', representations returned from the vectorizer
-        will be used, if 'topic', representations returned by
-        the topic model will be used. This can be particularly
-        advantageous with non-bag-of-words topic models.
-
-    Returns
-    -------
-    go.Figure
-        Map of groups.
-    """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-        group_labels=group_labels,
-        representation=representation,
-    )
+def group_map(topic_data: TopicData, group_labels: List[str]) -> go.Figure:
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -69,10 +27,7 @@ def group_map(
         group_id_labels,
         n_groups,
     )
-    if representation == "term":
-        x, y = prepare.group_positions(group_term_importances)
-    else:
-        x, y = prepare.group_positions(group_topic_importances)
+    x, y = prepare.group_positions(group_term_importances)
     dominant_topic = prepare.dominant_topic(group_topic_importances)
     dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
     groups_df = pd.DataFrame(
@@ -104,42 +59,8 @@ def group_map(
 
 
 def group_topic_barcharts(
-    corpus: Iterable[str],
-    model: Union[Pipeline, TransformerMixin],
-    group_labels: List[str],
-    topic_names: Optional[List[str]] = None,
-    top_n: int = 5,
-    n_columns: int = 4,
-) -> go.Figure:
-    """Plots topic importance barcharts for all groups.
-
-    Parameters
-    ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    group_labels: list of str
-        List of group labels for each document.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
-    top_n: int, default 5
-        Number of top topics to display for a given group.
-    n_columns: int, default 4
-        Number of columns allowed in the subplot grid.
-
-    Returns
-    -------
-    go.Figure
-        Topic importance barcharts for all groups.
-    """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-        group_labels=group_labels,
-    )
+    topic_data: TopicData, group_labels: List[str], top_n: int = 5, n_columns: int = 4
+):
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -213,42 +134,8 @@ def group_topic_barcharts(
 
 
 def group_wordclouds(
-    corpus: Iterable[str],
-    model: Union[TransformerMixin, Pipeline],
-    group_labels: List[str],
-    topic_names: Optional[List[str]] = None,
-    top_n: int = 30,
-    n_columns: int = 4,
+    topic_data: TopicData, group_labels: List[str], top_n: int = 30, n_columns: int = 4
 ) -> go.Figure:
-    """Displays wordclouds for each of the groups based on word frequencies.
-
-    Parameters
-    ----------
-    corpus: iterable of str
-        List of all works in the corpus you intend to visualize.
-    model: Pipeline or TransformerMixin
-        Bow topic pipeline or contextual topic model.
-    group_labels: list of str
-        List of group labels for each document.
-    topic_names: list of str, default None
-        List of topic names in the corpus, if not provided
-        topic names will be inferred.
-    top_n: int, default 30
-        Number of top topics to display for a given group.
-    n_columns: int, default 6
-        Number of columns allowed in the subplot grid.
-
-    Returns
-    -------
-    go.Figure
-        Topic importance barcharts for all groups.
-    """
-    topic_data = prepare_topic_data(
-        corpus=corpus,
-        model=model,
-        topic_names=topic_names,
-        group_labels=group_labels,
-    )
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]

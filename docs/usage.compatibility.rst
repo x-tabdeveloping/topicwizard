@@ -80,6 +80,66 @@ You can either produce a TopicData object with this model or use it directly in 
 .. autoclass:: topicwizard.compatibility.bertopic.BERTopicWrapper
    :members:
 
+
+Top2Vec
+^^^^^^^^
+
+We do not provide support for direct usage of Top2Vec models,
+since Top2Vec models can be represented exactly in terms of Turftopic's abstractions.
+
+We therefore recommend that if you intend to use Top2Vec models, construct a model from scratch in Turftopic.
+
+.. code-block:: bash
+
+   pip install turftopic
+   pip install umap-learn
+   pip install scikit-learn>=1.3.0
+
+.. code-block:: python
+
+   from turftopic import ClusteringTopicModel
+   from sklearn.cluster import HDBSCAN
+   import umap
+
+   # This has the exact same behaviour as Top2Vec models.
+   top2vec = ClusteringTopicModel(
+       dimensionality_reduction=umap.UMAP(
+           n_neighbors=15,
+           n_components=5,
+           metric="cosine"
+       ),
+       clustering=HDBSCAN(
+           min_cluster_size=15,
+           metric="euclidean",
+           cluster_selection_method="eom",
+       ),
+       feature_importance="centroid",
+   )
+
+   topicwizard.visualize(corpus, model=top2vec)
+
+.. note::
+   
+   Writing a wrapper for Top2Vec models shouldn't be too hard, but we do not intend on maintaining one.
+
+CTM
+^^^^^^^^
+
+CTM models are not supported out of the box, because CTM's behaviour can be replicated using AutoEncodingTopicModel from Turftopic.
+
+.. code-block:: python
+
+   from turftopic import AutoEncodingTopicModel
+
+   zeroshot_tm = AutoEncodingTopicModel(10, combined=False)
+   combined_tm = AutoEncodingTopicModel(10, combined=True)
+
+   topicwizard.visualize(corpus, model=zeroshot_tm)
+
+.. note::
+   
+   Writing a wrapper for CTM models shouldn't be too hard, but we do not intend on maintaining one.
+
 Custom Topic Models
 ^^^^^^^^^^^^^^^^^^^^^^^^
 

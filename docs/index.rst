@@ -46,7 +46,7 @@ The easiest and most sensible way to visualize is with the topicwizard web appli
 
    import topicwizard
 
-   topicwizard.visualize(texts, pipeline=topic_pipeline)
+   topicwizard.visualize(texts, model=topic_pipeline)
 
 .. image:: _static/screenshot_topics.png
     :width: 800
@@ -60,7 +60,9 @@ Here is an example of how you can visualize words' relations to each other in a 
    
    from topicwizard.figures import word_map
 
-   word_map(corpus=texts, pipeline=pipeline)
+   topic_data = topic_pipeline.prepare_topic_data(corpus)
+
+   word_map(topic_data)
 
 
 .. raw:: html
@@ -69,24 +71,28 @@ Here is an example of how you can visualize words' relations to each other in a 
 This will open a new browser tab in which you can investigate topic models visually.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: User guide
+   :maxdepth: 1
+   :caption: Models and Data
 
    usage.pipelines
-   application
-   usage.topics
-   usage.words
-   usage.documents
-   usage.groups
-   usage.persistence
+   usage.contextual_models
+   topic_data
    usage.compatibility
-   usage.deployment
 
 .. toctree::
-   :maxdepth: 2
-   :caption: API reference
+   :maxdepth: 1
+   :caption: Interpretation and Usage
 
-   api_reference
+   application
+   figures
+
+.. toctree::
+   :maxdepth: 1
+   :caption: MLOps
+
+   usage.persistence
+   usage.deployment
+
 
 .. toctree::
    GitHub Repository <https://github.com/x-tabdeveloping/topic-wizard>

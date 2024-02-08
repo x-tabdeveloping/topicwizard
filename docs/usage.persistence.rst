@@ -9,12 +9,36 @@ You can persist your results by clicking on the download button right next to th
     :width: 200
     :alt: Download button.
 
-This will serialize all the necessary data for you to save the topic model and the topic names into a joblib file.
+This will serialize all inference information into a `TopicData <topic data>`_ object,
+including the topic names you have specified while using the application.
 
-Then you can load this data in another script and start the app from the persisted data.
+This is virtually equivalent to saving the TopicData on the server directly,
+using the prepare_topic_data() method of compatible models or `TopicPipelines <usage pipelines>`_,
+except for manually assigned topic names.
+
+Serialization is done with `joblib <https://joblib.readthedocs.io/en/stable/>`_.
 
 .. code-block:: python
 
-    import topicwizard
+   from turftopic import KeyNMF
+   import joblib
 
-    topicwizard.load(filename="topic_data.joblib")
+   model = KeyNMF(10)
+   topic_data = model.prepare_topic_data(corpus)
+
+   joblib.dump(topic_data, "topic_data.joblib")
+
+
+Then this data can be loaded again using joblib.
+
+.. code-block:: python
+
+   import topicwizard
+   # We import this only for type checking
+   from topicwizard.data import TopicData
+   import joblib
+
+   topic_data: TopicData = joblib.load("topic_data.joblib")
+
+   topicwizard.visualize(topic_data=topic_data)
+

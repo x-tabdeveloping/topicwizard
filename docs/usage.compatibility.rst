@@ -81,6 +81,9 @@ Then you need to create a pipeline with topicwizard.
 Custom Topic Models
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+Classical Models with TopicPipeline
+-----------------------------------
+
 You can write topic models, which are compatible with topicwizard.
 If you have a topic model, which rests on the bag-of-words assumption this is
 a fairly straightforward task.
@@ -127,4 +130,24 @@ Topic model components should follow the following structure:
        @property
        def components_(self) -> np.ndarray:
            pass
+
+
+Any Model / Contextual Models
+-----------------------------
+
+Contextual models have to follow the following interface, and have to be able to produce a TopicData objects:
+
+.. code-block:: python
+
+   from topicwizard.model_interface import TopicModel
+   from topicwizard.data import TopicData
+
+   # TopicModel is only a Protocol, the model inferits no behaviour,
+   # it just provides static checks
+   class CustomTopicModel(TopicModel):
+      def prepare_topic_data(
+          self,
+          corpus: list[str],
+      ) -> TopicData:
+          pass
 

@@ -1,13 +1,16 @@
 .. _usage pipelines:
 
-Pipelines
-=============
+Classical Topic Models
+======================
 
-topicwizard uses the idea of a topic pipeline as its main abstraction to understand topic models.
-Most of topicwizard's code relies on the assumption that any topic model consists of a pipeline
-of a vectorizer component, and some sort of a decomposition model.
+topicwizard uses the idea of a topic pipeline as its main abstraction to understand classical topic models.
+
+Classical topic models (aka. ones that make the bag-of-words assumption) in Scikit-learn typically consist of a vectorizer,
+optional weighting and a topic model that only operates on the BoW representations.
+
 One can either use a regular sklearn Pipeline, or topicwizards own abstraction, TopicPipeline.
 
+In the app, all pipelines get turned into TopicPipelines, functionally there is no difference between the two.
 
 Vectorizer
 ----------
@@ -77,6 +80,14 @@ use in downstream tasks and model interpretation.
    from topicwizard.pipeline import make_topic_pipeline
 
    topic_pipeline = make_topic_pipeline(vectorizer, model)
+
+You can also convert an already existent Pipeline to a TopicPipeline:
+
+.. code-block:: python
+
+   from topicwizard.pipeline import TopicPipeline
+
+   topic_pipeline = TopicPipeline.from_pipeline(pipeline)
 
 Named Outputs
 ^^^^^^^^^^^^^^^^^^^^
@@ -195,3 +206,8 @@ Validation
 TopicPipeline validates whether the passed components are appropriate to use as a topic model in topicwizard
 unlike a regular scikit-learn pipeline.
 
+API Reference
+-------------
+
+.. autoclass:: topicwizard.pipeline.TopicPipeline
+   :members:

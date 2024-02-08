@@ -2,25 +2,18 @@ Deployment
 ============
 
 Since topicwizard is technically just like any Dash application you can easily deploy topicwizard
-to a cloud probvider or your own servers.
+to a cloud provider or your own servers.
 
-You can either create the app from scratch with a trained topic pipeline.
+If you have access to a TopicData object, you can build a Dash application, that can be used to spin up a server.
 
 .. code-block:: python
 
     # main.py
     import topicwizard
 
-    app = topicwizard.get_dash_app(vectorizer, topic_model, corpus=corpus)
+    app = topicwizard.get_dash_app(topic_data)
 
-Or you can retrieve an app from loaded data.
-
-.. code-block:: python
-
-    # main.py
-    app = topicwizard.load_app(filename="topic_data.joblib")
-
-Then you can run the server from the file manually:
+Then you can run the server from a main file manually:
 
 .. code-block:: python
     

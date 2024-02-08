@@ -29,6 +29,8 @@ This means that if you have a TopicData object from some corpus and some topic m
    # Beware that topic_data is a keyword argument
    topicwizard.visualize(topic_data=topic_data)
 
+API Reference
+-------------
 
 .. autoclass:: topicwizard.data.TopicData
    :members:

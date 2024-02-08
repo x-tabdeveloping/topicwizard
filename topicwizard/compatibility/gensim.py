@@ -6,6 +6,8 @@ import scipy.sparse as spr
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline, make_pipeline
 
+from topicwizard.pipeline import TopicPipeline, make_topic_pipeline
+
 
 class DictionaryVectorizer(BaseEstimator):
     """Wrapper for Gensim's dictionary object as an sklearn compatible vectorizer object.
@@ -179,7 +181,7 @@ class TopicModelWrapper(BaseEstimator):
         return self.transform(X)
 
 
-def gensim_pipeline(dictionary, model) -> Pipeline:
+def gensim_pipeline(dictionary, model) -> TopicPipeline:
     """Creates sklearn compatible wrapper for a Gensim topic pipeline.
 
     Parameters
@@ -197,4 +199,4 @@ def gensim_pipeline(dictionary, model) -> Pipeline:
     """
     vectorizer = DictionaryVectorizer(dictionary)
     topic_model = TopicModelWrapper(model=model, index_to_key=vectorizer.index_to_key)
-    return make_pipeline(vectorizer, topic_model)
+    return make_topic_pipeline(vectorizer, topic_model)

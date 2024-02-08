@@ -33,3 +33,17 @@ We will build a Semantic Signal Separation model, and visualize it with the topi
 
     # Or you can run the app directly with the model and a corpus
     topicwizard.visualize(corpus, model=model)
+
+BERTopic models have to be wrapped in a compatibility layer to be used:
+
+
+.. code-block:: python
+
+    from bertopic import BERTopic
+    from topicwizard.compatibility import BERTopicWrapper
+
+    # The model can be fitted or not.
+    model = BERTopic()
+    wrapped_model = BERTopicWrapper(model)
+
+    topicwizard.visualize(corpus, model=wrapped_model)

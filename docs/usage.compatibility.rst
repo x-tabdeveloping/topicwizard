@@ -34,49 +34,51 @@ Then you need to create a pipeline with topicwizard.
 .. code-block:: python
 
    import topicwizard
+   from topicwizard.compatibility import gensim_pipeline
 
-   pipeline = topicwizard.gensim_pipeline(dictionary, model=lda)
+   pipeline = gensim_pipeline(dictionary, model=lda)
    # Then you can use the pipeline as usual
    corpus = [" ".join(text) for text in texts]
    topicwizard.visualize(pipeline=pipeline, corpus=corpus)
+
+.. autofunction:: topicwizard.compatibility.gensim.gensim_pipeline
 
 BERTopic
 ^^^^^^^^
 
 You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.
 
-First you need to train a BERTopic topic model.
+First you need to construct a BERTopic model.
+The model does not have to be pretrained. If you don't train it, it will be automatically fitted when running the app.
 
-.. code-block:: python
-
-    from bertopic import BERTopic
-
-    model = BERTopic(corpus)
-
-Then you need to create a pipeline with topicwizard.
-
-.. code-block:: python
-
-   import topicwizard
-
-   # BERTopic automatically assigns topic names, you can use these
-   # in topicwizard
-   pipeline = topicwizard.bertopic_pipeline(model)
-
-   # Then you can use the pipeline as usual
-   topicwizard.visualize(pipeline=pipeline, corpus=corpus)
+BERTopic models have to be wrapped in a compatibility layer to be used with topicwizard.
 
 .. note::
-   BERTopic compatibility is an experimental feature in topicwizard.
-   Most of topicwizard rests on the bag of words assumption, and two-step topic
-   pipelines, which BERTopic does not conform to.
-   Document and word positions for example are solely based on c-TF-IDF representations,
-   not on the contextual embeddings in BERTopic.
 
-   If you find that the results are unsatisfactory, we recommend that you use BERTopic's
-   own excellent visualizations. (They are honestly pretty great :))
-   In the future there is a possiblity of a BERTopic-specific visualization dashboard.
+   BERTopic models are now first-class citizens of topicwizard, and have native support.
 
+.. code-block:: python
+
+   from bertopic import BERTopic
+   from topicwizard.compatibility import BERTopicWrapper
+
+   model = BERTopic(language="english")
+   wrapped_model = BERTopicWrapper(model)
+
+You can either produce a TopicData object with this model or use it directly in the web app.
+
+.. code-block:: python
+   
+   import topicwizard
+
+   # Start the web app immediately
+   topicwizard.visualize(corpus, model=wrapped_model)
+   
+   # Or produce a TopicData object for persistance or figures.
+   topic_data = wrapped_model.prepare_topic_data(corpus)
+
+.. autoclass:: topicwizard.compatibility.bertopic.BERTopicWrapper
+   :members:
 
 Custom Topic Models
 ^^^^^^^^^^^^^^^^^^^^^^^^

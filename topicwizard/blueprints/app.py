@@ -1,5 +1,5 @@
 from io import BytesIO
-from typing import Any, Callable, Dict, List, Optional, Set, Union
+from typing import Callable, Dict, List, Optional, Set
 
 import dash_mantine_components as dmc
 import joblib
@@ -7,14 +7,13 @@ import numpy as np
 from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
                                     exceptions, html)
 from dash_iconify import DashIconify
-from sklearn.base import TransformerMixin
-from sklearn.pipeline import Pipeline
 
 import topicwizard.blueprints.documents as documents
 import topicwizard.blueprints.groups as groups
 import topicwizard.blueprints.topics as topics
 import topicwizard.blueprints.words as words
 from topicwizard.blueprints.template import create_blank_page
+from topicwizard.data import TopicData
 
 
 def create_blueprint(
@@ -158,14 +157,18 @@ def create_blueprint(
         Input("download_button", "n_clicks"),
         State("topic_names", "data"),
     )
-    def download_data(n_clicks: int, topic_names: List[str]) -> Dict:
+    def download_data(n_clicks: int, topic_names: List[str]):
         if not n_clicks:
             raise exceptions.PreventUpdate
-        data = dict(
-            document_names=document_names,
+        data = TopicData(
             corpus=corpus,
+            vocab=vocab,
+            document_term_matrix=document_term_matrix,
+            document_topic_matrix=document_topic_matrix,
+            topic_term_matrix=topic_term_matrix,
+            document_representation=document_representation,
+            transform=transform,
             topic_names=topic_names,
-            group_labels=group_labels,
         )
 
         def write_joblib(bytes_io: BytesIO):

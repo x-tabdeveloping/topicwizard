@@ -30,7 +30,7 @@ PageName = Literal["topics", "documents", "words"]
 
 def get_dash_app(
     topic_data: TopicData,
-    exclude_pages: Set[PageName],
+    exclude_pages: Optional[Set[PageName]] = None,
     document_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
 ) -> Dash:
@@ -40,7 +40,7 @@ def get_dash_app(
     ----------
     topic_data: TopicData
         Data about topical inference.
-    exclude_pages: set of {"topics", "documents", "words"}
+    exclude_pages: set of {"topics", "documents", "words"}, optional
         Pages to exclude from the app.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
@@ -56,6 +56,8 @@ def get_dash_app(
     Dash
         Dash application object for topicwizard.
     """
+    if exclude_pages is None:
+        exclude_pages = set()
     blueprint = create_blueprint(
         **topic_data,
         document_names=document_names

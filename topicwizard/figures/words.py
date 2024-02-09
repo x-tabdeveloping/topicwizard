@@ -22,6 +22,8 @@ def word_map(
 
     Parameters
     ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
     z_threshold: float, default 2.0
         Z-score frequency threshold over which words get labels on the
         plot. The default roughly corresponds to 95% percentile
@@ -30,11 +32,6 @@ def word_map(
         If you find not enough words have labels, lower this number
         if you find there is too much clutter on your graph,
         change this to something higher.
-
-    Returns
-    -------
-    go.Figure
-        Map of words.
     """
     x, y = prepare.word_positions(topic_data["topic_term_matrix"])
     word_frequencies = prepare.word_importances(topic_data["document_term_matrix"])
@@ -85,19 +82,15 @@ def word_association_barchart(
 
     Parameters
     ----------
-    words: list of str or str
+    topic_data: TopicData
+        Inference data from topic modeling.
+    words: list[str] or str
         Words you want to start the association from.
     n_association: int, default 0
         Number of words to associate with the given words.
         None get displayed by default.
     top_n: int = 20
         Top N topics to display.
-
-    Returns
-    -------
-    go.Figure
-        Bar chart of most important topics for the given words and
-        their associations.
     """
     if isinstance(words, str):
         words = [words]

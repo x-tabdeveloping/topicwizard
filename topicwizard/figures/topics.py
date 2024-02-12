@@ -109,7 +109,6 @@ def topic_barcharts(
 def topic_wordclouds(
     topic_data: TopicData,
     top_n: int = 30,
-    alpha: float = 1.0,
     n_columns: int = 4,
 ) -> go.Figure:
     """Plots most relevant words as word clouds for every topic.
@@ -120,11 +119,6 @@ def topic_wordclouds(
         Inference data from topic modeling.
     top_n: int, default 30
         Specifies the number of words to show for each topic.
-    alpha: float, default 1.0
-        Specifies relevance metric for obtaining the most relevant
-        words. Has to be in range (0.0, 1.0).
-        Numbers closer to zero will yield words that are more
-        exclusive to the given topic.
     n_columns: int, default 4
         Number of columns in the subplot grid.
     """

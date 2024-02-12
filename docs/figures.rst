@@ -28,7 +28,8 @@ You can display a semantic map of topics in your model.
 
 
 .. raw:: html
-   :file: _static/plots/topic_map.html
+
+    <iframe src="_static/plots/topic_map.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.topic_map
 
@@ -51,7 +52,8 @@ If you find that too many words get displayed, you can reduce that with the top_
    topic_barcharts(topic_data, top_n=5)
 
 .. raw:: html
-   :file: _static/plots/topic_barcharts.html
+
+    <iframe src="_static/plots/topic_barcharts.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.topic_barcharts
 
@@ -69,7 +71,8 @@ You can specify the relevance metric with the alpha keyword parameter.
 
 
 .. raw:: html
-   :file: _static/plots/topic_wordclouds.html
+
+   <iframe src="_static/plots/topic_wordclouds.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.topic_wordclouds
 
@@ -93,7 +96,8 @@ the individual words for inspection.
 
 
 .. raw:: html
-   :file: _static/plots/word_map.html
+
+   <iframe src="_static/plots/word_map.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.word_map
 
@@ -115,7 +119,8 @@ do so:
 
 
 .. raw:: html
-   :file: _static/plots/word_association_barchart.html
+
+   <iframe src="_static/plots/word_association_barchart.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.word_association_barchart
 
@@ -139,7 +144,8 @@ Different topics are clearly outlined with discrete colors.
 
 
 .. raw:: html
-   :file: _static/plots/document_map_term.html
+
+   <iframe src="_static/plots/document_map.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.document_map
 
@@ -154,11 +160,12 @@ You can display topic distributions for a given document or list of documents on
 
    document_topic_distribution(
        topic_data,
-       "Joe Biden takes over presidential office from Donald Trump.",
+       "New cure against type 2 diabetes in development.",
    )
 
 .. raw:: html
-   :file: _static/plots/document_topic_distribution.html
+
+   <iframe src="_static/plots/document_topic_distribution.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.document_topic_distribution
 
@@ -175,11 +182,12 @@ You can specify window and step size in number of tokens if you find the results
 
    document_topic_timeline(
        topic_data,
-       "Joe Biden takes over presidential office from Donald Trump.",
+       "New cure against type 2 diabetes in development.",
    )
 
 .. raw:: html
-   :file: _static/plots/document_topic_timeline.html
+
+   <iframe src="_static/plots/document_topic_timeline.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.document_topic_timeline
 
@@ -197,8 +205,8 @@ You can display the group map as a standalone plot, with the groups being colore
 
 
 .. raw:: html
-   :file: _static/plots/group_map_term.html
 
+   <iframe src="_static/plots/group_map.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.group_map
 
@@ -215,7 +223,8 @@ These will be displayed as bar charts.
    group_topic_barcharts(corpus, group_labels, pipeline=pipeline, top_n=5)
 
 .. raw:: html
-   :file: _static/plots/group_topic_barcharts.html
+
+   <iframe src="_static/plots/group_topic_barcharts.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.group_topic_barcharts
 
@@ -232,6 +241,7 @@ You can create word clouds for each of the group labels. This will only take wor
 
 
 .. raw:: html
-   :file: _static/plots/group_wordclouds.html
+
+   <iframe src="_static/plots/group_wordclouds.html" width="800px" height="600px"></iframe>
 
 .. autofunction:: topicwizard.figures.group_wordclouds

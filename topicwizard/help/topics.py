@@ -67,9 +67,6 @@ TOPIC_WORDS = [
         along with a wordcloud displaying the most relevant words for the selected topic.
         """
     ),
-    dmc.Text(
-        "Words are ordered by a relevance metric computed using the Lambda value that can be selected on the slider."
-    ),
     dmc.Title("How are importances calculated?", order=4),
     dmc.Text(
         """
@@ -81,11 +78,7 @@ TOPIC_WORDS = [
             [
                 html.Tr(
                     [
-                        html.Td(
-                            dcc.Markdown(
-                                "$w_{k_i} = t_i \\cdot \\phi_{k_i}$", mathjax=True
-                            )
-                        ),
+                        html.Td(dcc.Markdown("$w_{k_i} = \\phi_{k_i}$", mathjax=True)),
                         html.Td("Importance of word k for topic i."),
                     ]
                 ),
@@ -99,38 +92,11 @@ TOPIC_WORDS = [
                 ),
                 html.Tr(
                     [
-                        html.Td(dcc.Markdown("$t_i$", mathjax=True)),
-                        html.Td("Importance of topic i. (see other helper)"),
-                    ]
-                ),
-                html.Tr(
-                    [
                         html.Td(dcc.Markdown("$\\phi$", mathjax=True)),
                         html.Td("Topic-term matrix from the model."),
                     ]
                 ),
             ],
         )
-    ),
-    dmc.Title("How is relevance calculated?", order=4),
-    dmc.Text("Relevances are calculated as follows (from the LDAvis paper):"),
-    dmc.Table(
-        html.Tbody(
-            [
-                html.Tr(
-                    [
-                        html.Td(
-                            dcc.Markdown(
-                                "$r_{k_i} = \\lambda \\cdot log (w_{k_i}) + (1 - \\lambda) \\cdot \\frac{log(w_{k_i})}{log(w_k)}$",
-                                mathjax=True,
-                            )
-                        ),
-                    ]
-                ),
-            ],
-        )
-    ),
-    dmc.Text(
-        "Lower lambda values will result in more specific results in the given topic."
     ),
 ]

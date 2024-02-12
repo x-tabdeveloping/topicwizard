@@ -43,11 +43,11 @@ html_theme_options = {
     "dark_logo": "icon.svg",
     "light_css_variables": {
         "color-api-name": "#28a4df",
-        "color-api-pre-name": "#ffa671",
+        "color-api-pre-name": "#0205cc",
     },
     "dark_css_variables": {
         "color-api-name": "#28a4df",
-        "color-api-pre-name": "#ffa671",
+        "color-api-pre-name": "#aaacff",
     },
 }
 

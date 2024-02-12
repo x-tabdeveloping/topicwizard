@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Web Application" href="application.html" /><link rel="prev" title="Getting Started" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Contextually Sensitive Topic Models" href="usage.contextual_models.html" /><link rel="prev" title="Getting Started" href="index.html" />
 
     <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Pipelines - topicwizard</title>
+        <title>Classical Topic Models - topicwizard</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -19,7 +19,7 @@
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #0205cc;
   
   }
   @media not print {
@@ -27,7 +27,7 @@
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
     }
     @media (prefers-color-scheme: dark) {
@@ -35,7 +35,7 @@
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
       }
     }
@@ -164,21 +164,22 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Models and Data</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.words.html">Investigating Words</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.documents.html">Investigating Documents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.groups.html">Investigating Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Classical Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.contextual_models.html">Contextually Sensitive Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topic_data.html">Topic Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.compatibility.html">Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Interpretation and Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="figures.html">Individual Figures</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLOps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/x-tabdeveloping/topic-wizard">GitHub Repository</a></li>
@@ -216,12 +217,13 @@
           </label>
         </div>
         <article role="main">
-          <section id="pipelines">
-<span id="usage-pipelines"></span><h1>Pipelines<a class="headerlink" href="#pipelines" title="Link to this heading">#</a></h1>
-<p>topicwizard uses the idea of a topic pipeline as its main abstraction to understand topic models.
-Most of topicwizard’s code relies on the assumption that any topic model consists of a pipeline
-of a vectorizer component, and some sort of a decomposition model.
-One can either use a regular sklearn Pipeline, or topicwizards own abstraction, TopicPipeline.</p>
+          <section id="classical-topic-models">
+<span id="usage-pipelines"></span><h1>Classical Topic Models<a class="headerlink" href="#classical-topic-models" title="Link to this heading">#</a></h1>
+<p>topicwizard uses the idea of a topic pipeline as its main abstraction to understand classical topic models.</p>
+<p>Classical topic models (aka. ones that make the bag-of-words assumption) in Scikit-learn typically consist of a vectorizer,
+optional weighting and a topic model that only operates on the BoW representations.</p>
+<p>One can either use a regular sklearn Pipeline, or topicwizards own abstraction, TopicPipeline.</p>
+<p>In the app, all pipelines get turned into TopicPipelines, functionally there is no difference between the two.</p>
 <section id="vectorizer">
 <h2>Vectorizer<a class="headerlink" href="#vectorizer" title="Link to this heading">#</a></h2>
 <p>The vectorizer is a component that turns texts into bag-of-words vectors.
@@ -280,6 +282,12 @@ use in downstream tasks and model interpretation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.pipeline</span> <span class="kn">import</span> <span class="n">make_topic_pipeline</span>
 
 <span class="n">topic_pipeline</span> <span class="o">=</span> <span class="n">make_topic_pipeline</span><span class="p">(</span><span class="n">vectorizer</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also convert an already existent Pipeline to a TopicPipeline:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.pipeline</span> <span class="kn">import</span> <span class="n">TopicPipeline</span>
+
+<span class="n">topic_pipeline</span> <span class="o">=</span> <span class="n">TopicPipeline</span><span class="o">.</span><span class="n">from_pipeline</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="named-outputs">
@@ -456,6 +464,174 @@ This is useful if you want to treat importances as probabilities in calculations
 unlike a regular scikit-learn pipeline.</p>
 </section>
 </section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.pipeline.</span></span><span class="sig-name descname"><span class="pre">TopicPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">BaseEstimator</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pandas_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline" title="Link to this definition">#</a></dt>
+<dd><p>Scikit-learn compatible topic pipeline.
+It assigns topic names to the output, can return DataFrames
+and validates models and vectorizers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>) – Estimators in the pipeline. The first one has to
+be an sklearn compatible vectorizer, the last one
+has to be an sklearn compatible topic model.</p></li>
+<li><p><strong>memory</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">joblib.Memory</span> <span class="pre">interface</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Used to cache the fitted transformers of the pipeline. The last step
+will never be cached, even if it is a transformer. By default, no
+caching is performed. If a string is given, it is the path to the
+caching directory. Enabling caching triggers a clone of the transformers
+before fitting. Therefore, the transformer instance given to the
+pipeline cannot be inspected directly. Use the attribute <code class="docutils literal notranslate"><span class="pre">named_steps</span></code>
+or <code class="docutils literal notranslate"><span class="pre">steps</span></code> to inspect estimators within the pipeline. Caching the
+transformers is advantageous when fitting is time consuming.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, the time elapsed while fitting each step will be printed as it
+is completed.</p></li>
+<li><p><strong>pandas_out</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, transform() will return a DataFrame.</p></li>
+<li><p><strong>norm_row</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If True, every row in transform() will be sum-normalized so that
+they can be interpreted as probabilities.</p></li>
+<li><p><strong>freeze</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>) – If True, components of the pipeline will not be fitted when fit()
+is called. This is good for downstream uses of the topic model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.topic_names">
+<span class="sig-name descname"><span class="pre">topic_names</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.topic_names" title="Link to this definition">#</a></dt>
+<dd><p>Inferred names of topics. Can be changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.vectorizer_">
+<span class="sig-name descname"><span class="pre">vectorizer_</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.vectorizer_" title="Link to this definition">#</a></dt>
+<dd><p>Vectorizer model in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.topic_model_">
+<span class="sig-name descname"><span class="pre">topic_model_</span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.topic_model_" title="Link to this definition">#</a></dt>
+<dd><p>Topic model in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.fit" title="Link to this definition">#</a></dt>
+<dd><p>Fits the pipeline, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">self</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.partial_fit">
+<span class="sig-name descname"><span class="pre">partial_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.partial_fit" title="Link to this definition">#</a></dt>
+<dd><p>Fits the pipeline on a batch, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fitted pipeline.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">self</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.transform" title="Link to this definition">#</a></dt>
+<dd><p>Turns texts into a document-topic matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – List of documents.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Document-topic importance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_topics)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.get_feature_names_out">
+<span class="sig-name descname"><span class="pre">get_feature_names_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.get_feature_names_out" title="Link to this definition">#</a></dt>
+<dd><p>Returns names of topics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.fit_transform">
+<span class="sig-name descname"><span class="pre">fit_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.fit_transform" title="Link to this definition">#</a></dt>
+<dd><p>Fits the pipeline, infers topic names and validates that the
+individual estimators are indeed a vectorizer and a topic model.
+Then turns texts into a document-topic matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Texts to fit the model on.</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Ignored, exists for compatibility.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Document-topic importance matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">array</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_topics)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.set_output">
+<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.set_output" title="Link to this definition">#</a></dt>
+<dd><p>You can set the output of the pipeline to be a pandas dataframe.
+If you pass ‘pandas’ it will do this, otherwise it will disable pandas output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.pipeline.TopicPipeline.prepare_topic_data">
+<span class="sig-name descname"><span class="pre">prepare_topic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_representation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'term'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'topic'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'term'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></span><a class="headerlink" href="#topicwizard.pipeline.TopicPipeline.prepare_topic_data" title="Link to this definition">#</a></dt>
+<dd><p>Prepares topic data</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -463,12 +639,12 @@ unlike a regular scikit-learn pipeline.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="application.html">
+          <a class="next-page" href="usage.contextual_models.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Web Application</div>
+                <div class="title">Contextually Sensitive Topic Models</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -513,7 +689,7 @@ unlike a regular scikit-learn pipeline.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Pipelines</a><ul>
+<li><a class="reference internal" href="#">Classical Topic Models</a><ul>
 <li><a class="reference internal" href="#vectorizer">Vectorizer</a></li>
 <li><a class="reference internal" href="#topic-model">Topic Model</a></li>
 <li><a class="reference internal" href="#pipeline">Pipeline</a></li>
@@ -523,6 +699,22 @@ unlike a regular scikit-learn pipeline.</p>
 <li><a class="reference internal" href="#output-as-dataframe">Output as DataFrame</a></li>
 <li><a class="reference internal" href="#pseudoprobabilites">Pseudoprobabilites</a></li>
 <li><a class="reference internal" href="#validation">Validation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline"><code class="docutils literal notranslate"><span class="pre">TopicPipeline</span></code></a><ul>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.topic_names"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.topic_names</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.vectorizer_"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.vectorizer_</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.topic_model_"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.topic_model_</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.fit"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.fit()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.partial_fit"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.partial_fit()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.transform"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.transform()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.get_feature_names_out"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.get_feature_names_out()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.fit_transform"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.fit_transform()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.set_output"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.set_output()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.pipeline.TopicPipeline.prepare_topic_data"><code class="docutils literal notranslate"><span class="pre">TopicPipeline.prepare_topic_data()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

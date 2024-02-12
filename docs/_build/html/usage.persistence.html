@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Compatibility" href="usage.compatibility.html" /><link rel="prev" title="Investigating Groups" href="usage.groups.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Deployment" href="usage.deployment.html" /><link rel="prev" title="Individual Figures" href="figures.html" />
 
     <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Persistence - topicwizard</title>
@@ -19,7 +19,7 @@
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #0205cc;
   
   }
   @media not print {
@@ -27,7 +27,7 @@
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
     }
     @media (prefers-color-scheme: dark) {
@@ -35,7 +35,7 @@
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
       }
     }
@@ -164,21 +164,22 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.words.html">Investigating Words</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.documents.html">Investigating Documents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.groups.html">Investigating Groups</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Persistence</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.compatibility.html">Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Models and Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Classical Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.contextual_models.html">Contextually Sensitive Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topic_data.html">Topic Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.compatibility.html">Compatibility</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Interpretation and Usage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="figures.html">Individual Figures</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLOps</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/x-tabdeveloping/topic-wizard">GitHub Repository</a></li>
@@ -220,11 +221,40 @@
 <span id="usage-persistence"></span><h1>Persistence<a class="headerlink" href="#persistence" title="Link to this heading">#</a></h1>
 <p>You can persist your results by clicking on the download button right next to the navigation bar.</p>
 <a class="reference internal image-reference" href="_images/download_button.png"><img alt="Download button." src="_images/download_button.png" style="width: 200px;" /></a>
-<p>This will serialize all the necessary data for you to save the topic model and the topic names into a joblib file.</p>
-<p>Then you can load this data in another script and start the app from the persisted data.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+<p>This will serialize all inference information into a <a class="reference external" href="topicdata">TopicData</a> object,
+including the topic names you have specified while using the application.</p>
+<p>This is virtually equivalent to saving the <a class="reference external" href="topicdata">TopicData</a> on the server directly,
+using the prepare_topic_data() method of compatible models or <a class="reference external" href="usagepipelines">TopicPipelines</a>,
+except for manually assigned topic names.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>topicwizard 1.0.x provides no backwards compatibility for topic data downloaded with previous versions of the package.
+Old objects have to be manually converted into <a class="reference external" href="topicdata">TopicData</a> if you intend to use them.</p>
+</div>
+<p>Serialization is done with <a class="reference external" href="https://joblib.readthedocs.io/en/stable/">joblib</a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">KeyNMF</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
 
-<span class="n">topicwizard</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;topic_data.joblib&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">KeyNMF</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">topic_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prepare_topic_data</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">topic_data</span><span class="p">,</span> <span class="s2">&quot;topic_data.joblib&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then this data can be loaded again using joblib.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure that the receiving end has the same topic modeling packages with the same version (sklearn, turftopic, bertopic etc.),
+otherwise you might encounter issues with deserialization.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+<span class="c1"># We import this only for type checking</span>
+<span class="kn">from</span> <span class="nn">topicwizard.data</span> <span class="kn">import</span> <span class="n">TopicData</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
+
+<span class="n">topic_data</span><span class="p">:</span> <span class="n">TopicData</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;topic_data.joblib&quot;</span><span class="p">)</span>
+
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">topic_data</span><span class="o">=</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -234,23 +264,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="usage.compatibility.html">
+          <a class="next-page" href="usage.deployment.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Compatibility</div>
+                <div class="title">Deployment</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="usage.groups.html">
+          <a class="prev-page" href="figures.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Investigating Groups</div>
+                <div class="title">Individual Figures</div>
                 
               </div>
             </a>

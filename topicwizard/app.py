@@ -217,10 +217,12 @@ def visualize(
 
     Parameters
     ----------
-    corpus: iterable of str
+    corpus: list[str], optional
         List of all works in the corpus you intend to visualize.
-    model: Pipeline or TopicModel
+    model: Pipeline or TopicModel, optional
         Bag of words topic pipeline or contextual topic model.
+    topic_data: TopicData, optional
+        Data about topical inference over a corpus.
     document_names: list of str, default None
         List of document names in the corpus, if not provided documents will
         be labeled 'Document <index>'.

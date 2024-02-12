@@ -70,11 +70,14 @@ def document_topic_distribution(
     top_n: int, default 8
         Number of topics to display at most.
     """
+    transform = topic_data["transform"]
+    if transform is None:
+        raise TypeError(
+            "Topic model doesn't have a transform method, and is possibly transductive."
+        )
     if isinstance(documents, str):
         documents = [documents]
-    topic_importances = prepare.document_topic_importances(
-        topic_data["document_topic_matrix"]
-    )
+    topic_importances = prepare.document_topic_importances(transform(documents))
     topic_importances = topic_importances.groupby(["topic_id"]).sum().reset_index()
     n_topics = topic_data["document_topic_matrix"].shape[-1]
     twilight = colors.get_colorscale("Portland")

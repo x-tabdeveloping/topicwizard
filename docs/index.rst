@@ -22,7 +22,7 @@ Usage
    </a>
 
 
-Train a scikit-learn compatible topic pipeline.
+Build a scikit-learn compatible topic pipeline with classical models.
 
 .. note::
    If you intend to investigate non-scikit-learn models, please have a look at
@@ -37,8 +37,15 @@ Train a scikit-learn compatible topic pipeline.
 
    bow_vectorizer = CountVectorizer()
    nmf = NMF(n_components=10)
-   topic_pipeline = make_topic_pipeline(bow_vectorizer, nmf)
-   topic_pipeline.fit(texts)
+   model = make_topic_pipeline(bow_vectorizer, nmf)
+
+Or build a contextually sensitive topic model with Turftopic or BERTopic:
+
+.. code-block:: python
+
+   from turftopic import KeyNMF
+
+   model = KeyNMF(n_components=10)
 
 The easiest and most sensible way to visualize is with the topicwizard web application.
 
@@ -46,7 +53,7 @@ The easiest and most sensible way to visualize is with the topicwizard web appli
 
    import topicwizard
 
-   topicwizard.visualize(texts, model=topic_pipeline)
+   topicwizard.visualize(texts, model=model)
 
 .. image:: _static/screenshot_topics.png
     :width: 800

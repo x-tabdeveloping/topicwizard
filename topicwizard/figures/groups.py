@@ -14,6 +14,15 @@ from topicwizard.data import TopicData
 
 
 def group_map(topic_data: TopicData, group_labels: List[str]) -> go.Figure:
+    """Projects groups into 2d space and displays them on a scatter plot.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    group_labels: list[str]
+        Labels for each of the documents in the corpus.
+    """
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -61,6 +70,19 @@ def group_map(topic_data: TopicData, group_labels: List[str]) -> go.Figure:
 def group_topic_barcharts(
     topic_data: TopicData, group_labels: List[str], top_n: int = 5, n_columns: int = 4
 ):
+    """Displays the most important topics for each group.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    group_labels: list[str]
+        Labels for each of the documents in the corpus.
+    top_n: int, default 5
+        Maximum number of topics to display for each group.
+    n_columns: int, default 4
+        Indicates how many columns the faceted plot should have.
+    """
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]
@@ -136,6 +158,19 @@ def group_topic_barcharts(
 def group_wordclouds(
     topic_data: TopicData, group_labels: List[str], top_n: int = 30, n_columns: int = 4
 ) -> go.Figure:
+    """Plots wordclouds for each group.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    group_labels: list[str]
+        Labels for each document in the corpus.
+    top_n: int, default 30
+        Number of words to display for each group.
+    n_columns: int, default 4
+        Number of columns the faceted plot should have.
+    """
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
     n_groups = group_names.shape[0]

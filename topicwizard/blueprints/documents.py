@@ -28,13 +28,14 @@ def create_blueprint(
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
-    n_topics = topic_term_matrix.shape[0]
+    n_topics = document_topic_matrix.shape[1]
     document_positions = prepare.document_positions(document_representation)
     dominant_topics = prepare.dominant_topic(
         document_topic_matrix=document_topic_matrix
     )
     # Creating unified color scheme
     color_scheme = colors.get_colorscale("Portland")
+    # Factorizing labels
     topic_colors = colors.sample_colorscale(
         color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
     )

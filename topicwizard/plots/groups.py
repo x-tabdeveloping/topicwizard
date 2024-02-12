@@ -67,7 +67,6 @@ def group_map(
 
 def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
     """Plots topic importances for currently selected group."""
-    print(top_topics)
     top_topics = top_topics.sort_values("importance", ascending=True)
     text = top_topics.topic.map(lambda s: f"<b>{s}</b>")
     overlap = np.any(top_topics.overall_importance < top_topics.importance)

@@ -64,7 +64,7 @@ class BERTopicWrapper(TopicModel):
             vocab=vocab,
             document_term_matrix=document_term_matrix,
             document_topic_matrix=np.asarray(document_topic_matrix),
-            topic_term_matrix=np.asarray(self.model.c_tf_idf_),
+            topic_term_matrix=self.model.c_tf_idf_.toarray(),
             document_representation=embeddings,  # type: ignore
             transform=transform,
             topic_names=topic_names,

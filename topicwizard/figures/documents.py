@@ -15,6 +15,15 @@ from topicwizard.data import TopicData
 def document_map(
     topic_data: TopicData, document_metadata: Optional[pd.DataFrame] = None
 ) -> go.Figure:
+    """Projects documents into 2d space and displays them on a scatter plot.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    document_metadata: DataFrame, optional
+        Metadata you want displayed when hovering over documents on the graph.
+    """
     x, y = prepare.document_positions(topic_data["document_representation"])
     dominant_topic = prepare.dominant_topic(topic_data["document_topic_matrix"])
     dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
@@ -49,11 +58,26 @@ def document_map(
 def document_topic_distribution(
     topic_data: TopicData, documents: Union[List[str], str], top_n: int = 8
 ) -> go.Figure:
+    """Displays topic distribution on a bar plot for a document
+    or a set of documents.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    documents: list[str] or str
+        Documents to display topic distribution for.
+    top_n: int, default 8
+        Number of topics to display at most.
+    """
+    transform = topic_data["transform"]
+    if transform is None:
+        raise TypeError(
+            "Topic model doesn't have a transform method, and is possibly transductive."
+        )
     if isinstance(documents, str):
         documents = [documents]
-    topic_importances = prepare.document_topic_importances(
-        topic_data["document_topic_matrix"]
-    )
+    topic_importances = prepare.document_topic_importances(transform(documents))
     topic_importances = topic_importances.groupby(["topic_id"]).sum().reset_index()
     n_topics = topic_data["document_topic_matrix"].shape[-1]
     twilight = colors.get_colorscale("Portland")
@@ -67,6 +91,19 @@ def document_topic_distribution(
 def document_topic_timeline(
     topic_data: TopicData, document: str, window_size: int = 10, step_size: int = 1
 ) -> go.Figure:
+    """Projects documents into 2d space and displays them on a scatter plot.
+
+    Parameters
+    ----------
+    topic_data: TopicData
+        Inference data from topic modeling.
+    document: str
+        Document to display the timeline for.
+    window_size: int, default 10
+        The windows over which topic inference should be run.
+    step_size: int, default 1
+        Size of the steps for the rolling window.
+    """
     timeline = prepare.calculate_timeline(
         doc_id=0,
         corpus=[document],

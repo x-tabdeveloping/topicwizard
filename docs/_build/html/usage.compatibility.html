@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Deployment" href="usage.deployment.html" /><link rel="prev" title="Persistence" href="usage.persistence.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Web Application" href="application.html" /><link rel="prev" title="Topic Data" href="topic_data.html" />
 
     <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Compatibility - topicwizard</title>
@@ -19,7 +19,7 @@
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #0205cc;
   
   }
   @media not print {
@@ -27,7 +27,7 @@
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
     }
     @media (prefers-color-scheme: dark) {
@@ -35,7 +35,7 @@
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
       }
     }
@@ -164,21 +164,22 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Models and Data</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Pipelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.words.html">Investigating Words</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.documents.html">Investigating Documents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.groups.html">Investigating Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Classical Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.contextual_models.html">Contextually Sensitive Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topic_data.html">Topic Data</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Interpretation and Usage</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="application.html">Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="figures.html">Individual Figures</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLOps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/x-tabdeveloping/topic-wizard">GitHub Repository</a></li>
@@ -241,48 +242,146 @@ and a topic model object available, topicwizard is compatible with LSI, LDA (als
 </div>
 <p>Then you need to create a pipeline with topicwizard.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+<span class="kn">from</span> <span class="nn">topicwizard.compatibility</span> <span class="kn">import</span> <span class="n">gensim_pipeline</span>
 
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">topicwizard</span><span class="o">.</span><span class="n">gensim_pipeline</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">lda</span><span class="p">)</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">gensim_pipeline</span><span class="p">(</span><span class="n">dictionary</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">lda</span><span class="p">)</span>
 <span class="c1"># Then you can use the pipeline as usual</span>
 <span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">]</span>
 <span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">corpus</span><span class="o">=</span><span class="n">corpus</span><span class="p">)</span>
 </pre></div>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="topicwizard.compatibility.gensim.gensim_pipeline">
+<span class="sig-prename descclassname"><span class="pre">topicwizard.compatibility.gensim.</span></span><span class="sig-name descname"><span class="pre">gensim_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="usage.pipelines.html#topicwizard.pipeline.TopicPipeline" title="topicwizard.pipeline.TopicPipeline"><span class="pre">TopicPipeline</span></a></span></span><a class="headerlink" href="#topicwizard.compatibility.gensim.gensim_pipeline" title="Link to this definition">#</a></dt>
+<dd><p>Creates sklearn compatible wrapper for a Gensim topic pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dictionary</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.corpora.dictionary.Dictionary</span></code>) – Gensim’s dictionary object. Please only pass already fitted
+dictionary objects.</p></li>
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">LdaModel</span> <span class="pre">|</span> <span class="pre">LdaMulticore</span> <span class="pre">|</span> <span class="pre">Nmf</span> <span class="pre">|</span> <span class="pre">LsiModel</span></code>) – Gensim topic model. The model should already be fitted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sklearn compatible topic pipeline wrapping the Gensim topic model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicPipeline</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="bertopic">
 <h2>BERTopic<a class="headerlink" href="#bertopic" title="Link to this heading">#</a></h2>
 <p>You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.</p>
-<p>First you need to train a BERTopic topic model.</p>
+<p>First you need to construct a BERTopic model.
+The model does not have to be pretrained. If you don’t train it, it will be automatically fitted when running the app.</p>
+<p>BERTopic models have to be wrapped in a compatibility layer to be used with topicwizard.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>BERTopic models are now first-class citizens of topicwizard, and have native support.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
+<span class="kn">from</span> <span class="nn">topicwizard.compatibility</span> <span class="kn">import</span> <span class="n">BERTopicWrapper</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">)</span>
+<span class="n">wrapped_model</span> <span class="o">=</span> <span class="n">BERTopicWrapper</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Then you need to create a pipeline with topicwizard.</p>
+<p>You can either produce a TopicData object with this model or use it directly in the web app.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
 
-<span class="c1"># BERTopic automatically assigns topic names, you can use these</span>
-<span class="c1"># in topicwizard</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">topicwizard</span><span class="o">.</span><span class="n">bertopic_pipeline</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># Start the web app immediately</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">wrapped_model</span><span class="p">)</span>
 
-<span class="c1"># Then you can use the pipeline as usual</span>
-<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">corpus</span><span class="o">=</span><span class="n">corpus</span><span class="p">)</span>
+<span class="c1"># Or produce a TopicData object for persistance or figures.</span>
+<span class="n">topic_data</span> <span class="o">=</span> <span class="n">wrapped_model</span><span class="o">.</span><span class="n">prepare_topic_data</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="topicwizard.compatibility.bertopic.BERTopicWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.compatibility.bertopic.</span></span><span class="sig-name descname"><span class="pre">BERTopicWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.compatibility.bertopic.BERTopicWrapper" title="Link to this definition">#</a></dt>
+<dd><p>Wrapper for BERTopic models to be used in topicwizard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">BERTopic</span></code>) – BERTopic model to wrap.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data">
+<span class="sig-name descname"><span class="pre">prepare_topic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></span><a class="headerlink" href="#topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data" title="Link to this definition">#</a></dt>
+<dd><p>Produces topic data for visualizations in topicwizard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Corpus to infer topic data for.</p></li>
+<li><p><strong>embeddings</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_dimensions)</span></code>) – Contextual embeddings to use for topic discovery.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="top2vec">
+<h2>Top2Vec<a class="headerlink" href="#top2vec" title="Link to this heading">#</a></h2>
+<p>We do not provide support for direct usage of Top2Vec models,
+since Top2Vec models can be represented exactly in terms of Turftopic’s abstractions.</p>
+<p>We therefore recommend that if you intend to use Top2Vec models, construct a model from scratch in Turftopic.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>turftopic
+pip<span class="w"> </span>install<span class="w"> </span>umap-learn
+pip<span class="w"> </span>install<span class="w"> </span>scikit-learn&gt;<span class="o">=</span><span class="m">1</span>.3.0
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">ClusteringTopicModel</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">HDBSCAN</span>
+<span class="kn">import</span> <span class="nn">umap</span>
+
+<span class="c1"># This has the exact same behaviour as Top2Vec models.</span>
+<span class="n">top2vec</span> <span class="o">=</span> <span class="n">ClusteringTopicModel</span><span class="p">(</span>
+    <span class="n">dimensionality_reduction</span><span class="o">=</span><span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span>
+        <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">n_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span>
+    <span class="p">),</span>
+    <span class="n">clustering</span><span class="o">=</span><span class="n">HDBSCAN</span><span class="p">(</span>
+        <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+        <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+        <span class="n">cluster_selection_method</span><span class="o">=</span><span class="s2">&quot;eom&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">feature_importance</span><span class="o">=</span><span class="s2">&quot;centroid&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">top2vec</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>BERTopic compatibility is an experimental feature in topicwizard.
-Most of topicwizard rests on the bag of words assumption, and two-step topic
-pipelines, which BERTopic does not conform to.
-Document and word positions for example are solely based on c-TF-IDF representations,
-not on the contextual embeddings in BERTopic.</p>
-<p>If you find that the results are unsatisfactory, we recommend that you use BERTopic’s
-own excellent visualizations. (They are honestly pretty great :))
-In the future there is a possiblity of a BERTopic-specific visualization dashboard.</p>
+<p>Writing a wrapper for Top2Vec models shouldn’t be too hard, but we do not intend on maintaining one.</p>
+</div>
+</section>
+<section id="ctm">
+<h2>CTM<a class="headerlink" href="#ctm" title="Link to this heading">#</a></h2>
+<p>CTM models are not supported out of the box, because CTM’s behaviour can be replicated using AutoEncodingTopicModel from Turftopic.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">AutoEncodingTopicModel</span>
+
+<span class="n">zeroshot_tm</span> <span class="o">=</span> <span class="n">AutoEncodingTopicModel</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">combined</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">combined_tm</span> <span class="o">=</span> <span class="n">AutoEncodingTopicModel</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">combined</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">zeroshot_tm</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Writing a wrapper for CTM models shouldn’t be too hard, but we do not intend on maintaining one.</p>
 </div>
 </section>
 <section id="custom-topic-models">
 <h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Link to this heading">#</a></h2>
+<section id="classical-models-with-topicpipeline">
+<h3>Classical Models with TopicPipeline<a class="headerlink" href="#classical-models-with-topicpipeline" title="Link to this heading">#</a></h3>
 <p>You can write topic models, which are compatible with topicwizard.
 If you have a topic model, which rests on the bag-of-words assumption this is
 a fairly straightforward task.</p>
@@ -326,6 +425,24 @@ a fairly straightforward task.</p>
 </pre></div>
 </div>
 </section>
+<section id="any-model-contextual-models">
+<h3>Any Model / Contextual Models<a class="headerlink" href="#any-model-contextual-models" title="Link to this heading">#</a></h3>
+<p>Contextual models have to follow the following interface, and have to be able to produce a TopicData objects:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.model_interface</span> <span class="kn">import</span> <span class="n">TopicModel</span>
+<span class="kn">from</span> <span class="nn">topicwizard.data</span> <span class="kn">import</span> <span class="n">TopicData</span>
+
+<span class="c1"># TopicModel is only a Protocol, the model inferits no behaviour,</span>
+<span class="c1"># it just provides static checks</span>
+<span class="k">class</span> <span class="nc">CustomTopicModel</span><span class="p">(</span><span class="n">TopicModel</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">prepare_topic_data</span><span class="p">(</span>
+       <span class="bp">self</span><span class="p">,</span>
+       <span class="n">corpus</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+   <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TopicData</span><span class="p">:</span>
+       <span class="k">pass</span>
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -333,23 +450,23 @@ a fairly straightforward task.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="usage.deployment.html">
+          <a class="next-page" href="application.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Deployment</div>
+                <div class="title">Web Application</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="usage.persistence.html">
+          <a class="prev-page" href="topic_data.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Persistence</div>
+                <div class="title">Topic Data</div>
                 
               </div>
             </a>
@@ -384,9 +501,24 @@ a fairly straightforward task.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Compatibility</a><ul>
-<li><a class="reference internal" href="#gensim">Gensim</a></li>
-<li><a class="reference internal" href="#bertopic">BERTopic</a></li>
-<li><a class="reference internal" href="#custom-topic-models">Custom Topic Models</a></li>
+<li><a class="reference internal" href="#gensim">Gensim</a><ul>
+<li><a class="reference internal" href="#topicwizard.compatibility.gensim.gensim_pipeline"><code class="docutils literal notranslate"><span class="pre">gensim_pipeline()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bertopic">BERTopic</a><ul>
+<li><a class="reference internal" href="#topicwizard.compatibility.bertopic.BERTopicWrapper"><code class="docutils literal notranslate"><span class="pre">BERTopicWrapper</span></code></a><ul>
+<li><a class="reference internal" href="#topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data"><code class="docutils literal notranslate"><span class="pre">BERTopicWrapper.prepare_topic_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#top2vec">Top2Vec</a></li>
+<li><a class="reference internal" href="#ctm">CTM</a></li>
+<li><a class="reference internal" href="#custom-topic-models">Custom Topic Models</a><ul>
+<li><a class="reference internal" href="#classical-models-with-topicpipeline">Classical Models with TopicPipeline</a></li>
+<li><a class="reference internal" href="#any-model-contextual-models">Any Model / Contextual Models</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

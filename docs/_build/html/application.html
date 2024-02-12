@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Investigating Topics" href="usage.topics.html" /><link rel="prev" title="Pipelines" href="usage.pipelines.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Individual Figures" href="figures.html" /><link rel="prev" title="Compatibility" href="usage.compatibility.html" />
 
     <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>Web Application - topicwizard</title>
@@ -19,7 +19,7 @@
     --color-code-background: #f8f8f8;
   --color-code-foreground: black;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #0205cc;
   
   }
   @media not print {
@@ -27,7 +27,7 @@
       --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
     }
     @media (prefers-color-scheme: dark) {
@@ -35,7 +35,7 @@
         --color-code-background: #202020;
   --color-code-foreground: #d0d0d0;
   --color-api-name: #28a4df;
-  --color-api-pre-name: #ffa671;
+  --color-api-pre-name: #aaacff;
   
       }
     }
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -164,21 +164,22 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Pipelines</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Web Application</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.topics.html">Investigating Topics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.words.html">Investigating Words</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.documents.html">Investigating Documents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.groups.html">Investigating Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.compatibility.html">Compatibility</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Models and Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.pipelines.html">Classical Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.contextual_models.html">Contextually Sensitive Topic Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topic_data.html">Topic Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.compatibility.html">Compatibility</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Interpretation and Usage</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Web Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="figures.html">Individual Figures</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLOps</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.persistence.html">Persistence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.deployment.html">Deployment</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/x-tabdeveloping/topic-wizard">GitHub Repository</a></li>
@@ -210,14 +211,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="web-application">
-<h1>Web Application<a class="headerlink" href="#web-application" title="Link to this heading">#</a></h1>
+<span id="application"></span><h1>Web Application<a class="headerlink" href="#web-application" title="Link to this heading">#</a></h1>
 <p>As stated earlier topicwizard is easiest to use with the default visualization dashboard that comes with it,
 as this provides a general and interactive overview of the topic models you wish to interpret.</p>
 <p>For this example let’s train a Non-negative Matrix Factorization model over a corpus of texts we have.</p>
@@ -232,22 +233,94 @@ as this provides a general and interactive overview of the topic models you wish
 <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Once you have trained a scikit-learn compatible topicmodel, like NMF,
+<p>Once you have trained a topic model, like NMF,
 interpreting the model in topicwizard is as trivial as starting the web application with the visualize() function.</p>
-<p>Topicwizard can either take a pipeline, where the first element is a CountVectorizer (or functionally identical)
-and the last element is a topic model…</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
 
-<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="o">=</span><span class="n">texts</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">)</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">pipeline</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Or it can also take these components in the pipeline individually.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="o">=</span><span class="n">texts</span><span class="p">,</span> <span class="n">vectorizer</span><span class="o">=</span><span class="n">bow_vectorizer</span><span class="p">,</span> <span class="n">topic_model</span><span class="o">=</span><span class="n">topic_model</span><span class="p">)</span>
+<p>topicwizard can take <a class="reference internal" href="usage.pipelines.html#usage-pipelines"><span class="std std-ref">Classical Topic Models</span></a>, <a class="reference internal" href="usage.contextual_models.html#usage-contextual"><span class="std std-ref">Contextually Sensitive Models</span></a> along with a corpus, or a TopicData object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">SemanticSignalSeparation</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">SemanticSignalSeparation</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1">## OR</span>
+
+<span class="n">topic_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">prepare_topic_data</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">topic_data</span><span class="o">=</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/screenshot_topics.png"><img alt="Screenshot of topics." src="_images/screenshot_topics.png" style="width: 800px;" /></a>
+<section id="pages">
+<h2>Pages<a class="headerlink" href="#pages" title="Link to this heading">#</a></h2>
 <p>This will open a web app in a new browser tab with three pages, one for topics, one for words and one for documents,
 where you can investigate the intricate relations of these in an interactive fashion.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To understand how the plots at the pages are generated, hover over the question mark in the lower left corner.</p>
+</div>
+<section id="topics">
+<h3>Topics<a class="headerlink" href="#topics" title="Link to this heading">#</a></h3>
+<p>The first page of the webapp is a general overview of the topics in the model.
+On the left you can see a topic map, on which you can click
+on topics to investigate them and see word importances in the given topics on bar charts and wordclouds.</p>
+<a class="reference internal image-reference" href="_images/screenshot_topics.png"><img alt="Screenshot of topics." src="_images/screenshot_topics.png" style="width: 800px;" /></a>
+</section>
+<section id="words">
+<h3>Words<a class="headerlink" href="#words" title="Link to this heading">#</a></h3>
+<p>The Words pages displays words’ semantic relations to each other and topics.
+You have access to a semantic map over word representations in the topics models
+and a bar chart displaying topic importances
+for selected words and their closest associations.</p>
+<a class="reference internal image-reference" href="_images/screenshot_words.png"><img alt="Screenshot of words." src="_images/screenshot_words.png" style="width: 800px;" /></a>
+</section>
+<section id="documents">
+<h3>Documents<a class="headerlink" href="#documents" title="Link to this heading">#</a></h3>
+<p>On this page you will see a map of document representations,
+along with utilities for exploring a given document’s content
+by looking topical content overall and over time in the document.</p>
+<p>You can also search for specific documents that you might have special interest in.</p>
+<a class="reference internal image-reference" href="_images/screenshot_documents.png"><img alt="Screenshot of documents." src="_images/screenshot_documents.png" style="width: 800px;" /></a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With large corpora this page is by far the slowest to start up, as such I would recommend that you disable it
+unless you have special interest in the individual documents in your corpus.
+This is because document representations are high-dimensional and there is usually a lot of documents,
+calculating 2D UMAP projections for such data is slow and tedious.</p>
+</div>
+</section>
+<section id="groups-optional">
+<h3>Groups (optional)<a class="headerlink" href="#groups-optional" title="Link to this heading">#</a></h3>
+<p>If you have gold standard group labels for your corpus, these can be passed to the web application.</p>
+<p>Here’s an example of doing this with the 20Newsgroups dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">topicwizard</span>
+<span class="kn">from</span> <span class="nn">topicwizard.pipeline</span> <span class="kn">import</span> <span class="n">make_topic_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_20newsgroups</span>
+
+<span class="n">newsgroups</span> <span class="o">=</span> <span class="n">fetch_20newsgroups</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">corpus</span> <span class="o">=</span> <span class="n">newsgroups</span><span class="o">.</span><span class="n">data</span>
+<span class="c1"># Sklearn gives the labels back as integers, we have to map them back to</span>
+<span class="c1"># the actual textual label.</span>
+<span class="n">group_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">target_names</span><span class="p">)[</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">target</span><span class="p">]</span>
+
+<span class="c1"># Here we fit a topic model to the corpus</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_topic_pipeline</span><span class="p">(</span>
+    <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">),</span>
+    <span class="n">NMF</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+
+<span class="c1"># Notice that I&#39;m passing the labels as the group_labels argument</span>
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">group_labels</span><span class="o">=</span><span class="n">group_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will add an additional page, which can be used to investigate these labels’ relations to topics and word content.</p>
+<a class="reference internal image-reference" href="_images/screenshot_groups.png"><img alt="Screenshot of groups." src="_images/screenshot_groups.png" style="width: 800px;" /></a>
+</section>
+</section>
+<section id="performance-tips">
+<h2>Performance Tips<a class="headerlink" href="#performance-tips" title="Link to this heading">#</a></h2>
 <p>Beware that if you display all three pages, especially with larger corpora or vocabularies, topicwizard might take a long time
 to start up.
 This is because visualizing documents, words and topics is hard. You need to have 2D projections of their embeddings, for
@@ -255,14 +328,77 @@ which topicwizard uses a method called UMAP, which produces nicely interpretable
 and infer.</p>
 <p>If you just want a drop-in replacement of PyLDAvis for your project, and you only care about word importances for
 your topics, you can disable the words and documents pages with the exclude_pages argument.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="o">=</span><span class="n">texts</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">exclude_pages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">,</span> <span class="s2">&quot;words&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">exclude_pages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">,</span> <span class="s2">&quot;words&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Or equally if you use a matrix decomposition method for creating word embeddings like LSI for example, you can use topicwizard to visualize your embeddings
 and disable all else:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">corpus</span><span class="o">=</span><span class="n">texts</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">exclude_pages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">,</span> <span class="s2">&quot;topics&quot;</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">exclude_pages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;documents&quot;</span><span class="p">,</span> <span class="s2">&quot;topics&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="topicwizard.visualize">
+<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">visualize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Pipeline</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">TopicModel</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'topics'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'documents'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'words'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8050</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Thread</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#topicwizard.visualize" title="Link to this definition">#</a></dt>
+<dd><p>Visualizes your topic model with topicwizard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code>, <em>optional</em>) – List of all works in the corpus you intend to visualize.</p></li>
+<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">TopicModel</span></code>, <em>optional</em>) – Bag of words topic pipeline or contextual topic model.</p></li>
+<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>, <em>optional</em>) – Data about topical inference over a corpus.</p></li>
+<li><p><strong>document_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – List of document names in the corpus, if not provided documents will
+be labeled ‘Document &lt;index&gt;’.</p></li>
+<li><p><strong>exclude_pages</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span></code> of <code class="docutils literal notranslate"><span class="pre">{&quot;topics&quot;,</span> <span class="pre">&quot;documents&quot;,</span> <span class="pre">&quot;words&quot;}</span></code>) – Set of pages you want to exclude from the application.
+This can be relevant as with larger corpora for example,
+calculating UMAP embeddings for documents or words can take
+a long time and you might not be interested in them.</p></li>
+<li><p><strong>port</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">8050</span></code>) – Port where the application should run in localhost. Defaults to 8050.</p></li>
+<li><p><strong>group_labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – List of preexisting labels for the documents.
+You can pass it along if you have genre labels for example.
+In this case an additional page will get created with information
+about how these groups relate to topics and words in the corpus.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns a Thread if running in a Jupyter notebook (so you can close the server)
+returns None otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="topicwizard.get_dash_app">
+<span class="sig-prename descclassname"><span class="pre">topicwizard.</span></span><span class="sig-name descname"><span class="pre">get_dash_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_pages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'topics'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'documents'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'words'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dash</span></span></span><a class="headerlink" href="#topicwizard.get_dash_app" title="Link to this definition">#</a></dt>
+<dd><p>Returns topicwizard Dash application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Data about topical inference.</p></li>
+<li><p><strong>exclude_pages</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code> of <code class="docutils literal notranslate"><span class="pre">{&quot;topics&quot;,</span> <span class="pre">&quot;documents&quot;,</span> <span class="pre">&quot;words&quot;}</span></code>, <em>optional</em>) – Pages to exclude from the app.</p></li>
+<li><p><strong>document_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – List of document names in the corpus, if not provided documents will
+be labeled ‘Document &lt;index&gt;’.</p></li>
+<li><p><strong>group_labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – List of preexisting labels for the documents.
+You can pass it along if you have genre labels for example.
+In this case an additional page will get created with information
+about how these groups relate to topics and words in the corpus.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dash application object for topicwizard.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dash</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -270,23 +406,23 @@ and disable all else:</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="usage.topics.html">
+          <a class="next-page" href="figures.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Investigating Topics</div>
+                <div class="title">Individual Figures</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="usage.pipelines.html">
+          <a class="prev-page" href="usage.compatibility.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Pipelines</div>
+                <div class="title">Compatibility</div>
                 
               </div>
             </a>
@@ -308,8 +444,39 @@ and disable all else:</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Web Application</a><ul>
+<li><a class="reference internal" href="#pages">Pages</a><ul>
+<li><a class="reference internal" href="#topics">Topics</a></li>
+<li><a class="reference internal" href="#words">Words</a></li>
+<li><a class="reference internal" href="#documents">Documents</a></li>
+<li><a class="reference internal" href="#groups-optional">Groups (optional)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#performance-tips">Performance Tips</a></li>
+<li><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li><a class="reference internal" href="#topicwizard.visualize"><code class="docutils literal notranslate"><span class="pre">visualize()</span></code></a></li>
+<li><a class="reference internal" href="#topicwizard.get_dash_app"><code class="docutils literal notranslate"><span class="pre">get_dash_app()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

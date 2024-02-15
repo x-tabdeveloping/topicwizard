@@ -1,4 +1,4 @@
-from typing import Any, Iterable, List, Literal, Optional
+from typing import Any, Iterable, List, Literal, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -14,7 +14,7 @@ from topicwizard.prepare.topics import infer_topic_names
 
 def split_pipeline(
     vectorizer: Any, topic_model: Any, pipeline: Optional[Pipeline]
-) -> tuple[Any, Any]:
+) -> Tuple[Any, Any]:
     """Check which arguments are provided,
     raises error if the arguments are not satisfactory, and if needed
     splits Pipeline into vectorizer and topic model."""
@@ -72,7 +72,7 @@ class TopicPipeline(Pipeline, TopicModel):
 
     def __init__(
         self,
-        steps: list[tuple[str, BaseEstimator]],
+        steps: List[Tuple[str, BaseEstimator]],
         *,
         memory=None,
         verbose=False,

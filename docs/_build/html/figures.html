@@ -309,16 +309,31 @@ as here you can’t select words to highlight.</p>
 <p>Instead you can specify a cutoff in Z-values over which words will be labelled on the graph.</p>
 <p>Words are also distinctively colored according to the most relevant topic as you cannot select
 the individual words for inspection.</p>
+<p>You can either choose to let UMAP discover the axis and project the words into 2D space, which is good for exploring words’ distances and relations to each other in the model,
+as well as potential clusters of words in the topic model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">word_map</span>
 
 <span class="n">word_map</span><span class="p">(</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/word_map.html" width="800px" height="600px"></iframe><dl class="py function">
+<iframe src="_static/plots/word_map.html" width="800px" height="600px"></iframe><p>Or you can display words with given topics as axes. This is especially useful for models like Semantic Signal Separation or Latent Semantic Analysis,
+where words with the lowest importance for a topic also cary information, as a topic is assumed to be an axis of semantic space.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">word_map</span>
+
+<span class="n">word_map</span><span class="p">(</span>
+  <span class="n">topic_data</span><span class="p">,</span>
+  <span class="n">topic_axes</span><span class="o">=</span><span class="p">(</span>
+     <span class="s2">&quot;9_api_apis_register_automatedsarcasmgenerator&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;4_study_studying_assessments_exams&quot;</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<iframe src="_static/plots/word_map_axes.html" width="800px" height="600px"></iframe><dl class="py function">
 <dt class="sig sig-object py" id="topicwizard.figures.word_map">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">word_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.word_map" title="Link to this definition">#</a></dt>
-<dd><p>Plots words on a scatter plot based on the UMAP projections
-of their importances in topics into 2D space.</p>
+<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">word_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.word_map" title="Link to this definition">#</a></dt>
+<dd><p>Plots words on a scatter plot based on UMAP projections
+of their importances in topics into 2D space or by two topic axes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -330,6 +345,9 @@ if we assume normal distribution for word frequencies
 If you find not enough words have labels, lower this number
 if you find there is too much clutter on your graph,
 change this to something higher.</p></li>
+<li><p><strong>topic_axes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str|int</span></code>, <em>optional</em>) – The topic axes along which the words should be displayed.
+If not specified, the axes on the graph are going to be
+UMAP projections’ dimensions.</p></li>
 </ul>
 </dd>
 </dl>

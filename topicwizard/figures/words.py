@@ -1,5 +1,6 @@
 """External API for creating self-contained figures for words."""
-from typing import List, Union
+
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -16,9 +17,10 @@ from topicwizard.data import TopicData
 def word_map(
     topic_data: TopicData,
     z_threshold: float = 2.0,
+    topic_axes: Optional[Tuple[Union[str, int], Union[str, int]]] = None,
 ) -> go.Figure:
-    """Plots words on a scatter plot based on the UMAP projections
-    of their importances in topics into 2D space.
+    """Plots words on a scatter plot based on UMAP projections
+    of their importances in topics into 2D space or by two topic axes.
 
     Parameters
     ----------
@@ -32,8 +34,26 @@ def word_map(
         If you find not enough words have labels, lower this number
         if you find there is too much clutter on your graph,
         change this to something higher.
+    topic_axes: tuple of str|int, optional
+        The topic axes along which the words should be displayed.
+        If not specified, the axes on the graph are going to be
+        UMAP projections' dimensions.
     """
-    x, y = prepare.word_positions(topic_data["topic_term_matrix"])
+    topic_names = topic_data["topic_names"]
+    if topic_axes is None:
+        x, y = prepare.word_positions(topic_data["topic_term_matrix"])
+        xaxis_name = "UMAP_1"
+        yaxis_name = "UMAP_1"
+    else:
+        xaxis, yaxis = topic_axes
+        if isinstance(xaxis, str):
+            xaxis = topic_names.index(xaxis)
+        if isinstance(yaxis, str):
+            yaxis = topic_names.index(yaxis)
+        xaxis_name = topic_names[xaxis]
+        yaxis_name = topic_names[yaxis]
+        x = topic_data["topic_term_matrix"][xaxis]
+        y = topic_data["topic_term_matrix"][yaxis]
     word_frequencies = prepare.word_importances(topic_data["document_term_matrix"])
     freq_z = zscore(word_frequencies)
     dominant_topic = prepare.dominant_topic(topic_data["topic_term_matrix"])
@@ -53,7 +73,7 @@ def word_map(
             y=y,
         )
     )
-    return px.scatter(
+    fig = px.scatter(
         words_df,
         x="x",
         y="y",
@@ -69,6 +89,9 @@ def word_map(
         },
         template="plotly_white",
     )
+    fig.update_xaxes(title=xaxis_name)
+    fig.update_yaxes(title=yaxis_name)
+    return fig
 
 
 def word_association_barchart(

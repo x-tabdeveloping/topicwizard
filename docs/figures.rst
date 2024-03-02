@@ -88,16 +88,38 @@ Instead you can specify a cutoff in Z-values over which words will be labelled o
 Words are also distinctively colored according to the most relevant topic as you cannot select
 the individual words for inspection.
 
+You can either choose to let UMAP discover the axis and project the words into 2D space, which is good for exploring words' distances and relations to each other in the model,
+as well as potential clusters of words in the topic model.
+
 .. code-block:: python
    
    from topicwizard.figures import word_map
 
    word_map(topic_data)
 
-
 .. raw:: html
 
    <iframe src="_static/plots/word_map.html" width="800px" height="600px"></iframe>
+
+Or you can display words with given topics as axes. This is especially useful for models like Semantic Signal Separation or Latent Semantic Analysis,
+where words with the lowest importance for a topic also cary information, as a topic is assumed to be an axis of semantic space.
+
+.. code-block:: python
+   
+   from topicwizard.figures import word_map
+
+   word_map(
+     topic_data,
+     topic_axes=(
+        "9_api_apis_register_automatedsarcasmgenerator",
+        "4_study_studying_assessments_exams"
+     )
+   )
+
+.. raw:: html
+
+   <iframe src="_static/plots/word_map_axes.html" width="800px" height="600px"></iframe>
+
 
 .. autofunction:: topicwizard.figures.word_map
 

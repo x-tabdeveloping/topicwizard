@@ -179,10 +179,13 @@ class TopicPipeline(Pipeline, TopicModel):
                 if hasattr(step, "transform"):
                     X = step.transform(X)
         self._validate()
-        self.topic_names = infer_topic_names(
+        return self
+
+    @property
+    def topic_names(self) -> list[str]:
+        return infer_topic_names(
             self.vectorizer_.get_feature_names_out(), self.topic_model_.components_
         )
-        return self
 
     def transform(self, X: Iterable[str]):
         """Turns texts into a document-topic matrix.

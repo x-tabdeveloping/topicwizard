@@ -197,8 +197,6 @@ class TopicPipeline(Pipeline, TopicModel):
         array or DataFrame of shape (n_documents, n_topics)
             Document-topic importance matrix.
         """
-        if self.topic_names is None:
-            raise NotFittedError("Topic pipeline has not been fitted yet.")
         X_new = super().transform(X)
         if self.norm_row:
             X_new = normalize(X_new, norm="l1", axis=1)
@@ -267,9 +265,11 @@ class TopicPipeline(Pipeline, TopicModel):
             corpus=corpus,
             document_term_matrix=document_term_matrix,
             document_topic_matrix=document_topic_matrix,
-            document_representation=document_term_matrix
-            if document_representation == "term"
-            else document_topic_matrix,
+            document_representation=(
+                document_term_matrix
+                if document_representation == "term"
+                else document_topic_matrix
+            ),
             vocab=vocab,
             topic_term_matrix=components,
             transform=self.transform,

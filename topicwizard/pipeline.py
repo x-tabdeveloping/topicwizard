@@ -81,7 +81,6 @@ class TopicPipeline(Pipeline, TopicModel):
         freeze=False,
     ):
         super().__init__(steps, memory=memory, verbose=verbose)
-        self.topic_names = None
         self.pandas_out = pandas_out
         self.norm_row = norm_row
         self.freeze = freeze
@@ -144,9 +143,6 @@ class TopicPipeline(Pipeline, TopicModel):
         if not self.freeze:
             super().fit(X, y)
         self._validate()
-        self.topic_names = infer_topic_names(
-            self.vectorizer_.get_feature_names_out(), self.topic_model_.components_
-        )
         return self
 
     def partial_fit(self, X, y=None, classes=None, **kwargs):

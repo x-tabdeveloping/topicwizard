@@ -125,9 +125,9 @@ You can also use your gensim topic models in topicwizard by wrapping them in a `
 ```python
 from gensim.corpora.dictionary import Dictionary
 from gensim.models import LdaModel
-from topicwizard.compatiblity import gensim_pipeline
+from topicwizard.compatibility import gensim_pipeline
 
-texts: list[list[str] = [
+texts: list[list[str]] = [
     ['computer', 'time', 'graph'],
     ['survey', 'response', 'eps'],
     ['human', 'system', 'computer'],

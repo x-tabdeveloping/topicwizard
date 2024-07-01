@@ -29,7 +29,7 @@ jobs:
         run: python3 -c "import sys; print(sys.version)"
 
       - name: Install dependencies
-        run: python3 -m pip install --upgrade topic-wizard pytest bertopic turftopic gensim
+        run: python3 -m pip install --upgrade topic-wizard pytest bertopic turftopic
 
       - name: Run tests
         run: python3 -m pytest tests/

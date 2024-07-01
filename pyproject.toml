@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "topic-wizard"
-version = "1.0.2"
+version = "1.0.3"
 description = "Pretty and opinionated topic model visualization in Python."
 authors = ["Márton Kardos <power.up1163@gmail.com>"]
 license = "MIT"
@@ -18,7 +18,7 @@ scikit-learn = "^1.2.0"
 scipy = ">=1.8.0"
 umap-learn = ">=0.5.3"
 numpy = ">=1.22.0"
-pandas = "^1.5.2"
+pandas = ">=1.5.2"
 wordcloud = "^1.9.2"
 Pillow = "^10.1.0"
 

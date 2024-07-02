@@ -38,3 +38,6 @@ class TopicData(TypedDict):
     document_representation: np.ndarray
     transform: Optional[Callable]
     topic_names: List[str]
+    topic_positions: Optional[np.ndarray]
+    word_positions: Optional[np.ndarray]
+    document_positions: Optional[np.ndarray]

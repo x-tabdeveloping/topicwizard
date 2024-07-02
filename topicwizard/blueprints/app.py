@@ -28,6 +28,9 @@ def create_blueprint(
     topic_names: List[str],
     exclude_pages: Set[str],
     group_labels: Optional[List[str]],
+    word_positions: Optional[np.ndarray] = None,
+    topic_positions: Optional[np.ndarray] = None,
+    document_positions: Optional[np.ndarray] = None,
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
@@ -39,6 +42,7 @@ def create_blueprint(
             document_names=document_names,
             corpus=corpus,
             topic_names=topic_names,
+            topic_positions=topic_positions,
         )
         if "topics" not in exclude_pages
         else create_blank_page("topics")
@@ -54,6 +58,7 @@ def create_blueprint(
             transform=transform,
             corpus=corpus,
             topic_names=topic_names,
+            document_positions=document_positions,
         )
         if "documents" not in exclude_pages
         else create_blank_page("documents")
@@ -67,6 +72,7 @@ def create_blueprint(
             document_names=document_names,
             corpus=corpus,
             topic_names=topic_names,
+            word_positions=word_positions,
         )
         if "words" not in exclude_pages
         else create_blank_page("words")
@@ -169,6 +175,9 @@ def create_blueprint(
             document_representation=document_representation,
             transform=transform,
             topic_names=topic_names,
+            document_positions=document_positions,
+            topic_positions=topic_positions,
+            word_positions=word_positions,
         )
 
         def write_joblib(bytes_io: BytesIO):

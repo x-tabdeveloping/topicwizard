@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 import dash_mantine_components as dmc
 import numpy as np
@@ -8,7 +8,8 @@ from plotly import colors
 import topicwizard.help.words as help
 import topicwizard.prepare.words as prepare
 from topicwizard.components.color_legend import make_color_legend
-from topicwizard.components.words.association_slider import create_association_slider
+from topicwizard.components.words.association_slider import \
+    create_association_slider
 from topicwizard.components.words.word_barplot import create_word_barplot
 from topicwizard.components.words.word_map import create_word_map
 from topicwizard.components.words.word_selector import create_word_selector
@@ -20,10 +21,12 @@ def create_blueprint(
     document_term_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
     topic_names: List[str],
+    word_positions: Optional[np.ndarray] = None,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
-    word_positions = prepare.word_positions(topic_term_matrix=topic_term_matrix)
+    if word_positions is None:
+        word_positions = prepare.word_positions(topic_term_matrix=topic_term_matrix)
     word_frequencies = prepare.word_importances(document_term_matrix)
     dominant_topic = prepare.dominant_topic(topic_term_matrix)
     n_topics = len(topic_names)

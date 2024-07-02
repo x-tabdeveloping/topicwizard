@@ -10,9 +10,11 @@ import topicwizard.prepare.documents as prepare
 from topicwizard.components.color_legend import make_color_legend
 from topicwizard.components.documents.document_bar import create_document_bar
 from topicwizard.components.documents.document_map import create_document_map
-from topicwizard.components.documents.document_selector import create_document_selector
+from topicwizard.components.documents.document_selector import \
+    create_document_selector
 from topicwizard.components.documents.document_timeline import create_timeline
-from topicwizard.components.documents.document_viewer import create_document_viewer
+from topicwizard.components.documents.document_viewer import \
+    create_document_viewer
 from topicwizard.components.documents.window_slider import create_window_slider
 from topicwizard.help.utils import make_helper
 
@@ -25,11 +27,13 @@ def create_blueprint(
     corpus: List[str],
     transform: Optional[Callable],
     document_representation: np.ndarray,
+    document_positions: Optional[np.ndarray] = None,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
     n_topics = document_topic_matrix.shape[1]
-    document_positions = prepare.document_positions(document_representation)
+    if document_positions is None:
+        document_positions = prepare.document_positions(document_representation)
     dominant_topics = prepare.dominant_topic(
         document_topic_matrix=document_topic_matrix
     )

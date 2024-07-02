@@ -20,7 +20,7 @@ def test_figures():
     newsgroups = fetch_20newsgroups(
         subset="all",
         categories=[
-            "misc.forsale",
+            "alt.atheism",
         ],
         remove=("headers", "footers", "quotes"),
     )

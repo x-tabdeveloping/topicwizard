@@ -16,8 +16,7 @@ def test_app_integration():
     newsgroups = fetch_20newsgroups(
         subset="all",
         categories=[
-            "misc.forsale",
-            "sci.med",
+            "alt.atheism",
         ],
         remove=("headers", "footers", "quotes"),
     )

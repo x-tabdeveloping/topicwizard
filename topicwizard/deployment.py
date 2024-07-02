@@ -64,7 +64,12 @@ if __name__ == "__main__":
 """
 
 
-def easy_deploy(topic_data: TopicData, dest_dir: Union[str, Path], port: int = 7860):
+def easy_deploy(
+    topic_data: TopicData,
+    dest_dir: Union[str, Path],
+    port: int = 7860,
+    precompute: bool = True,
+):
     """Prepares topic data for easy deployment in a Docker container.
 
     Parameters
@@ -73,6 +78,11 @@ def easy_deploy(topic_data: TopicData, dest_dir: Union[str, Path], port: int = 7
         Topic data to deploy.
     dest_dir: Path
         Directory to save the deployment to.
+    port: int, default 7860
+        Port to deploy the app to. Default is for HuggingFace Spaces.
+    precomputed: bool, default True
+        Determined whether to precompute positions for the deployment.
+        If you want to stay backwards compatible you should set this to False.
     """
     dest_path = Path(dest_dir)
     dest_path.mkdir(exist_ok=True, parents=True)

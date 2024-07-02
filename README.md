@@ -17,6 +17,29 @@ Pretty and opinionated topic model visualization in Python.
 https://github.com/x-tabdeveloping/topicwizard/assets/13087737/9736f33c-6865-4ed4-bc17-d8e6369bda80
 
 
+## New in version 1.1.0
+
+### Easier Deployment and Faster Cold Starts
+
+If you want to produce a deployment of topicwizard with a fitted topic model, you can now produce a Docker deployment folder with `easy_deploy()`.
+
+```python
+import joblib
+import topicwizard
+
+# Load previously produced topic_data object
+topic_data = joblib.load("topic_data.joblib")
+
+topicwizard.easy_deploy(topic_data, dest_dir="deployment", port=7860)
+```
+
+This will put everything you need in the `deployment/` directory, and will work out of the box on cloud platforms or HuggingFace Spaces.
+
+Cold starts are now faster, as UMAP projections can be precomputed.
+
+```python
+topic_data_w_positions = topicwizard.precompute_positions(topic_data)
+```
 
 ## New in version 1.0.0 🌟 
 

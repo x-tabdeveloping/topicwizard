@@ -2,6 +2,9 @@
 
 # topicwizard
 
+#### [Try in :hugs: Spaces](https://huggingface.co/spaces/kardosdrur/topicwizard_20newsgroups_KeyNMF)
+
+
 <br>
 
 Pretty and opinionated topic model visualization in Python.
@@ -17,7 +20,7 @@ Pretty and opinionated topic model visualization in Python.
 https://github.com/x-tabdeveloping/topicwizard/assets/13087737/9736f33c-6865-4ed4-bc17-d8e6369bda80
 
 
-## New in version 1.1.0
+## New in version 1.1.0 🌟
 
 ### Easier Deployment and Faster Cold Starts
 
@@ -41,11 +44,7 @@ Cold starts are now faster, as UMAP projections can be precomputed.
 topic_data_w_positions = topicwizard.precompute_positions(topic_data)
 ```
 
-## New in version 1.0.0 🌟 
-
- - Compatiblity with contextually sensitive topic models in Turftopic and BERTopic.
- - Easier and more streamlined persistence and interoperability.
- - Smaller building blocks for constructing figures and apps.
+You can try a deployment produced with `easy_deploy()` on [:hugs: Spaces](https://huggingface.co/spaces/kardosdrur/topicwizard_20newsgroups_KeyNMF)
 
 ## Features
 

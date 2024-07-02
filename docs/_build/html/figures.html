@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Persistence" href="usage.persistence.html" /><link rel="prev" title="Web Application" href="application.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Individual Figures - topicwizard</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -159,7 +159,7 @@
   <span class="sidebar-brand-text">topicwizard</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -202,8 +202,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -218,7 +217,7 @@
         </div>
         <article role="main">
           <section id="individual-figures">
-<span id="figures"></span><h1>Individual Figures<a class="headerlink" href="#individual-figures" title="Link to this heading">#</a></h1>
+<span id="figures"></span><h1>Individual Figures<a class="headerlink" href="#individual-figures" title="Permalink to this heading">#</a></h1>
 <p>If you are preparing individual figures for a publication or report,
 you might need to modify the appearance or resolution of the figures you producing.</p>
 <p>It might also be the case that it’s only certain figures you’re interested in.</p>
@@ -228,28 +227,16 @@ If you have a TopicData object, you can manually produce individual figures.</p>
 and export them as HTML or a number of image formats.
 For an extensive overview of how you can manipulate plots produced by topicwizard consult <a class="reference external" href="https://plotly.com/python/">Plotly’s documentation</a>.</p>
 <section id="topic-map">
-<h2>Topic Map<a class="headerlink" href="#topic-map" title="Link to this heading">#</a></h2>
+<h2>Topic Map<a class="headerlink" href="#topic-map" title="Permalink to this heading">#</a></h2>
 <p>You can display a semantic map of topics in your model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">topic_map</span>
 
 <span class="n">topic_map</span><span class="p">(</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/topic_map.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.topic_map">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">topic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.topic_map" title="Link to this definition">#</a></dt>
-<dd><p>Plots topics on a scatter plot based on the UMAP projections
-of their parameters into 2D space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/topic_map.html" width="800px" height="600px"></iframe></section>
 <section id="word-barplots">
-<h2>Word Barplots<a class="headerlink" href="#word-barplots" title="Link to this heading">#</a></h2>
+<h2>Word Barplots<a class="headerlink" href="#word-barplots" title="Permalink to this heading">#</a></h2>
 <p>You can display a joint plot of all topics, where word importances are displayed on a bar chart.
 You can specify the relevance metric with the alpha keyword parameter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">topic_barcharts</span>
@@ -261,24 +248,9 @@ You can specify the relevance metric with the alpha keyword parameter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topic_barcharts</span><span class="p">(</span><span class="n">topic_data</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/topic_barcharts.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.topic_barcharts">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">topic_barcharts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.topic_barcharts" title="Link to this definition">#</a></dt>
-<dd><p>Plots most relevant words as bar charts for every topic.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">5</span></code>) – Specifies the number of words to show for each topic.</p></li>
-<li><p><strong>n_columns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">4</span></code>) – Number of columns in the subplot grid.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/topic_barcharts.html" width="800px" height="600px"></iframe></section>
 <section id="word-clouds">
-<h2>Word Clouds<a class="headerlink" href="#word-clouds" title="Link to this heading">#</a></h2>
+<h2>Word Clouds<a class="headerlink" href="#word-clouds" title="Permalink to this heading">#</a></h2>
 <p>You can produce a joint word cloud plot of all topics.
 You can specify the relevance metric with the alpha keyword parameter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">topic_wordclouds</span>
@@ -286,24 +258,9 @@ You can specify the relevance metric with the alpha keyword parameter.</p>
 <span class="n">topic_wordclouds</span><span class="p">(</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/topic_wordclouds.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.topic_wordclouds">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">topic_wordclouds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.topic_wordclouds" title="Link to this definition">#</a></dt>
-<dd><p>Plots most relevant words as word clouds for every topic.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">30</span></code>) – Specifies the number of words to show for each topic.</p></li>
-<li><p><strong>n_columns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">4</span></code>) – Number of columns in the subplot grid.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/topic_wordclouds.html" width="800px" height="600px"></iframe></section>
 <section id="word-map">
-<h2>Word Map<a class="headerlink" href="#word-map" title="Link to this heading">#</a></h2>
+<h2>Word Map<a class="headerlink" href="#word-map" title="Permalink to this heading">#</a></h2>
 <p>The word map that you can display with a dedicated function is slightly different from the one in the app
 as here you can’t select words to highlight.</p>
 <p>Instead you can specify a cutoff in Z-values over which words will be labelled on the graph.</p>
@@ -329,33 +286,9 @@ where words with the lowest importance for a topic also cary information, as a t
 <span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/word_map_axes.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.word_map">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">word_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic_axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.word_map" title="Link to this definition">#</a></dt>
-<dd><p>Plots words on a scatter plot based on UMAP projections
-of their importances in topics into 2D space or by two topic axes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>z_threshold</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">2.0</span></code>) – Z-score frequency threshold over which words get labels on the
-plot. The default roughly corresponds to 95% percentile
-if we assume normal distribution for word frequencies
-(which is probably not the case, see Zipf’s law).
-If you find not enough words have labels, lower this number
-if you find there is too much clutter on your graph,
-change this to something higher.</p></li>
-<li><p><strong>topic_axes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str|int</span></code>, <em>optional</em>) – The topic axes along which the words should be displayed.
-If not specified, the axes on the graph are going to be
-UMAP projections’ dimensions.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/word_map_axes.html" width="800px" height="600px"></iframe></section>
 <section id="important-topics">
-<h2>Important Topics<a class="headerlink" href="#important-topics" title="Link to this heading">#</a></h2>
+<h2>Important Topics<a class="headerlink" href="#important-topics" title="Permalink to this heading">#</a></h2>
 <p>You can visualize most relevant topics for a given set of words with
 barcharts, these behave virtually the same as in the app, but no associations
 are selected by default.</p>
@@ -366,27 +299,9 @@ do so:</p>
 <span class="n">word_association_barchart</span><span class="p">(</span><span class="n">topic_data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;supreme&quot;</span><span class="p">,</span> <span class="s2">&quot;court&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/word_association_barchart.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.word_association_barchart">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">word_association_barchart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">words</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_association</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.figures.word_association_barchart" title="Link to this definition">#</a></dt>
-<dd><p>Plots bar chart of most important topics for the given words and their closest
-associations in topic space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>words</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Words you want to start the association from.</p></li>
-<li><p><strong>n_association</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0</span></code>) – Number of words to associate with the given words.
-None get displayed by default.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span> <span class="pre">=</span> <span class="pre">20</span></code>) – Top N topics to display.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/word_association_barchart.html" width="800px" height="600px"></iframe></section>
 <section id="document-map">
-<h2>Document Map<a class="headerlink" href="#document-map" title="Link to this heading">#</a></h2>
+<h2>Document Map<a class="headerlink" href="#document-map" title="Permalink to this heading">#</a></h2>
 <p>You can display a map of documents as a self-contained plot.
 This can be advantageous when you want to see how different documents relate to each other in your corpus,
 and to the underlying topics discovered by the model.</p>
@@ -397,23 +312,9 @@ and to the underlying topics discovered by the model.</p>
 <span class="n">document_map</span><span class="p">(</span><span class="n">topic_data</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/document_map.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.document_map">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">document_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">document_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.document_map" title="Link to this definition">#</a></dt>
-<dd><p>Projects documents into 2d space and displays them on a scatter plot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>document_metadata</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <em>optional</em>) – Metadata you want displayed when hovering over documents on the graph.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/document_map.html" width="800px" height="600px"></iframe></section>
 <section id="topic-distribution">
-<h2>Topic Distribution<a class="headerlink" href="#topic-distribution" title="Link to this heading">#</a></h2>
+<h2>Topic Distribution<a class="headerlink" href="#topic-distribution" title="Permalink to this heading">#</a></h2>
 <p>You can display topic distributions for a given document or list of documents on a bar chart.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">document_topic_distribution</span>
 
@@ -423,23 +324,7 @@ and to the underlying topics discovered by the model.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/document_topic_distribution.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.document_topic_distribution">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">document_topic_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.document_topic_distribution" title="Link to this definition">#</a></dt>
-<dd><p>Displays topic distribution on a bar plot for a document
-or a set of documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>documents</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Documents to display topic distribution for.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">8</span></code>) – Number of topics to display at most.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<p>You can also display topic distribution over time in a single document on a line chart.
+<iframe src="_static/plots/document_topic_distribution.html" width="800px" height="600px"></iframe><p>You can also display topic distribution over time in a single document on a line chart.
 (or an entire corpus if you join the texts.)</p>
 <p>This works by taking windows of tokens from the document and running them through the pipeline.
 You can specify window and step size in number of tokens if you find the results have to high or to low resolution.</p>
@@ -451,48 +336,18 @@ You can specify window and step size in number of tokens if you find the results
 <span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/document_topic_timeline.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.document_topic_timeline">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">document_topic_timeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.document_topic_timeline" title="Link to this definition">#</a></dt>
-<dd><p>Projects documents into 2d space and displays them on a scatter plot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>document</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Document to display the timeline for.</p></li>
-<li><p><strong>window_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">10</span></code>) – The windows over which topic inference should be run.</p></li>
-<li><p><strong>step_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1</span></code>) – Size of the steps for the rolling window.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/document_topic_timeline.html" width="800px" height="600px"></iframe></section>
 <section id="group-map">
-<h2>Group Map<a class="headerlink" href="#group-map" title="Link to this heading">#</a></h2>
+<h2>Group Map<a class="headerlink" href="#group-map" title="Permalink to this heading">#</a></h2>
 <p>You can display the group map as a standalone plot, with the groups being colored according to dominant topic.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">group_map</span>
 
 <span class="n">group_map</span><span class="p">(</span><span class="n">topic_data</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/group_map.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.group_map">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">group_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.group_map" title="Link to this definition">#</a></dt>
-<dd><p>Projects groups into 2d space and displays them on a scatter plot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>group_labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code>) – Labels for each of the documents in the corpus.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/group_map.html" width="800px" height="600px"></iframe></section>
 <section id="group-topic-barcharts">
-<h2>Group Topic Barcharts<a class="headerlink" href="#group-topic-barcharts" title="Link to this heading">#</a></h2>
+<h2>Group Topic Barcharts<a class="headerlink" href="#group-topic-barcharts" title="Permalink to this heading">#</a></h2>
 <p>You can create a joint plot of the topic content of all groups.
 These will be displayed as bar charts.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">group_topic_barcharts</span>
@@ -500,48 +355,16 @@ These will be displayed as bar charts.</p>
 <span class="n">group_topic_barcharts</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">top_n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/group_topic_barcharts.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.group_topic_barcharts">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">group_topic_barcharts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.figures.group_topic_barcharts" title="Link to this definition">#</a></dt>
-<dd><p>Displays the most important topics for each group.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>group_labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code>) – Labels for each of the documents in the corpus.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">5</span></code>) – Maximum number of topics to display for each group.</p></li>
-<li><p><strong>n_columns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">4</span></code>) – Indicates how many columns the faceted plot should have.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/group_topic_barcharts.html" width="800px" height="600px"></iframe></section>
 <section id="group-word-clouds">
-<h2>Group Word Clouds<a class="headerlink" href="#group-word-clouds" title="Link to this heading">#</a></h2>
+<h2>Group Word Clouds<a class="headerlink" href="#group-word-clouds" title="Permalink to this heading">#</a></h2>
 <p>You can create word clouds for each of the group labels. This will only take word counts into account and not relevance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.figures</span> <span class="kn">import</span> <span class="n">group_wordclouds</span>
 
 <span class="n">group_wordclouds</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">group_labels</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">)</span>
 </pre></div>
 </div>
-<iframe src="_static/plots/group_wordclouds.html" width="800px" height="600px"></iframe><dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.figures.group_wordclouds">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.figures.</span></span><span class="sig-name descname"><span class="pre">group_wordclouds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Figure</span></span></span><a class="headerlink" href="#topicwizard.figures.group_wordclouds" title="Link to this definition">#</a></dt>
-<dd><p>Plots wordclouds for each group.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>topic_data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TopicData</span></code>) – Inference data from topic modeling.</p></li>
-<li><p><strong>group_labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list[str]</span></code>) – Labels for each document in the corpus.</p></li>
-<li><p><strong>top_n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">30</span></code>) – Number of words to display for each group.</p></li>
-<li><p><strong>n_columns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">4</span></code>) – Number of columns the faceted plot should have.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
+<iframe src="_static/plots/group_wordclouds.html" width="800px" height="600px"></iframe></section>
 </section>
 
         </article>
@@ -556,10 +379,10 @@ These will be displayed as bar charts.</p>
                 </div>
                 <div class="title">Persistence</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="application.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -581,7 +404,9 @@ These will be displayed as bar charts.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -593,54 +418,23 @@ These will be displayed as bar charts.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Individual Figures</a><ul>
-<li><a class="reference internal" href="#topic-map">Topic Map</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.topic_map"><code class="docutils literal notranslate"><span class="pre">topic_map()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#word-barplots">Word Barplots</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.topic_barcharts"><code class="docutils literal notranslate"><span class="pre">topic_barcharts()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#word-clouds">Word Clouds</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.topic_wordclouds"><code class="docutils literal notranslate"><span class="pre">topic_wordclouds()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#word-map">Word Map</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.word_map"><code class="docutils literal notranslate"><span class="pre">word_map()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#important-topics">Important Topics</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.word_association_barchart"><code class="docutils literal notranslate"><span class="pre">word_association_barchart()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#document-map">Document Map</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.document_map"><code class="docutils literal notranslate"><span class="pre">document_map()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#topic-distribution">Topic Distribution</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.document_topic_distribution"><code class="docutils literal notranslate"><span class="pre">document_topic_distribution()</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.figures.document_topic_timeline"><code class="docutils literal notranslate"><span class="pre">document_topic_timeline()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#group-map">Group Map</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.group_map"><code class="docutils literal notranslate"><span class="pre">group_map()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#group-topic-barcharts">Group Topic Barcharts</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.group_topic_barcharts"><code class="docutils literal notranslate"><span class="pre">group_topic_barcharts()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#group-word-clouds">Group Word Clouds</a><ul>
-<li><a class="reference internal" href="#topicwizard.figures.group_wordclouds"><code class="docutils literal notranslate"><span class="pre">group_wordclouds()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#topic-map">Topic Map</a></li>
+<li><a class="reference internal" href="#word-barplots">Word Barplots</a></li>
+<li><a class="reference internal" href="#word-clouds">Word Clouds</a></li>
+<li><a class="reference internal" href="#word-map">Word Map</a></li>
+<li><a class="reference internal" href="#important-topics">Important Topics</a></li>
+<li><a class="reference internal" href="#document-map">Document Map</a></li>
+<li><a class="reference internal" href="#topic-distribution">Topic Distribution</a></li>
+<li><a class="reference internal" href="#group-map">Group Map</a></li>
+<li><a class="reference internal" href="#group-topic-barcharts">Group Topic Barcharts</a></li>
+<li><a class="reference internal" href="#group-word-clouds">Group Word Clouds</a></li>
 </ul>
 </li>
 </ul>
@@ -652,9 +446,11 @@ These will be displayed as bar charts.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

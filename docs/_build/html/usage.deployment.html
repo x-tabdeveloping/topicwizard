@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Persistence" href="usage.persistence.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Deployment - topicwizard</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -159,7 +159,7 @@
   <span class="sidebar-brand-text">topicwizard</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -202,8 +202,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -211,14 +210,14 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="deployment">
-<h1>Deployment<a class="headerlink" href="#deployment" title="Link to this heading">#</a></h1>
+<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this heading">#</a></h1>
 <p>Since topicwizard is technically just like any Dash application you can easily deploy topicwizard
 to a cloud provider or your own servers.</p>
 <p>If you have access to a TopicData object, you can build a Dash application, that can be used to spin up a server.</p>
@@ -239,6 +238,46 @@ to a cloud provider or your own servers.</p>
 </pre></div>
 </div>
 <p>You can easily package a topicwizard app with gunicorn into a Docker image as well.</p>
+<section id="easy-deployment-new-in-version-1-1-0">
+<h2>Easy Deployment (New in version 1.1.0)<a class="headerlink" href="#easy-deployment-new-in-version-1-1-0" title="Permalink to this heading">#</a></h2>
+<p>If you want to produce a deployment of topicwizard with a fitted topic model, you can now produce a Docker deployment folder with easy_deploy().</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">import</span> <span class="nn">topicwizard</span>
+
+<span class="c1"># Load previously produced topic_data object</span>
+<span class="n">topic_data</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;topic_data.joblib&quot;</span><span class="p">)</span>
+
+<span class="n">topicwizard</span><span class="o">.</span><span class="n">easy_deploy</span><span class="p">(</span><span class="n">topic_data</span><span class="p">,</span> <span class="n">dest_dir</span><span class="o">=</span><span class="s2">&quot;deployment&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">7860</span><span class="p">)</span>
+
+<span class="c1"># deployment/</span>
+<span class="c1">#    - Dockerfile</span>
+<span class="c1">#    - main.py</span>
+<span class="c1">#    - topic_data.joblib</span>
+</pre></div>
+</div>
+<p>This will put everything you need in the <cite>deployment/</cite> directory, and will work out of the box on cloud platforms or HuggingFace Spaces.</p>
+<p>Cold starts are now faster, as UMAP projections can be precomputed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">topic_data_w_positions</span> <span class="o">=</span> <span class="n">topicwizard</span><span class="o">.</span><span class="n">precompute_positions</span><span class="p">(</span><span class="n">topic_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="deploying-to-huggingface-spaces">
+<h2>Deploying to HuggingFace Spaces<a class="headerlink" href="#deploying-to-huggingface-spaces" title="Permalink to this heading">#</a></h2>
+<p>You can deploy topic models in topicwizard to HuggingFace Spaces by creating a <a class="reference external" href="https://huggingface.co/docs/hub/spaces-sdks-docker">Docker Space</a>.
+You should then clone the repository to your computer.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone &lt;link_to_space&gt;
+</pre></div>
+</div>
+<p>Then move the contents of a deployment folder created with easy_deploy() to the repo folder, and push everything to the Space.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mv deployment/* /path/to/space_repo
+<span class="nb">cd</span> path/to/space_repo
+git add -A
+git commit -m <span class="s2">&quot;Added deployment&quot;</span>
+git push
+</pre></div>
+</div>
+<p>Your deployment will automatically start.</p>
+</section>
 </section>
 
         </article>
@@ -248,7 +287,7 @@ to a cloud provider or your own servers.</p>
         <div class="related-pages">
           
           <a class="prev-page" href="usage.persistence.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -270,21 +309,45 @@ to a cloud provider or your own servers.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Deployment</a><ul>
+<li><a class="reference internal" href="#easy-deployment-new-in-version-1-1-0">Easy Deployment (New in version 1.1.0)</a></li>
+<li><a class="reference internal" href="#deploying-to-huggingface-spaces">Deploying to HuggingFace Spaces</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

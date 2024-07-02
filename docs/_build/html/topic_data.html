@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Compatibility" href="usage.compatibility.html" /><link rel="prev" title="Contextually Sensitive Topic Models" href="usage.contextual_models.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Topic Data - topicwizard</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -159,7 +159,7 @@
   <span class="sidebar-brand-text">topicwizard</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -202,8 +202,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -218,7 +217,7 @@
         </div>
         <article role="main">
           <section id="topic-data">
-<span id="id1"></span><h1>Topic Data<a class="headerlink" href="#topic-data" title="Link to this heading">#</a></h1>
+<span id="id1"></span><h1>Topic Data<a class="headerlink" href="#topic-data" title="Permalink to this heading">#</a></h1>
 <p>Topic data is the main abstraction in topicwizard that contains information about topical inference in a corpus,
 that can be used to reproduce the interpretive visualizations in the web app and individual figures.</p>
 <p>This interface is needed so that topicwizard can use data from other libraries or your own topic models,
@@ -241,15 +240,15 @@ This means that if you have a TopicData object from some corpus and some topic m
 </pre></div>
 </div>
 <section id="api-reference">
-<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.data.</span></span><span class="sig-name descname"><span class="pre">TopicData</span></span><a class="headerlink" href="#topicwizard.data.TopicData" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.data.</span></span><span class="sig-name descname"><span class="pre">TopicData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.data.TopicData" title="Permalink to this definition">#</a></dt>
 <dd><p>Inference data used to produce visualizations
 in the application and figures.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.corpus">
-<span class="sig-name descname"><span class="pre">corpus</span></span><a class="headerlink" href="#topicwizard.data.TopicData.corpus" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">corpus</span></span><a class="headerlink" href="#topicwizard.data.TopicData.corpus" title="Permalink to this definition">#</a></dt>
 <dd><p>The corpus on which inference was run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -260,7 +259,7 @@ in the application and figures.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.vocab">
-<span class="sig-name descname"><span class="pre">vocab</span></span><a class="headerlink" href="#topicwizard.data.TopicData.vocab" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">vocab</span></span><a class="headerlink" href="#topicwizard.data.TopicData.vocab" title="Permalink to this definition">#</a></dt>
 <dd><p>Array of all words in the vocabulary of the topic model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -271,7 +270,7 @@ in the application and figures.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.document_term_matrix">
-<span class="sig-name descname"><span class="pre">document_term_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_term_matrix" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">document_term_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_term_matrix" title="Permalink to this definition">#</a></dt>
 <dd><p>Bag-of-words document representations.
 Elements of the matrix are word importances/frequencies for given documents.</p>
 <dl class="field-list simple">
@@ -283,7 +282,7 @@ Elements of the matrix are word importances/frequencies for given documents.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.document_topic_matrix">
-<span class="sig-name descname"><span class="pre">document_topic_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_topic_matrix" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">document_topic_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_topic_matrix" title="Permalink to this definition">#</a></dt>
 <dd><p>Topic importances for each document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -294,7 +293,7 @@ Elements of the matrix are word importances/frequencies for given documents.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.topic_term_matrix">
-<span class="sig-name descname"><span class="pre">topic_term_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.topic_term_matrix" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">topic_term_matrix</span></span><a class="headerlink" href="#topicwizard.data.TopicData.topic_term_matrix" title="Permalink to this definition">#</a></dt>
 <dd><p>Importances of each term for each topic in a matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -305,7 +304,7 @@ Elements of the matrix are word importances/frequencies for given documents.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.document_representation">
-<span class="sig-name descname"><span class="pre">document_representation</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_representation" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">document_representation</span></span><a class="headerlink" href="#topicwizard.data.TopicData.document_representation" title="Permalink to this definition">#</a></dt>
 <dd><p>Embedded representations for documents.
 Can also be a sparse BoW matrix for classical models.</p>
 <dl class="field-list simple">
@@ -317,7 +316,7 @@ Can also be a sparse BoW matrix for classical models.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><a class="headerlink" href="#topicwizard.data.TopicData.transform" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">transform</span></span><a class="headerlink" href="#topicwizard.data.TopicData.transform" title="Permalink to this definition">#</a></dt>
 <dd><p>Function that transforms documents to document-topic matrices.
 Can be None in the case of transductive models.</p>
 <dl class="field-list simple">
@@ -329,7 +328,7 @@ Can be None in the case of transductive models.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="topicwizard.data.TopicData.topic_names">
-<span class="sig-name descname"><span class="pre">topic_names</span></span><a class="headerlink" href="#topicwizard.data.TopicData.topic_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">topic_names</span></span><a class="headerlink" href="#topicwizard.data.TopicData.topic_names" title="Permalink to this definition">#</a></dt>
 <dd><p>Names or topic descriptions inferred for topics by the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -355,10 +354,10 @@ Can be None in the case of transductive models.</p>
                 </div>
                 <div class="title">Compatibility</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="usage.contextual_models.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -380,7 +379,9 @@ Can be None in the case of transductive models.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -392,27 +393,14 @@ Can be None in the case of transductive models.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Topic Data</a><ul>
-<li><a class="reference internal" href="#api-reference">API Reference</a><ul>
-<li><a class="reference internal" href="#topicwizard.data.TopicData"><code class="docutils literal notranslate"><span class="pre">TopicData</span></code></a><ul>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.corpus"><code class="docutils literal notranslate"><span class="pre">TopicData.corpus</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.vocab"><code class="docutils literal notranslate"><span class="pre">TopicData.vocab</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.document_term_matrix"><code class="docutils literal notranslate"><span class="pre">TopicData.document_term_matrix</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.document_topic_matrix"><code class="docutils literal notranslate"><span class="pre">TopicData.document_topic_matrix</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.topic_term_matrix"><code class="docutils literal notranslate"><span class="pre">TopicData.topic_term_matrix</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.document_representation"><code class="docutils literal notranslate"><span class="pre">TopicData.document_representation</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.transform"><code class="docutils literal notranslate"><span class="pre">TopicData.transform</span></code></a></li>
-<li><a class="reference internal" href="#topicwizard.data.TopicData.topic_names"><code class="docutils literal notranslate"><span class="pre">TopicData.topic_names</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#api-reference">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -424,9 +412,11 @@ Can be None in the case of transductive models.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

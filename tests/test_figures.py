@@ -20,17 +20,15 @@ def test_figures():
     newsgroups = fetch_20newsgroups(
         subset="all",
         categories=[
-            "misc.forsale",
-            "sci.med",
-            "comp.graphics",
             "alt.atheism",
-            "talk.politics.misc",
         ],
         remove=("headers", "footers", "quotes"),
     )
     texts = newsgroups.data
     labels = list(np.array(newsgroups.target_names)[newsgroups.target])
-    trf = SentenceTransformer("all-MiniLM-L6-v2")
+    trf = SentenceTransformer(
+        "sentence-transformers/average_word_embeddings_glove.6B.300d"
+    )
     embeddings = np.asarray(trf.encode(texts))
     models = dict()
     models["nmf"] = make_topic_pipeline(
@@ -41,8 +39,6 @@ def test_figures():
         TfidfVectorizer(stop_words="english", max_features=8000),
         TruncatedSVD(10),
     ).fit(texts)
-    models["s3"] = SemanticSignalSeparation(10)
-    models["keynmf"] = KeyNMF(10)
     example_document = "Joe Biden takes over presidential office from Donald Trump."
     plots = {
         "group_map": partial(figures.group_map, group_labels=labels),

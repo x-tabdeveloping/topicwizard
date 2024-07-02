@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js" lang="en" data-content_root="./">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Web Application" href="application.html" /><link rel="prev" title="Topic Data" href="topic_data.html" />
 
-    <link rel="shortcut icon" href="_static/icon.svg"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+    <link rel="shortcut icon" href="_static/icon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Compatibility - topicwizard</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=362ab14a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -159,7 +159,7 @@
   <span class="sidebar-brand-text">topicwizard</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -202,8 +202,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -218,11 +217,11 @@
         </div>
         <article role="main">
           <section id="compatibility">
-<span id="usage-compatibility"></span><h1>Compatibility<a class="headerlink" href="#compatibility" title="Link to this heading">#</a></h1>
+<span id="usage-compatibility"></span><h1>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this heading">#</a></h1>
 <p>Compatibility layers have been introduced with version 0.2.4,
 Gensim and BERTopic can now be used with topicwizard.</p>
 <section id="gensim">
-<h2>Gensim<a class="headerlink" href="#gensim" title="Link to this heading">#</a></h2>
+<h2>Gensim<a class="headerlink" href="#gensim" title="Permalink to this heading">#</a></h2>
 <p>sklearn compatible pipelines for Gensim models can be created once you have a dictionary
 and a topic model object available, topicwizard is compatible with LSI, LDA (also multicore) and NMF.</p>
 <p>First you need to train a Gensim dictionary and topic model.</p>
@@ -250,30 +249,9 @@ and a topic model object available, topicwizard is compatible with LSI, LDA (als
 <span class="n">topicwizard</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">corpus</span><span class="o">=</span><span class="n">corpus</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="py function">
-<dt class="sig sig-object py" id="topicwizard.compatibility.gensim.gensim_pipeline">
-<span class="sig-prename descclassname"><span class="pre">topicwizard.compatibility.gensim.</span></span><span class="sig-name descname"><span class="pre">gensim_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="usage.pipelines.html#topicwizard.pipeline.TopicPipeline" title="topicwizard.pipeline.TopicPipeline"><span class="pre">TopicPipeline</span></a></span></span><a class="headerlink" href="#topicwizard.compatibility.gensim.gensim_pipeline" title="Link to this definition">#</a></dt>
-<dd><p>Creates sklearn compatible wrapper for a Gensim topic pipeline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dictionary</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">gensim.corpora.dictionary.Dictionary</span></code>) – Gensim’s dictionary object. Please only pass already fitted
-dictionary objects.</p></li>
-<li><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">LdaModel</span> <span class="pre">|</span> <span class="pre">LdaMulticore</span> <span class="pre">|</span> <span class="pre">Nmf</span> <span class="pre">|</span> <span class="pre">LsiModel</span></code>) – Gensim topic model. The model should already be fitted.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Sklearn compatible topic pipeline wrapping the Gensim topic model.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TopicPipeline</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="bertopic">
-<h2>BERTopic<a class="headerlink" href="#bertopic" title="Link to this heading">#</a></h2>
+<h2>BERTopic<a class="headerlink" href="#bertopic" title="Permalink to this heading">#</a></h2>
 <p>You can create a topicwizard pipeline from a BERTopic pipeline fairly easily.</p>
 <p>First you need to construct a BERTopic model.
 The model does not have to be pretrained. If you don’t train it, it will be automatically fitted when running the app.</p>
@@ -299,40 +277,15 @@ The model does not have to be pretrained. If you don’t train it, it will be au
 <span class="n">topic_data</span> <span class="o">=</span> <span class="n">wrapped_model</span><span class="o">.</span><span class="n">prepare_topic_data</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
 </pre></div>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="topicwizard.compatibility.bertopic.BERTopicWrapper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">topicwizard.compatibility.bertopic.</span></span><span class="sig-name descname"><span class="pre">BERTopicWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#topicwizard.compatibility.bertopic.BERTopicWrapper" title="Link to this definition">#</a></dt>
-<dd><p>Wrapper for BERTopic models to be used in topicwizard.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">BERTopic</span></code>) – BERTopic model to wrap.</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data">
-<span class="sig-name descname"><span class="pre">prepare_topic_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="topic_data.html#topicwizard.data.TopicData" title="topicwizard.data.TopicData"><span class="pre">TopicData</span></a></span></span><a class="headerlink" href="#topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data" title="Link to this definition">#</a></dt>
-<dd><p>Produces topic data for visualizations in topicwizard.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>corpus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Corpus to infer topic data for.</p></li>
-<li><p><strong>embeddings</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(n_documents</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">n_dimensions)</span></code>) – Contextual embeddings to use for topic discovery.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="top2vec">
-<h2>Top2Vec<a class="headerlink" href="#top2vec" title="Link to this heading">#</a></h2>
+<h2>Top2Vec<a class="headerlink" href="#top2vec" title="Permalink to this heading">#</a></h2>
 <p>We do not provide support for direct usage of Top2Vec models,
 since Top2Vec models can be represented exactly in terms of Turftopic’s abstractions.</p>
 <p>We therefore recommend that if you intend to use Top2Vec models, construct a model from scratch in Turftopic.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>turftopic
-pip<span class="w"> </span>install<span class="w"> </span>umap-learn
-pip<span class="w"> </span>install<span class="w"> </span>scikit-learn&gt;<span class="o">=</span><span class="m">1</span>.3.0
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install turftopic
+pip install umap-learn
+pip install scikit-learn&gt;<span class="o">=</span><span class="m">1</span>.3.0
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">ClusteringTopicModel</span>
@@ -363,7 +316,7 @@ pip<span class="w"> </span>install<span class="w"> </span>scikit-learn&gt;<span 
 </div>
 </section>
 <section id="ctm">
-<h2>CTM<a class="headerlink" href="#ctm" title="Link to this heading">#</a></h2>
+<h2>CTM<a class="headerlink" href="#ctm" title="Permalink to this heading">#</a></h2>
 <p>CTM models are not supported out of the box, because CTM’s behaviour can be replicated using AutoEncodingTopicModel from Turftopic.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">turftopic</span> <span class="kn">import</span> <span class="n">AutoEncodingTopicModel</span>
 
@@ -379,9 +332,9 @@ pip<span class="w"> </span>install<span class="w"> </span>scikit-learn&gt;<span 
 </div>
 </section>
 <section id="custom-topic-models">
-<h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Link to this heading">#</a></h2>
+<h2>Custom Topic Models<a class="headerlink" href="#custom-topic-models" title="Permalink to this heading">#</a></h2>
 <section id="classical-models-with-topicpipeline">
-<h3>Classical Models with TopicPipeline<a class="headerlink" href="#classical-models-with-topicpipeline" title="Link to this heading">#</a></h3>
+<h3>Classical Models with TopicPipeline<a class="headerlink" href="#classical-models-with-topicpipeline" title="Permalink to this heading">#</a></h3>
 <p>You can write topic models, which are compatible with topicwizard.
 If you have a topic model, which rests on the bag-of-words assumption this is
 a fairly straightforward task.</p>
@@ -426,7 +379,7 @@ a fairly straightforward task.</p>
 </div>
 </section>
 <section id="any-model-contextual-models">
-<h3>Any Model / Contextual Models<a class="headerlink" href="#any-model-contextual-models" title="Link to this heading">#</a></h3>
+<h3>Any Model / Contextual Models<a class="headerlink" href="#any-model-contextual-models" title="Permalink to this heading">#</a></h3>
 <p>Contextual models have to follow the following interface, and have to be able to produce a TopicData objects:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">topicwizard.model_interface</span> <span class="kn">import</span> <span class="n">TopicModel</span>
 <span class="kn">from</span> <span class="nn">topicwizard.data</span> <span class="kn">import</span> <span class="n">TopicData</span>
@@ -457,10 +410,10 @@ a fairly straightforward task.</p>
                 </div>
                 <div class="title">Web Application</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="topic_data.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -482,7 +435,9 @@ a fairly straightforward task.</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -494,24 +449,15 @@ a fairly straightforward task.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Compatibility</a><ul>
-<li><a class="reference internal" href="#gensim">Gensim</a><ul>
-<li><a class="reference internal" href="#topicwizard.compatibility.gensim.gensim_pipeline"><code class="docutils literal notranslate"><span class="pre">gensim_pipeline()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#bertopic">BERTopic</a><ul>
-<li><a class="reference internal" href="#topicwizard.compatibility.bertopic.BERTopicWrapper"><code class="docutils literal notranslate"><span class="pre">BERTopicWrapper</span></code></a><ul>
-<li><a class="reference internal" href="#topicwizard.compatibility.bertopic.BERTopicWrapper.prepare_topic_data"><code class="docutils literal notranslate"><span class="pre">BERTopicWrapper.prepare_topic_data()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#gensim">Gensim</a></li>
+<li><a class="reference internal" href="#bertopic">BERTopic</a></li>
 <li><a class="reference internal" href="#top2vec">Top2Vec</a></li>
 <li><a class="reference internal" href="#ctm">CTM</a></li>
 <li><a class="reference internal" href="#custom-topic-models">Custom Topic Models</a><ul>
@@ -530,9 +476,11 @@ a fairly straightforward task.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=01f34227"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=32e29ea5"></script>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
     </body>
 </html>

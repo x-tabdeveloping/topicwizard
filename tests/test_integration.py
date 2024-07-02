@@ -1,9 +1,5 @@
-import os
-import random
-import tempfile
-from pathlib import Path
-
 import numpy as np
+from bertopic import BERTopic
 from sentence_transformers import SentenceTransformer
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.decomposition import NMF, TruncatedSVD
@@ -11,6 +7,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from turftopic import KeyNMF, SemanticSignalSeparation
 
 from topicwizard import get_dash_app
+from topicwizard.compatibility import BERTopicWrapper
 from topicwizard.pipeline import make_topic_pipeline
 
 
@@ -21,14 +18,13 @@ def test_app_integration():
         categories=[
             "misc.forsale",
             "sci.med",
-            "comp.graphics",
-            "alt.atheism",
-            "talk.politics.misc",
         ],
         remove=("headers", "footers", "quotes"),
     )
     texts = newsgroups.data
-    trf = SentenceTransformer("all-MiniLM-L6-v2")
+    trf = SentenceTransformer(
+        "sentence-transformers/average_word_embeddings_glove.6B.300d"
+    )
     embeddings = np.asarray(trf.encode(texts))
     models = dict()
     models["nmf"] = make_topic_pipeline(
@@ -39,8 +35,11 @@ def test_app_integration():
         TfidfVectorizer(stop_words="english", max_features=8000),
         TruncatedSVD(10),
     ).fit(texts)
-    models["s3"] = SemanticSignalSeparation(10)
-    models["keynmf"] = KeyNMF(10)
+    models["s3"] = SemanticSignalSeparation(10, encoder=trf)
+    models["keynmf"] = KeyNMF(10, encoder=trf)
+    models["bertopic"] = BERTopicWrapper(
+        BERTopic(language="english", embedding_model=trf)
+    )
     for model_name, model in models.items():
         try:
             topic_data = model.prepare_topic_data(texts, embeddings=embeddings)

@@ -21,10 +21,6 @@ def test_figures():
         subset="all",
         categories=[
             "misc.forsale",
-            "sci.med",
-            "comp.graphics",
-            "alt.atheism",
-            "talk.politics.misc",
         ],
         remove=("headers", "footers", "quotes"),
     )

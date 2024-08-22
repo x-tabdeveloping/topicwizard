@@ -19,6 +19,10 @@ class BERTopicWrapper(TopicModel):
     def __init__(self, model):
         self.model = model
 
+    def transform(self, corpus: list[str]):
+        topic_labels, _ = self.model.transform(corpus)
+        return label_binarize(topic_labels, classes=self.model.topics_)
+
     def prepare_topic_data(
         self, corpus: List[str], embeddings: Optional[np.ndarray] = None
     ) -> TopicData:
@@ -55,10 +59,6 @@ class BERTopicWrapper(TopicModel):
         else:
             topic_names = self.model.generate_topic_labels(nr_words=3)
 
-        def transform(corpus: list[str]):
-            topic_labels, _ = self.model.transform(corpus, embeddings=embeddings)
-            return label_binarize(topic_labels, classes=self.model.topics_)
-
         return TopicData(
             corpus=corpus,
             vocab=vocab,
@@ -66,6 +66,6 @@ class BERTopicWrapper(TopicModel):
             document_topic_matrix=np.asarray(document_topic_matrix),
             topic_term_matrix=self.model.c_tf_idf_.toarray(),
             document_representation=embeddings,  # type: ignore
-            transform=transform,
+            transform=self.transform,
             topic_names=topic_names,
         )

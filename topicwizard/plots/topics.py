@@ -1,4 +1,5 @@
 """Module containing plotting utilities for topics."""
+
 from typing import List
 
 import numpy as np
@@ -139,7 +140,7 @@ def topic_plot(top_words: pd.DataFrame):
     return fig
 
 
-def wordcloud(top_words: pd.DataFrame) -> go.Figure:
+def wordcloud(top_words: pd.DataFrame, color_scheme: str = "copper") -> go.Figure:
     """Plots most relevant words for current topic as a worcloud."""
     top_dict = {
         word: importance
@@ -151,7 +152,7 @@ def wordcloud(top_words: pd.DataFrame) -> go.Figure:
         width=800,
         height=1060,
         background_color="white",
-        colormap="copper",
+        colormap=color_scheme,
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()

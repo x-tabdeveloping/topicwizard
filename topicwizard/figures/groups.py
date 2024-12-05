@@ -1,4 +1,5 @@
 """External API for creating self-contained figures for groups."""
+
 from typing import List
 
 import numpy as np
@@ -68,7 +69,11 @@ def group_map(topic_data: TopicData, group_labels: List[str]) -> go.Figure:
 
 
 def group_topic_barcharts(
-    topic_data: TopicData, group_labels: List[str], top_n: int = 5, n_columns: int = 4
+    topic_data: TopicData,
+    group_labels: List[str],
+    top_n: int = 5,
+    n_columns: int = 4,
+    color_scheme: str = "Portland",
 ):
     """Displays the most important topics for each group.
 
@@ -82,6 +87,8 @@ def group_topic_barcharts(
         Maximum number of topics to display for each group.
     n_columns: int, default 4
         Indicates how many columns the faceted plot should have.
+    color_scheme: str, default 'Portland'
+        Name of the plotly color scheme to use for the figure.
     """
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
@@ -105,7 +112,7 @@ def group_topic_barcharts(
         horizontal_spacing=0.01,
     )
     n_topics = len(topic_data["topic_names"])
-    color_scheme = colors.get_colorscale("Portland")
+    color_scheme = colors.get_colorscale(color_scheme)
     topic_colors = colors.sample_colorscale(
         color_scheme, np.arange(n_topics) / n_topics, low=0.25, high=1.0
     )

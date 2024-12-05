@@ -18,6 +18,7 @@ def word_map(
     topic_data: TopicData,
     z_threshold: float = 2.0,
     topic_axes: Optional[Tuple[Union[str, int], Union[str, int]]] = None,
+    color_scheme: str = "tempo",
 ) -> go.Figure:
     """Plots words on a scatter plot based on UMAP projections
     of their importances in topics into 2D space or by two topic axes.
@@ -38,6 +39,8 @@ def word_map(
         The topic axes along which the words should be displayed.
         If not specified, the axes on the graph are going to be
         UMAP projections' dimensions.
+    color_scheme: str, default 'tempo'
+        Name of the Plotly color scheme to use for the plot.
     """
     topic_names = topic_data["topic_names"]
     if topic_axes is None:
@@ -58,7 +61,7 @@ def word_map(
     freq_z = zscore(word_frequencies)
     dominant_topic = prepare.dominant_topic(topic_data["topic_term_matrix"])
     dominant_topic = np.array(topic_data["topic_names"])[dominant_topic]
-    tempo = colors.get_colorscale("tempo")
+    tempo = colors.get_colorscale(color_scheme)
     n_topics = len(topic_data["topic_names"])
     topic_colors = colors.sample_colorscale(tempo, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
@@ -99,6 +102,7 @@ def word_association_barchart(
     words: Union[List[str], str],
     n_association: int = 0,
     top_n: int = 20,
+    color_scheme: str = "Rainbow",
 ):
     """Plots bar chart of most important topics for the given words and their closest
     associations in topic space.
@@ -114,6 +118,8 @@ def word_association_barchart(
         None get displayed by default.
     top_n: int = 20
         Top N topics to display.
+    color_scheme: str, default 'Rainbow'
+        Name of the Plotly color scheme to use for the plot.
     """
     if isinstance(words, str):
         words = [words]
@@ -128,7 +134,7 @@ def word_association_barchart(
         word_ids, topic_data["topic_term_matrix"], n_association
     )
     n_topics = topic_data["topic_term_matrix"].shape[0]
-    tempo = colors.get_colorscale("Rainbow")
+    tempo = colors.get_colorscale(color_scheme)
     topic_colors = colors.sample_colorscale(tempo, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
     top_topics = prepare.top_topics(

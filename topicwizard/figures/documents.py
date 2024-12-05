@@ -1,4 +1,5 @@
 """External API for creating self-contained figures for documents."""
+
 from typing import List, Optional, Union
 
 import numpy as np
@@ -56,7 +57,10 @@ def document_map(
 
 
 def document_topic_distribution(
-    topic_data: TopicData, documents: Union[List[str], str], top_n: int = 8
+    topic_data: TopicData,
+    documents: Union[List[str], str],
+    top_n: int = 8,
+    color_scheme: str = "Portland",
 ) -> go.Figure:
     """Displays topic distribution on a bar plot for a document
     or a set of documents.
@@ -69,6 +73,8 @@ def document_topic_distribution(
         Documents to display topic distribution for.
     top_n: int, default 8
         Number of topics to display at most.
+    color_scheme: str, default 'Portland'
+        Name of the Plotly color scheme to use for the plot.
     """
     transform = topic_data["transform"]
     if transform is None:
@@ -80,7 +86,7 @@ def document_topic_distribution(
     topic_importances = prepare.document_topic_importances(transform(documents))
     topic_importances = topic_importances.groupby(["topic_id"]).sum().reset_index()
     n_topics = topic_data["document_topic_matrix"].shape[-1]
-    twilight = colors.get_colorscale("Portland")
+    twilight = colors.get_colorscale(color_scheme)
     topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
     return plots.document_topic_barplot(
@@ -89,7 +95,11 @@ def document_topic_distribution(
 
 
 def document_topic_timeline(
-    topic_data: TopicData, document: str, window_size: int = 10, step_size: int = 1
+    topic_data: TopicData,
+    document: str,
+    window_size: int = 10,
+    step_size: int = 1,
+    color_scheme: str = "Portland",
 ) -> go.Figure:
     """Projects documents into 2d space and displays them on a scatter plot.
 
@@ -103,6 +113,8 @@ def document_topic_timeline(
         The windows over which topic inference should be run.
     step_size: int, default 1
         Size of the steps for the rolling window.
+    color_scheme: str, default 'Portland'
+        Name of Plotly color scheme to use for the plot.
     """
     timeline = prepare.calculate_timeline(
         doc_id=0,
@@ -113,7 +125,7 @@ def document_topic_timeline(
     )
     topic_names = topic_data["topic_names"]
     n_topics = len(topic_names)
-    twilight = colors.get_colorscale("Portland")
+    twilight = colors.get_colorscale(color_scheme)
     topic_colors = colors.sample_colorscale(twilight, np.arange(n_topics) / n_topics)
     topic_colors = np.array(topic_colors)
     return plots.document_timeline(timeline, topic_names, topic_colors)

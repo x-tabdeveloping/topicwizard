@@ -19,6 +19,14 @@ Pretty and opinionated topic model visualization in Python.
 
 https://github.com/x-tabdeveloping/topicwizard/assets/13087737/9736f33c-6865-4ed4-bc17-d8e6369bda80
 
+## New in version 1.1.3
+
+You can now specify your own font that should be used for wordclouds.
+This makes topicwizard usable with Chinese and other non-indo-european scripts.
+
+```python
+topicwizard.visualize(topic_data=topic_data, wordcloud_font_path="NotoSansTC-Bold.ttf")
+```
 
 ## New in version 1.1.0 🌟
 

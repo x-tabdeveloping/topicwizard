@@ -1,4 +1,5 @@
 """Module containing plotting utilities for documents."""
+
 from typing import Dict, Iterable, List, Optional
 
 import numpy as np
@@ -8,6 +9,8 @@ import plotly.graph_objects as go
 import scipy.sparse as spr
 from PIL import Image
 from wordcloud import WordCloud
+
+from topicwizard.plots.utils import get_default_font_path
 
 
 def document_map(
@@ -209,11 +212,16 @@ def document_timeline(
 
 
 def document_wordcloud(
-    doc_id: int, document_term_matrix: np.ndarray, vocab: np.ndarray
+    doc_id: int,
+    document_term_matrix: np.ndarray,
+    vocab: np.ndarray,
+    custom_font_path=None,
 ) -> go.Figure:
     coo = spr.coo_array(document_term_matrix[[doc_id], :])
     term_dict = {vocab[column]: data for column, data in zip(coo.col, coo.data)}
+    font_path = custom_font_path or get_default_font_path().absolute()
     cloud = WordCloud(
+        font_path=font_path,
         width=800,
         height=800,
         background_color="white",

@@ -31,6 +31,7 @@ def create_blueprint(
     word_positions: Optional[np.ndarray] = None,
     topic_positions: Optional[np.ndarray] = None,
     document_positions: Optional[np.ndarray] = None,
+    wordcloud_font_path: Optional[str] = None,
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
@@ -43,6 +44,7 @@ def create_blueprint(
             corpus=corpus,
             topic_names=topic_names,
             topic_positions=topic_positions,
+            wordcloud_font_path=wordcloud_font_path,
         )
         if "topics" not in exclude_pages
         else create_blank_page("topics")
@@ -59,6 +61,7 @@ def create_blueprint(
             corpus=corpus,
             topic_names=topic_names,
             document_positions=document_positions,
+            wordcloud_font_path=wordcloud_font_path,
         )
         if "documents" not in exclude_pages
         else create_blank_page("documents")
@@ -87,6 +90,7 @@ def create_blueprint(
             corpus=corpus,
             topic_names=topic_names,
             group_labels=group_labels,
+            wordcloud_font_path=wordcloud_font_path,
         )
         if group_labels is not None
         else create_blank_page("groups")

@@ -5,6 +5,8 @@ import plotly.graph_objects as go
 from PIL import Image
 from wordcloud import WordCloud
 
+from topicwizard.plots.utils import get_default_font_path
+
 
 def group_map(
     x: np.ndarray,
@@ -133,17 +135,21 @@ def group_topics_barchart(top_topics: pd.DataFrame, topic_colors: np.ndarray):
     return fig
 
 
-def wordcloud(top_words: pd.DataFrame) -> go.Figure:
+def wordcloud(
+    top_words: pd.DataFrame, custom_font_path=None, color_scheme: str = "twilight"
+) -> go.Figure:
     """Plots most relevant words for current topic as a worcloud."""
     top_dict = {
         word: importance
         for word, importance in zip(top_words.word, top_words.importance)
     }
+    font_path = custom_font_path or get_default_font_path().absolute()
     cloud = WordCloud(
+        font_path=font_path,
         width=800,
         height=1060,
         background_color="white",
-        colormap="twilight",
+        colormap=color_scheme,
         scale=4,
     ).generate_from_frequencies(top_dict)
     image = cloud.to_image()

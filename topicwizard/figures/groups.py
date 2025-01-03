@@ -163,7 +163,12 @@ def group_topic_barcharts(
 
 
 def group_wordclouds(
-    topic_data: TopicData, group_labels: List[str], top_n: int = 30, n_columns: int = 4
+    topic_data: TopicData,
+    group_labels: List[str],
+    top_n: int = 30,
+    n_columns: int = 4,
+    custom_font_path: str = None,
+    color_scheme: str = "twilight",
 ) -> go.Figure:
     """Plots wordclouds for each group.
 
@@ -177,6 +182,10 @@ def group_wordclouds(
         Number of words to display for each group.
     n_columns: int, default 4
         Number of columns the faceted plot should have.
+    custom_font_path: str, default None
+        Path to custom font to use to render the wordcloud.
+    color_scheme: str, default 'twilight'
+        Matplotlib color scheme to use for the plot.
     """
     # Factorizing group labels
     group_id_labels, group_names = pd.factorize(group_labels)
@@ -203,7 +212,9 @@ def group_wordclouds(
         top_words = prepare.top_words(
             group_id, top_n, group_term_importances, topic_data["vocab"]
         )
-        subfig = plots.wordcloud(top_words)
+        subfig = plots.wordcloud(
+            top_words, color_scheme=color_scheme, custom_font_path=custom_font_path
+        )
         row, column = (group_id // n_columns) + 1, (group_id % n_columns) + 1
         fig.add_trace(subfig.data[0], row=row, col=column)
     fig.update_layout(

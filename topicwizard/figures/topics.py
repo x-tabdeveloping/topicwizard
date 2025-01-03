@@ -111,6 +111,7 @@ def topic_wordclouds(
     top_n: int = 30,
     n_columns: int = 4,
     color_scheme: str = "copper",
+    custom_font_path=None,
 ) -> go.Figure:
     """Plots most relevant words as word clouds for every topic.
 
@@ -124,6 +125,8 @@ def topic_wordclouds(
         Number of columns in the subplot grid.
     color_scheme: str, default 'copper'
         Matplotlib color scheme to use for the wordcloud.
+    custom_font_path: str, default None
+        Path to custom font to use to render the wordcloud.
     """
     n_topics = topic_data["topic_term_matrix"].shape[0]
     (
@@ -150,7 +153,9 @@ def topic_wordclouds(
             components=topic_term_importances,
             vocab=topic_data["vocab"],
         )
-        subfig = plots.wordcloud(top_words, color_scheme=color_scheme)
+        subfig = plots.wordcloud(
+            top_words, color_scheme=color_scheme, custom_font_path=custom_font_path
+        )
         row, column = (topic_id // n_columns) + 1, (topic_id % n_columns) + 1
         fig.add_trace(subfig.data[0], row=row, col=column)
     fig.update_layout(

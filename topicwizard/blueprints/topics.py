@@ -50,6 +50,7 @@ def create_blueprint(
     topic_term_matrix: np.ndarray,
     topic_names: List[str],
     topic_positions: Optional[np.ndarray] = None,
+    wordcloud_font_path: Optional[str] = None,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
@@ -61,7 +62,9 @@ def create_blueprint(
         topic_positions, topic_importances, topic_names
     )
     topic_barplot = create_topic_barplot(topic_term_matrix, vocab)
-    wordcloud = create_wordcloud(topic_term_matrix, vocab)
+    wordcloud = create_wordcloud(
+        topic_term_matrix, vocab, wordcloud_font_path=wordcloud_font_path
+    )
     blueprints = [
         intertopic_map,
         topic_switcher,

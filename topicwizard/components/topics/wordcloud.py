@@ -7,7 +7,7 @@ import topicwizard.plots.topics as plots
 import topicwizard.prepare.topics as prepare
 
 
-def create_wordcloud(topic_term_matrix, vocab):
+def create_wordcloud(topic_term_matrix, vocab, wordcloud_font_path=None):
     wordcloud = DashBlueprint()
     top_bar = prepare.calculate_top_words(
         topic_id=0,
@@ -32,6 +32,6 @@ def create_wordcloud(topic_term_matrix, vocab):
             components=topic_term_matrix,
             vocab=vocab,
         )
-        return plots.wordcloud(top_bar)
+        return plots.wordcloud(top_bar, custom_font_path=wordcloud_font_path)
 
     return wordcloud

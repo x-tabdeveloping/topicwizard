@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 import dash_mantine_components as dmc
 import numpy as np
@@ -10,7 +10,8 @@ import topicwizard.help.groups as help
 import topicwizard.prepare.groups as prepare
 from topicwizard.components.groups.group_barplot import create_group_barplot
 from topicwizard.components.groups.group_map import create_group_map
-from topicwizard.components.groups.group_wordcloud import create_group_wordcloud
+from topicwizard.components.groups.group_wordcloud import \
+    create_group_wordcloud
 from topicwizard.help.utils import make_helper
 
 
@@ -20,6 +21,7 @@ def create_blueprint(
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
     group_labels: List[str],
+    wordcloud_font_path: Optional[str] = None,
     **kwargs,
 ) -> DashBlueprint:
     # --------[ Preparing data ]--------
@@ -47,7 +49,9 @@ def create_blueprint(
     group_map = create_group_map(
         group_positions, group_importances, group_names, dominant_topics, topic_colors
     )
-    group_wordcloud = create_group_wordcloud(group_term_importances, vocab)
+    group_wordcloud = create_group_wordcloud(
+        group_term_importances, vocab, wordcloud_font_path=wordcloud_font_path
+    )
     group_barchart = create_group_barplot(group_topic_importances, topic_colors)
     blueprints = [
         group_map,

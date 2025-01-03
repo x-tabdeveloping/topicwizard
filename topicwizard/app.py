@@ -33,6 +33,7 @@ def get_dash_app(
     exclude_pages: Optional[Set[PageName]] = None,
     document_names: Optional[List[str]] = None,
     group_labels: Optional[List[str]] = None,
+    wordcloud_font_path: Optional[str] = None,
 ) -> Dash:
     """Returns topicwizard Dash application.
 
@@ -50,6 +51,9 @@ def get_dash_app(
         You can pass it along if you have genre labels for example.
         In this case an additional page will get created with information
         about how these groups relate to topics and words in the corpus.
+    wordcloud_font_path: str, default None
+        Font to use for generating wordclouds.
+        Open Sans is used by default.
 
     Returns
     -------
@@ -64,6 +68,7 @@ def get_dash_app(
         or [f"Document {i}" for i, _ in enumerate(topic_data["corpus"])],
         group_labels=group_labels,
         exclude_pages=exclude_pages,
+        wordcloud_font_path=wordcloud_font_path,
     )
     app = Dash(
         __name__,
@@ -82,7 +87,9 @@ def get_dash_app(
     return app
 
 
-def load_app(filename: str, exclude_pages: Optional[Iterable[PageName]] = None) -> Dash:
+def load_app(
+    filename: str, exclude_pages: Optional[Iterable[PageName]] = None, **kwargs
+) -> Dash:
     """Loads and prepares saved app from disk.
 
     Parameters
@@ -100,7 +107,7 @@ def load_app(filename: str, exclude_pages: Optional[Iterable[PageName]] = None) 
         exclude_pages = set()
     else:
         exclude_pages = set(exclude_pages)
-    return get_dash_app(**data, exclude_pages=exclude_pages)
+    return get_dash_app(**data, exclude_pages=exclude_pages, **kwargs)
 
 
 def open_url(url: str) -> None:
@@ -156,6 +163,7 @@ def load(
     filename: str,
     exclude_pages: Optional[Iterable[PageName]] = None,
     port: int = 8050,
+    **kwargs,
 ) -> Optional[threading.Thread]:
     """Visualizes topic model data loaded from disk.
 
@@ -179,7 +187,7 @@ def load(
     """
     print("Preparing data")
     exclude_pages = set() if exclude_pages is None else set(exclude_pages)
-    app = load_app(filename, exclude_pages=exclude_pages)
+    app = load_app(filename, exclude_pages=exclude_pages, **kwargs)
     return run_app(app, port=port)
 
 
@@ -211,6 +219,7 @@ def visualize(
     exclude_pages: Optional[Iterable[PageName]] = None,
     group_labels: Optional[List[str]] = None,
     port: int = 8050,
+    wordcloud_font_path: Optional[str] = None,
     **kwargs,
 ) -> Optional[threading.Thread]:
     """Visualizes your topic model with topicwizard.
@@ -238,7 +247,9 @@ def visualize(
         You can pass it along if you have genre labels for example.
         In this case an additional page will get created with information
         about how these groups relate to topics and words in the corpus.
-
+    wordcloud_font_path: str, default None
+        Font to use for generating wordclouds.
+        Open Sans is used by default.
 
     Returns
     -------
@@ -278,5 +289,6 @@ def visualize(
         document_names=document_names,
         exclude_pages=exclude_pages,
         group_labels=group_labels,
+        wordcloud_font_path=wordcloud_font_path,
     )
     return run_app(app, port=port)

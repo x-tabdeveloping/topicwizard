@@ -9,7 +9,7 @@ import topicwizard.prepare.groups as prepare
 
 
 def create_group_wordcloud(
-    group_term_importances: np.ndarray, vocab: np.ndarray
+    group_term_importances: np.ndarray, vocab: np.ndarray, wordcloud_font_path=None
 ) -> DashBlueprint:
     group_wordcloud = DashBlueprint()
 
@@ -25,6 +25,6 @@ def create_group_wordcloud(
     )
     def update_plot(selected_group: int) -> go.Figure:
         top_words = prepare.top_words(selected_group, 60, group_term_importances, vocab)
-        return plots.wordcloud(top_words)
+        return plots.wordcloud(top_words, custom_font_path=wordcloud_font_path)
 
     return group_wordcloud

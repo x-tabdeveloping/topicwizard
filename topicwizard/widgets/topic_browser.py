@@ -1,9 +1,12 @@
-from typing import List, Optional
+from typing import List
 
 import dash_mantine_components as dmc
 import numpy as np
+import pandas as pd
+import plotly.express as px
 from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
                                     html)
+from matplotlib.colors import ListedColormap
 
 from topicwizard.plots.topics import wordcloud
 from topicwizard.prepare.topics import calculate_top_words
@@ -11,12 +14,49 @@ from topicwizard.prepare.topics import calculate_top_words
 
 def get_wordclouds(vocab, components):
     wordclouds = []
+    colormap = ListedColormap(["#0B1A4A", "#183280", "#005F8F"])
     for i in range(components.shape[0]):
         top_words = calculate_top_words(i, 100, components, vocab)
-        wc = wordcloud(top_words, color_scheme="cividis_r")
+        wc = wordcloud(top_words, color_scheme=colormap)
         wc.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         wordclouds.append(wc)
     return wordclouds
+
+
+def make_bars(vocab, components):
+    bars = []
+    for component in components:
+        idx = np.argsort(-component)[:10]
+        top_words = pd.DataFrame(dict(word=vocab[idx], importance=component[idx]))
+        top_words["text"] = (
+            "<b>"
+            + top_words["word"]
+            + " ("
+            + top_words["importance"].map(lambda x: f"{x:.2f}")
+            + ")</b>"
+        )
+        top_words = top_words.sort_values("importance", ascending=True)
+        barplot = px.bar(
+            top_words,
+            y="word",
+            x="importance",
+            text="text",
+            orientation="h",
+            template="plotly_white",
+        )
+        barplot.update_layout(
+            margin=dict(l=0, r=0, b=0, t=0),
+            xaxis_title="",
+            yaxis_title="",
+            font=dict(color="#0B1A4A"),
+        )
+        barplot.update_traces(
+            marker_color="white", marker_line_color="#0B1A4A", marker_line_width=1.5
+        )
+        barplot.update_xaxes(showticklabels=False)
+        barplot.update_yaxes(showticklabels=False)
+        bars.append(barplot)
+    return bars
 
 
 def make_table(topic_document_imp, corpus):
@@ -24,8 +64,8 @@ def make_table(topic_document_imp, corpus):
     head = html.Thead(
         html.Tr(
             [
-                html.Th("Most Relevant Documents"),
-                html.Th("Document Relevance", className="w-1/6"),
+                html.Th(dmc.Text("Most Relevant Documents", className="pl-1 pb-1")),
+                html.Th(dmc.Center(dmc.Text("Relevance")), className="w-1/6 pb-1"),
             ]
         )
     )
@@ -41,17 +81,21 @@ def make_table(topic_document_imp, corpus):
                         showLabel="...",
                         hideLabel="Hide",
                         maxHeight=50,
-                        className="overflow-y-auto",
-                        children=[dmc.Text(doc, fw=100)],
-                        style={"max-height": "400px"},
+                        className="overflow-y-auto pl-1",
+                        children=[dmc.Text(doc, fw=100, size="xs")],
+                        style={"max-height": "180px"},
                     )
                 ),
-                html.Th(dmc.Center(dmc.Text(imp, fw=600))),
+                html.Th(dmc.Center(dmc.Text(imp, fw=600, size="xs"))),
             ],
         )
         rows.append(row)
     body = html.Tbody(rows)
-    return dmc.Table([head, body])
+    return dmc.Table(
+        [head, body],
+        verticalSpacing=2.5,
+        horizontalSpacing=2.5,
+    )
 
 
 def create_document_tables(corpus, document_topic_matrix) -> List[dmc.Table]:
@@ -64,7 +108,6 @@ def create_document_tables(corpus, document_topic_matrix) -> List[dmc.Table]:
 def create_topic_browser(
     vocab: np.ndarray,
     corpus: List[str],
-    document_term_matrix: np.ndarray,
     document_topic_matrix: np.ndarray,
     topic_term_matrix: np.ndarray,
     topic_names: List[str],
@@ -77,6 +120,7 @@ def create_topic_browser(
         top_words.append(list(vocab[idx]))
     document_tables = create_document_tables(corpus, document_topic_matrix)
     wordclouds = get_wordclouds(vocab, topic_term_matrix)
+    bars = make_bars(vocab, topic_term_matrix)
     # --------[ Creating app blueprint ]--------
     app_blueprint = DashBlueprint()
     app_blueprint.layout = html.Div(
@@ -88,7 +132,7 @@ def create_topic_browser(
                         size="xl",
                         ta="center",
                         fw=700,
-                        className="pb-8",
+                        className="pb-6",
                     ),
                 ]
             ),
@@ -114,27 +158,26 @@ def create_topic_browser(
                             ),
                             dmc.AccordionPanel(
                                 [
-                                    dmc.Grid(
+                                    dmc.Group(
                                         [
-                                            dmc.Col(
-                                                dmc.Spoiler(
-                                                    children=document_tables[i_topic],
-                                                    maxHeight=500,
-                                                    showLabel="Expand Table",
-                                                    hideLabel="Collapse Table",
-                                                ),
-                                                span=6,
+                                            dcc.Graph(
+                                                figure=bars[i_topic],
+                                                style={"height": "200x"},
+                                                className="w-2/3",
                                             ),
-                                            dmc.Col(
-                                                dcc.Graph(
-                                                    figure=wordclouds[i_topic],
-                                                    style={"height": "500px"},
-                                                ),
-                                                span=1,
+                                            dcc.Graph(
+                                                figure=wordclouds[i_topic],
+                                                className="w-1/3",
                                             ),
                                         ],
                                         grow=True,
-                                    )
+                                    ),
+                                    dmc.Spoiler(
+                                        children=document_tables[i_topic],
+                                        maxHeight=250,
+                                        showLabel="Expand Table",
+                                        hideLabel="Collapse Table",
+                                    ),
                                 ]
                             ),
                         ],

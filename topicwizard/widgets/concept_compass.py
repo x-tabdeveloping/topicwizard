@@ -76,9 +76,21 @@ def create_concept_compass(
                         size="xl",
                         ta="center",
                         fw=700,
-                        className="pb-6",
                     ),
                 ]
+            ),
+            dmc.Center(
+                dmc.Text(
+                    """This widget allows you to explore concepts' distribution along
+                        two selected semantic azes discovered by the model.
+                        Choose an X and a Y axis, then explore relations on the graph below.
+                        You can zoom in by scrolling.
+                        """,
+                    size="sm",
+                    fw=400,
+                    c="dimmed",
+                    className="pb-6",
+                ),
             ),
             dmc.Group(
                 [

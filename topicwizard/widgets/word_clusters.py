@@ -109,9 +109,21 @@ def create_word_clusters(
                         size="xl",
                         ta="center",
                         fw=700,
-                        className="pb-6",
                     ),
                 ]
+            ),
+            dmc.Center(
+                dmc.Text(
+                    """ This widget allows you to explore topics as clusters of concepts
+                    on an interactive map.
+                    Zoom by scrolling and hover over individual words to gain more information about them.
+                    Larger points represent words more important to their respective topics.
+                    """,
+                    size="sm",
+                    fw=400,
+                    c="dimmed",
+                    className="pb-6",
+                ),
             ),
             dcc.Graph(
                 figure=word_map, className="flex-1 flex", config=dict(scrollZoom=True)

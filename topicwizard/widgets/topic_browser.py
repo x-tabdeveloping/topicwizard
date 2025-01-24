@@ -132,9 +132,20 @@ def create_topic_browser(
                         size="xl",
                         ta="center",
                         fw=700,
-                        className="pb-6",
                     ),
                 ]
+            ),
+            dmc.Center(
+                dmc.Text(
+                    """This widget allows you to explore topics and the most relevant
+                    words and documents connected to them.
+                    Click on a topic to explore it in detail.
+                    """,
+                    size="sm",
+                    fw=400,
+                    c="dimmed",
+                    className="pb-6",
+                ),
             ),
             dmc.Accordion(
                 chevronPosition="right",

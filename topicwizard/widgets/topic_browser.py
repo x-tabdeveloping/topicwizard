@@ -109,7 +109,7 @@ def create_document_tables(corpus, document_topic_matrix) -> List[dmc.Table]:
 
 
 def create_topic_browser(
-    widget_id: int,
+    app_id: str,
     vocab: np.ndarray,
     corpus: List[str],
     document_topic_matrix: np.ndarray,
@@ -136,6 +136,7 @@ def create_topic_browser(
                         size="xl",
                         ta="center",
                         fw=700,
+                        className="pb-1",
                     ),
                 ]
             ),
@@ -206,7 +207,7 @@ def create_topic_browser(
         flex flex-1 flex-col flex
         p-3
         """,
-        id=f"topic_browser_{widget_id}",
+        id=f"topic_browser_{app_id}",
     )
     return app_blueprint
 
@@ -223,8 +224,5 @@ class TopicBrowser(Widget):
     name = "Topic Browser"
     id_prefix = "topic_browser"
 
-    def __init__(self):
-        super().__init__()
-
-    def create_blueprint(self, topic_data: TopicData):
-        return create_topic_browser(self.widget_id, **topic_data)
+    def create_blueprint(self, topic_data: TopicData, app_id: str = ""):
+        return create_topic_browser(app_id, **topic_data)

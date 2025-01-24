@@ -90,7 +90,7 @@ def produce_map(
 
 
 def create_word_clusters(
-    widget_id: int,
+    app_id: str,
     vocab: np.ndarray,
     corpus: List[str],
     topic_term_matrix: np.ndarray,
@@ -113,6 +113,7 @@ def create_word_clusters(
                         size="xl",
                         ta="center",
                         fw=700,
+                        className="pb-1",
                     ),
                 ]
             ),
@@ -137,7 +138,7 @@ def create_word_clusters(
         flex flex-1 flex-col
         p-3 h-full
         """,
-        id=f"word_clusters_{widget_id}",
+        id=f"word_clusters_{app_id}",
     )
     return app_blueprint
 
@@ -148,14 +149,13 @@ class ConceptClusters(Widget):
         "corpus",
         "topic_term_matrix",
         "topic_names",
-        "word_positions",
     )
     icon = "material-symbols:category-outline"
-    name = "Concept Compass"
+    name = "Concept Clusters"
     id_prefix = "word_clusters"
 
     def __init__(self):
         super().__init__()
 
-    def create_blueprint(self, topic_data: TopicData):
-        return create_word_clusters(self.widget_id, **topic_data)
+    def create_blueprint(self, topic_data: TopicData, app_id: str = ""):
+        return create_word_clusters(app_id, **topic_data)

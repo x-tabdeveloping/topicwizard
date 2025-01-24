@@ -1,4 +1,3 @@
-import random
 from abc import ABC, abstractmethod
 from typing import Sequence
 
@@ -18,25 +17,22 @@ class Widget(ABC):
     name: str
     id_prefix: str
 
-    def __init__(self):
-        self.widget_id = random.randint(0, 10_000)
-
     def create_label(self):
-        return (
-            dmc.Center(
-                [
-                    DashIconify(
-                        icon=self.icon,
-                        width=16,
-                    ),
-                    html.Span(self.name),
-                ],
-                style={"gap": 10},
-            ),
+        return dmc.Center(
+            [
+                DashIconify(
+                    icon=self.icon,
+                    width=16,
+                ),
+                html.Span(self.name),
+            ],
+            style={"gap": 10},
         )
 
     @abstractmethod
-    def create_blueprint(self, topic_data: TopicData) -> DashBlueprint:
+    def create_blueprint(
+        self, topic_data: TopicData, app_id: str = ""
+    ) -> DashBlueprint:
         pass
 
     def validate_data(self, topic_data: TopicData):
@@ -49,7 +45,3 @@ class Widget(ABC):
         raise TypeError(
             f"Topic Data is missing the following attributes: {missing}, needed by Widget {self.name}"
         )
-
-    @property
-    def component_id(self):
-        return f"{self.id_prefix}_{self.widget_id}"

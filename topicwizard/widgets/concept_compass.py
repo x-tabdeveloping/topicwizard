@@ -22,7 +22,7 @@ def plot_compass(
     topic_y: int,
     topic_term_matrix: np.ndarray,
     vocab: np.ndarray,
-    **kwargs,
+    topic_names: List[str],
 ):
     x = topic_term_matrix[topic_x]
     y = topic_term_matrix[topic_y]
@@ -60,13 +60,12 @@ def plot_compass(
 
 
 def create_concept_compass(
-    widget_id: int,
+    app_id: str,
     vocab: np.ndarray,
     topic_term_matrix: np.ndarray,
     topic_names: List[str],
     **kwargs,
 ) -> DashBlueprint:
-    widget_id = random.randint(0, 10_000)
     # --------[ Preparing data ]--------
     default_compass = plot_compass(0, 1, topic_term_matrix, vocab, topic_names)
     # --------[ Creating app blueprint ]--------
@@ -80,6 +79,7 @@ def create_concept_compass(
                         size="xl",
                         ta="center",
                         fw=700,
+                        className="pb-1",
                     ),
                 ]
             ),
@@ -100,7 +100,7 @@ def create_concept_compass(
                 [
                     dmc.Select(
                         label="Select X Semantic Axis",
-                        id=f"x_select_{widget_id}",
+                        id=f"x_select_{app_id}",
                         value=0,
                         data=[
                             {"value": i_topic, "label": topic_name}
@@ -109,7 +109,7 @@ def create_concept_compass(
                     ),
                     dmc.Select(
                         label="Select Y Semantic Axis",
-                        id=f"y_select_{widget_id}",
+                        id=f"y_select_{app_id}",
                         value=1,
                         data=[
                             {"value": i_topic, "label": topic_name}
@@ -123,20 +123,20 @@ def create_concept_compass(
                 figure=default_compass,
                 className="flex-1 flex",
                 config=dict(scrollZoom=True),
-                id=f"compass_{widget_id}",
+                id=f"compass_{app_id}",
             ),
         ],
         className="""
         flex flex-1 flex-col 
         p-3 h-full
         """,
-        id=f"concept_compass_{widget_id}",
+        id=f"concept_compass_{app_id}",
     )
 
     @app_blueprint.callback(
-        Output(f"compass_{widget_id}", "figure"),
-        Input(f"x_select_{widget_id}", "value"),
-        Input(f"y_select_{widget_id}", "value"),
+        Output(f"compass_{app_id}", "figure"),
+        Input(f"x_select_{app_id}", "value"),
+        Input(f"y_select_{app_id}", "value"),
         prevent_initial_call=True,
     )
     def update_compass(topic_x: int, topic_y: int):
@@ -155,8 +155,5 @@ class ConceptCompass(Widget):
     name = "Concept Compass"
     id_prefix = "concept_compass"
 
-    def __init__(self):
-        super().__init__()
-
-    def create_blueprint(self, topic_data: TopicData):
-        return create_concept_compass(self.widget_id, **topic_data)
+    def create_blueprint(self, topic_data: TopicData, app_id: str = ""):
+        return create_concept_compass(app_id, **topic_data)

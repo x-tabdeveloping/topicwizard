@@ -55,12 +55,14 @@ def plot_document_clusters(
     document_topic_assignment = [
         topic_names[i_topic] for i_topic in document_topic_assignment
     ]
+    cleaned_text = [" ".join(text.split()) for text in corpus]
+    cleaned_text = [text[:150] for text in corpus]
     doc_df = pd.DataFrame(
         dict(
             x=x,
             y=y,
             topic=document_topic_assignment,
-            content=[text[:300] for text in corpus],
+            content=cleaned_text,
         )
     )
     fig = px.scatter(

@@ -17,7 +17,7 @@ from .widget import Widget
 
 def get_wordclouds(vocab, components):
     wordclouds = []
-    colormap = ListedColormap(["#0B1A4A", "#183280", "#005F8F"])
+    colormap = ListedColormap(["#339af0", "#1c7ed6", "#1864ab"])
     for i in range(components.shape[0]):
         top_words = calculate_top_words(i, 100, components, vocab)
         wc = wordcloud(top_words, color_scheme=colormap)
@@ -51,10 +51,10 @@ def make_bars(vocab, components):
             margin=dict(l=0, r=0, b=0, t=0),
             xaxis_title="",
             yaxis_title="",
-            font=dict(color="#0B1A4A"),
+            font=dict(color="#1864ab"),
         )
         barplot.update_traces(
-            marker_color="white", marker_line_color="#0B1A4A", marker_line_width=1.5
+            marker_color="white", marker_line_color="#1864ab", marker_line_width=1.5
         )
         barplot.update_xaxes(showticklabels=False)
         barplot.update_yaxes(showticklabels=False)
@@ -129,17 +129,6 @@ def create_topic_browser(
     app_blueprint = DashBlueprint()
     app_blueprint.layout = html.Div(
         [
-            dmc.Center(
-                [
-                    dmc.Text(
-                        "Topic Browser",
-                        size="xl",
-                        ta="center",
-                        fw=700,
-                        className="pb-1",
-                    ),
-                ]
-            ),
             dmc.Center(
                 dmc.Text(
                     """This widget allows you to explore topics and the most relevant

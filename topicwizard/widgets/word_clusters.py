@@ -6,12 +6,39 @@ import pandas as pd
 import plotly.express as px
 from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
                                     html)
-from matplotlib.colors import ListedColormap
 
 import topicwizard.prepare.words as prepare
 from topicwizard.data import TopicData
 
 from .widget import Widget
+
+mantine_color_sequence_24 = [
+    "#fa5252",  # red 6
+    "#c92a2a",  # red 9
+    "#e64980",  # pink 6
+    "#a61e4d",  # pink 9
+    "#be4bdb",  # grape 6
+    "#862e9c",  # grape 9
+    "#7950f2",  # violet 6
+    "#5f3dc4",  # violet 9
+    "#4c6ef5",  # indigo 6
+    "#364fc7",  # indigo 9
+    "#228be6",  # blue 6
+    "#1864ab",  # blue 9
+    "#15aabf",  # cyan 6
+    "#0b7285",  # cyan 9
+    "#12b886",  # teal 6
+    "#087f5b",  # teal 9
+    "#40c057",  # green 6
+    "#2b8a3e",  # green 9
+    "#82c91e",  # lime 6
+    "#5c940d",  # lime 9
+    "#fab005",  # yellow 6
+    "#e67700",  # yellow 9
+    "#fd7e14",  # orange 6
+    "#d9480f",  # orange 9
+]
+np.random.default_rng(42).shuffle(mantine_color_sequence_24)
 
 
 def produce_map(
@@ -52,7 +79,7 @@ def produce_map(
             "x": False,
             "y": False,
         },
-        color_discrete_sequence=px.colors.qualitative.Dark24,
+        color_discrete_sequence=mantine_color_sequence_24,
         size_max=60,
     )
     text_size = (np.sqrt(word_importance) / np.sqrt(np.max(word_importance))) * 22 + 8
@@ -106,17 +133,6 @@ def create_word_clusters(
     app_blueprint = DashBlueprint()
     app_blueprint.layout = html.Div(
         [
-            dmc.Center(
-                [
-                    dmc.Text(
-                        "Concept Clusters",
-                        size="xl",
-                        ta="center",
-                        fw=700,
-                        className="pb-1",
-                    ),
-                ]
-            ),
             dmc.Center(
                 dmc.Text(
                     """ This widget allows you to explore topics as clusters of concepts

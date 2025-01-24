@@ -73,17 +73,6 @@ def create_concept_compass(
     app_blueprint.layout = html.Div(
         [
             dmc.Center(
-                [
-                    dmc.Text(
-                        "Concept Compass",
-                        size="xl",
-                        ta="center",
-                        fw=700,
-                        className="pb-1",
-                    ),
-                ]
-            ),
-            dmc.Center(
                 dmc.Text(
                     """This widget allows you to explore concepts' distribution along
                         two selected semantic azes discovered by the model.

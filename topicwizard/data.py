@@ -1,6 +1,20 @@
-from typing import Callable, List, Optional, TypedDict
+from typing import Callable, List, Literal, Optional, TypedDict
 
 import numpy as np
+
+TopicDataAttribute = Literal[
+    "corpus",
+    "vocab",
+    "document_term_matrix",
+    "document_topic_matrix",
+    "topic_term_matrix",
+    "document_representation",
+    "transform",
+    "topic_names",
+    "topic_positions",
+    "word_positions",
+    "document_positions",
+]
 
 
 class TopicData(TypedDict):

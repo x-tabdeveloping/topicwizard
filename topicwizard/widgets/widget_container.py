@@ -15,6 +15,8 @@ from .widget import Widget
 def create_widget_container(
     widgets: List[Widget], topic_data: TopicData, app_id: Optional[str] = None
 ) -> DashBlueprint:
+    if app_id is None:
+        app_id = str(random.randint(0, 10_000))
     # --------[ Collecting blueprints ]--------
     ids = []
     names = []

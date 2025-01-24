@@ -8,8 +8,11 @@ from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
                                     html)
 from matplotlib.colors import ListedColormap
 
+from topicwizard.data import TopicData
 from topicwizard.plots.topics import wordcloud
 from topicwizard.prepare.topics import calculate_top_words
+
+from .widget import Widget
 
 
 def get_wordclouds(vocab, components):
@@ -106,6 +109,7 @@ def create_document_tables(corpus, document_topic_matrix) -> List[dmc.Table]:
 
 
 def create_topic_browser(
+    widget_id: int,
     vocab: np.ndarray,
     corpus: List[str],
     document_topic_matrix: np.ndarray,
@@ -202,6 +206,25 @@ def create_topic_browser(
         flex flex-1 flex-col flex
         p-3
         """,
-        id="topic_browser",
+        id=f"topic_browser_{widget_id}",
     )
     return app_blueprint
+
+
+class TopicBrowser(Widget):
+    needed_attributes = (
+        "vocab",
+        "corpus",
+        "document_topic_matrix",
+        "topic_term_matrix",
+        "topic_names",
+    )
+    icon = "material-symbols:space-dashboard-outline"
+    name = "Topic Browser"
+    id_prefix = "topic_browser"
+
+    def __init__(self):
+        super().__init__()
+
+    def create_blueprint(self, topic_data: TopicData):
+        return create_topic_browser(self.widget_id, **topic_data)

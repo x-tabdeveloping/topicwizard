@@ -9,6 +9,9 @@ from dash_extensions.enrich import (DashBlueprint, Input, Output, State, dcc,
 from matplotlib.colors import ListedColormap
 
 import topicwizard.prepare.words as prepare
+from topicwizard.data import TopicData
+
+from .widget import Widget
 
 
 def produce_map(
@@ -87,6 +90,7 @@ def produce_map(
 
 
 def create_word_clusters(
+    widget_id: int,
     vocab: np.ndarray,
     corpus: List[str],
     topic_term_matrix: np.ndarray,
@@ -133,6 +137,25 @@ def create_word_clusters(
         flex flex-1 flex-col
         p-3 h-full
         """,
-        id="word_clusters",
+        id=f"word_clusters_{widget_id}",
     )
     return app_blueprint
+
+
+class ConceptClusters(Widget):
+    needed_attributes = (
+        "vocab",
+        "corpus",
+        "topic_term_matrix",
+        "topic_names",
+        "word_positions",
+    )
+    icon = "material-symbols:category-outline"
+    name = "Concept Compass"
+    id_prefix = "word_clusters"
+
+    def __init__(self):
+        super().__init__()
+
+    def create_blueprint(self, topic_data: TopicData):
+        return create_word_clusters(self.widget_id, **topic_data)

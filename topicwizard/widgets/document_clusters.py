@@ -41,7 +41,7 @@ mantine_color_sequence_24 = [
     "#fd7e14",  # orange 6
     "#d9480f",  # orange 9
 ]
-np.random.default_rng(42).shuffle(mantine_color_sequence_24)
+np.random.default_rng(0).shuffle(mantine_color_sequence_24)
 
 
 def plot_document_clusters(

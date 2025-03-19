@@ -32,6 +32,7 @@ def create_blueprint(
     topic_positions: Optional[np.ndarray] = None,
     document_positions: Optional[np.ndarray] = None,
     wordcloud_font_path: Optional[str] = None,
+    **kwargs,
 ) -> DashBlueprint:
     # --------[ Collecting blueprints ]--------
     topic_blueprint = (
